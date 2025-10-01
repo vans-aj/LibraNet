@@ -89,3 +89,76 @@ form input[type="submit"]:hover {
     color: #0c5460;
     border: 1px solid #bee5eb;
 }
+
+.list-wrapper {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 800px;
+}
+
+.book-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+}
+
+.book-table th, .book-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.book-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.book-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.navbar {
+    background-color: #343a40;
+    padding: 1rem 2rem;
+    width: 100%;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links a {
+    color: #f8f9fa;
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-size: 1rem;
+}
+
+.nav-links a:hover {
+    color: #007bff;
+}
+
+/* Add padding to the top of the body to prevent content from hiding under the fixed navbar */
+body {
+    padding-top: 80px; 
+}

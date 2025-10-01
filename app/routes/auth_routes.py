@@ -1,7 +1,8 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash , request
 from app import db
 from app.routes import main_bp  # Import the blueprint from the __init__.py in the same folder
 from app.forms import LoginForm, RegistrationForm
+from flask_login import login_user, logout_user, login_required, current_user
 from app.models.student import Student
 
 # Note: We use @main_bp.route instead of @app.route
@@ -29,7 +30,31 @@ def register():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        flash('Login requested for user {}'.format(form.email.data), 'info')
-        # We will add real login logic here later
-        return redirect(url_for('main.login'))
+        # Find the student in the database by their email
+        student = Student.query.filter_by(email=form.email.data).first()
+        
+        # Check if the student exists and if the password is correct
+        if student is None or not student.check_password(form.password.data):
+            flash('Invalid email or password', 'danger')
+            return redirect(url_for('main.list_books'))
+        
+        # If credentials are correct, log the user in with Flask-Login
+        login_user(student, remember=form.remember_me.data)
+        flash('You have been logged in successfully!', 'success')
+
+        next_page = request.args.get('next')
+        if not next_page or not next_page.startswith('/'):
+            next_page = url_for('main.books')
+        
+        # Redirect to the dashboard page after a successful login
+        return redirect(next_page)
+        
     return render_template('login.html', title='Sign In', form=form)
+
+
+@main_bp.route('/logout')
+def logout():
+    """Logs the user out."""
+    logout_user() # This function from Flask-Login clears the user's session
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('main.login'))

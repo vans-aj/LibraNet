@@ -3,9 +3,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from config import Config  # Import the Config class
+from flask_login import LoginManager #If a user who is not logged in tries to access a protected page, redirect them to the login page
 
 db = SQLAlchemy()
 migrate = Migrate()
+login_manager = LoginManager()  
+login_manager.login_view = 'main.login'
 
 def create_app(config_class=Config): # Set the default config
     app = Flask(__name__)
@@ -15,6 +18,7 @@ def create_app(config_class=Config): # Set the default config
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
+    login_manager.init_app(app)
 
     # Import and register the blueprint
     from app.routes import main_bp

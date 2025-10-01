@@ -1,10 +1,11 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app import db
+from app import db , login_manager
 from . import RoleEnum
+from flask_login import UserMixin 
 
-class Student(db.Model):
+class Student(db.Model,UserMixin):
     """Model for library users (students, librarians, etc.)."""
 
     __tablename__ = "student"
@@ -35,3 +36,8 @@ class Student(db.Model):
 
     def __repr__(self) -> str:
         return f"<Student id={self.id} email={self.email}>"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Student.query.get(int(user_id))
