@@ -1,0 +1,33 @@
+{% extends "base.html" %} {% block content %}
+<div class="detail-wrapper">
+  <h1>{{ book.title }}</h1>
+  <div class="book-meta">
+    <p><strong>Author:</strong> {{ book.author }}</p>
+    <p><strong>ISBN:</strong> {{ book.isbn or 'Not Available' }}</p>
+    <p><strong>Format:</strong> {{ book.format.value.title() }}</p>
+    <p>
+      <strong>Availability:</strong> {{ book.available_copies }} of {{
+      book.total_copies }} copies are available.
+    </p>
+  </div>
+
+  <div class="actions">
+    <form
+      action="{{ url_for('main.add_to_bag', book_id=book.id) }}"
+      method="post"
+      style="display: inline"
+    >
+      {% if book.available_copies > 0 %}
+      <button type="submit" class="button-primary">Add to Bag</button>
+      {% else %}
+      <button type="submit" class="button-disabled" disabled>
+        Out of Stock
+      </button>
+      {% endif %}
+    </form>
+    <a href="{{ url_for('main.list_books') }}" class="button-secondary"
+      >Back to Catalog</a
+    >
+  </div>
+</div>
+{% endblock %}

@@ -44,7 +44,7 @@ def login():
 
         next_page = request.args.get('next')
         if not next_page or not next_page.startswith('/'):
-            next_page = url_for('main.books')
+            next_page = url_for('main.list_books')
         
         # Redirect to the dashboard page after a successful login
         return redirect(next_page)

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="list-wrapper">
+        <h1>My Loans</h1>
+        {% if loans %}
+            <table class="book-table">
+                <thead>
+                    <tr>
+                        <th>Book Title</th>
+                        <th>Date Borrowed</th>
+                        <th>Due Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in loans %}
+                        <tr>
+                            <td>{{ loan.book.title }}</td>
+                            <td>{{ loan.borrowed_date.strftime('%d %b %Y') }}</td>
+                            <td>{{ loan.due_date.strftime('%d %b %Y') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You have not borrowed any books yet.</p>
+            <div class="actions">
+                <a href="{{ url_for('main.list_books') }}" class="button-secondary">Browse the Catalog</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

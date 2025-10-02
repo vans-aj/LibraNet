@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="detail-wrapper">
+    <h1>{{ student.name }}</h1>
+    <div class="book-meta">
+        <p><strong>Email:</strong> {{ student.email }}</p>
+        <p><strong>Roll Number:</strong> {{ student.roll_no }}</p>
+        <p><strong>Role:</strong> {{ student.role.name.title() }}</p>
+    </div>
+
+    <h2 style="margin-top: 2rem;">Loan History</h2>
+    {% if student.loans %}
+        <table class="book-table">
+            <thead>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Date Borrowed</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan in student.loans %}
+                <tr>
+                    <td>{{ loan.book.title }}</td>
+                    <td>{{ loan.borrowed_date.strftime('%d %b %Y') }}</td>
+                    <td>{{ loan.due_date.strftime('%d %b %Y') }}</td>
+                    <td>{{ loan.status.name.title() }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>This student has no loan history.</p>
+    {% endif %}
+
+    <div class="actions">
+        <a href="{{ url_for('main.manage_students') }}" class="button-secondary">Back to Student List</a>
+    </div>
+</div>
+{% endblock %}

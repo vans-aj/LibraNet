@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="list-wrapper">
+    <h1>Manage Books</h1>
+    <div class="actions">
+        <a href="{{ url_for('main.add_book') }}" class="button-primary">Add New Book</a>
+    </div>
+
+    <table class="book-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Total Copies</th>
+                <th>Available</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.total_copies }}</td>
+                <td>{{ book.available_copies }}</td>
+                <td>
+                    <a href="{{ url_for('main.edit_book', book_id=book.id) }}" class="button-secondary">Edit</a>
+                    <form action="#" method="POST" style="display:inline;">
+                        <button type="submit" class="button-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

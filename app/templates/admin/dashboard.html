@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="list-wrapper">
+        <h1>Admin Dashboard</h1>
+        <p>Welcome, {{ current_user.name }}! This is a protected area only for admins.</p>
+        
+        <div class="actions">
+            <a href="{{ url_for('main.add_book') }}" class="button-primary">Add a New Book</a>
+            <a href="{{ url_for('main.manage_books') }}" class="button-primary">Manage All Books</a>
+            <a href="{{ url_for('main.manage_students') }}" class="button-primary">Manage Students</a>
+        </div>
+    </div>
+{% endblock %}

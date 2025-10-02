@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="list-wrapper">
+    <h1>My Bag ({{ books|length }} items)</h1>
+
+    {% if books %}
+        <table class="book-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>
+                        <form action="{{ url_for('main.remove_from_bag', book_id=book.id) }}" method="post">
+                            <button type="submit" class="button-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="actions">
+            <form action="{{ url_for('main.borrow_all') }}" method="post">
+                <button type="submit" class="button-primary">Borrow All Books</button>
+            </form>
+        </div>
+
+    {% else %}
+        <p>Your bag is empty.</p>
+        <div class="actions">
+            <a href="{{ url_for('main.list_books') }}" class="button-secondary">Browse Books</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
