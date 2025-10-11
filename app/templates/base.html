@@ -8,30 +8,59 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   </head>
   <body>
     <nav class="navbar">
       <div class="nav-container">
         <a href="{{ url_for('main.landing_page') }}" class="nav-brand">LibraNet</a>
-        <div class="nav-links">
-    {% if current_user.is_authenticated %}
-        <a href="{{ url_for('main.list_books') }}">Book Catalog</a>
-        <a href="{{ url_for('main.my_loans') }}">My Loans</a>
 
-        {% if session['bag'] %}
-            <a href="{{ url_for('main.my_bag') }}">My Bag ({{ session['bag']|length }})</a>
+        {% if current_user.is_authenticated %}
+        <div class="nav-search">
+            <form action="{{ url_for('main.search') }}" method="get" class="search-form">
+                <input type="search" name="q" placeholder="Search for books..." class="search-input">
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
         {% endif %}
 
-        <a href="{{ url_for('main.logout') }}">Logout</a>
+        <div class="nav-links">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('main.list_books') }}">Book Catalog</a>
+                <a href="{{ url_for('main.my_loans') }}">My Loans</a>
 
-    {% else %}
-        <a href="{{ url_for('main.login') }}">Login</a>
-        <a href="{{ url_for('main.register') }}">Register</a>
-    {% endif %}
-</div>
-      
+                {# This link will only appear if there are items in the bag #}
+                {% if session['bag'] %}
+                    <a href="{{ url_for('main.my_bag') }}">My Bag ({{ session['bag']|length }})</a>
+                {% else %}
+                    <a href="{{ url_for('main.my_bag') }}">My Bag</a>
+                {% endif %}
+
+                <a href="{{ url_for('main.logout') }}">Logout</a>
+                <a href="{{ url_for('main.profile') }}" class="nav-user-icon">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+            {% else %}
+                <a href="{{ url_for('main.login') }}">Login</a>
+                <a href="{{ url_for('main.register') }}">Register</a>
+            {% endif %}
+        </div>
+      </div>
     </nav>
-    <div class="container">
+    <style>
+        {% if 'login' in request.endpoint or 'register' in request.endpoint %}
+            body {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                padding-top: 0 !important;
+            }
+            .navbar {
+                display: none;
+            }
+        {% endif %}
+    </style>
+    <div class="container content-wrapper">
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %}
       <div class="flashes">
@@ -41,5 +70,11 @@
       </div>
       {% endif %} {% endwith %} {% block content %}{% endblock %}
     </div>
+    <!-- Replace the closing </body> tag with this: -->
+    {% if 'login' not in request.endpoint and 'register' not in request.endpoint %}
+        {% include "footer.html" %}
+    {% endif %}
+  </body>
+</html>
   </body>
 </html>

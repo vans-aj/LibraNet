@@ -10,6 +10,7 @@
                         <th>Book Title</th>
                         <th>Date Borrowed</th>
                         <th>Due Date</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -18,6 +19,7 @@
                             <td>{{ loan.book.title }}</td>
                             <td>{{ loan.borrowed_date.strftime('%d %b %Y') }}</td>
                             <td>{{ loan.due_date.strftime('%d %b %Y') }}</td>
+                            <td>{{ loan.status.name.title() }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

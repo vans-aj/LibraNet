@@ -69,3 +69,11 @@ def my_loans():
     loans = Loan.query.filter_by(student_id=current_user.id).all()
     
     return render_template('my_loans.html', title='My Loans', loans=loans)
+
+@main_bp.route('/profile')
+@login_required
+def profile():
+    """
+    Displays the user's profile page.
+    """
+    return render_template('profile.html', title='My Profile')

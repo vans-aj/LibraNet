@@ -1,52 +1,121 @@
-{% extends "base.html" %} {% block content %}
-<div class="form-wrapper">
-  <h1>Register a New Account</h1>
-  <form action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
-    <p>
-      {{ form.name.label }}<br />
-      {{ form.name(size=32) }}<br />
-      {% for error in form.name.errors %}
-      <span class="error-message">[{{ error }}]</span>
-      {% endfor %}
-    </p>
-    <p>
-      {{ form.roll_no.label }}<br />
-      {{ form.roll_no(size=32) }}<br />
-      {% for error in form.roll_no.errors %}
-      <span class="error-message">[{{ error }}]</span>
-      {% endfor %}
-    </p>
-    <p>
-      {{ form.phone.label }}<br />
-      {{ form.phone(size=32) }}<br />
-      {% for error in form.phone.errors %}
-      <span class="error-message">[{{ error }}]</span>
-      {% endfor %}
-    </p>
+{% extends "base.html" %}
 
-    <p>
-      {{ form.email.label }}<br />
-      {{ form.email(size=32) }}<br />
-      {% for error in form.email.errors %}
-      <span class="error-message">[{{ error }}]</span>
-      {% endfor %}
-    </p>
-    <p>
-      {{ form.password.label }}<br />
-      {{ form.password(size=32) }}<br />
-      {% for error in form.password.errors %}
-      <span class="error-message">[{{ error }}]</span>
-      {% endfor %}
-    </p>
-    <p>
-      {{ form.confirm_password.label }}<br />
-      {{ form.confirm_password(size=32) }}<br />
-      {% for error in form.confirm_password.errors %}
-      <span class="error-message">[{{ error }}]</span>
-      {% endfor %}
-    </p>
-    <p>{{ form.submit() }}</p>
-  </form>
+{% block content %}
+<div class="auth-wrapper">
+    <!-- LEFT SIDE - BRANDING -->
+    <div class="auth-left">
+        <div class="auth-card left">
+            <div class="auth-header left">
+                <div class="auth-logo">📚 LibraNet</div>
+                <h1 class="auth-title">Join LibraNet</h1>
+                <p class="auth-subtitle">Start your journey with our modern library management system. Access, borrow, and manage your books with ease.</p>
+            </div>
+
+            <div class="auth-features">
+                <div class="feature-item">
+                    <div class="feature-icon">🎓</div>
+                    <div class="feature-text">
+                        <h4>For Students</h4>
+                        <p>Perfect for your studies</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⏰</div>
+                    <div class="feature-text">
+                        <h4>24/7 Access</h4>
+                        <p>Browse anytime</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text">
+                        <h4>Smart Search</h4>
+                        <p>Find books easily</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✨</div>
+                    <div class="feature-text">
+                        <h4>User Friendly</h4>
+                        <p>Simple & intuitive</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE - REGISTER FORM -->
+    <div class="auth-right">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Create Account</h1>
+                <p class="auth-subtitle">Sign up to get started</p>
+            </div>
+
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="form-group">
+                    {{ form.name.label }}
+                    {{ form.name(size=32, placeholder="John Doe") }}
+                    {% for error in form.name.errors %}
+                    <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.roll_no.label }}
+                    {{ form.roll_no(size=32, placeholder="22UCS001") }}
+                    {% for error in form.roll_no.errors %}
+                    <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.phone.label }}
+                    {{ form.phone(size=32, placeholder="+91 98765 43210") }}
+                    {% for error in form.phone.errors %}
+                    <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.email.label }}
+                    {{ form.email(size=32, placeholder="you@university.edu") }}
+                    {% for error in form.email.errors %}
+                    <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.password.label }}
+                    {{ form.password(size=32, placeholder="••••••••") }}
+                    {% for error in form.password.errors %}
+                    <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.confirm_password.label }}
+                    {{ form.confirm_password(size=32, placeholder="••••••••") }}
+                    {% for error in form.confirm_password.errors %}
+                    <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                {{ form.submit(class="submit-btn", value="Create Account") }}
+            </form>
+
+            <div class="auth-divider">
+                <span>Already registered?</span>
+            </div>
+
+            <p class="auth-footer">
+                Already have an account? <a href="{{ url_for('main.login') }}">Sign in here</a>
+            </p>
+        </div>
+    </div>
 </div>
+
+{% include "footer.html" %}
 {% endblock %}

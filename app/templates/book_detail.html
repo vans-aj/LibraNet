@@ -1,14 +1,21 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+
+{% block content %}
 <div class="detail-wrapper">
   <h1>{{ book.title }}</h1>
   <div class="book-meta">
     <p><strong>Author:</strong> {{ book.author }}</p>
     <p><strong>ISBN:</strong> {{ book.isbn or 'Not Available' }}</p>
-    <p><strong>Format:</strong> {{ book.format.value.title() }}</p>
+    {% if book.related_courses %}
+    <p><strong>Related Courses:</strong> {{ book.related_courses }}</p>
+    {% endif %}
     <p>
       <strong>Availability:</strong> {{ book.available_copies }} of {{
       book.total_copies }} copies are available.
     </p>
+    {% if book.summary %}
+    <p><strong>Summary:</strong> {{ book.summary }}</p>
+    {% endif %}
   </div>
 
   <div class="actions">

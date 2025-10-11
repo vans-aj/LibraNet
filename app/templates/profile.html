@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - LibraNet{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-wrapper">
+        <h1 class="page-title">My Profile</h1>
+        <div class="profile-details">
+            <p><strong>Name:</strong> {{ current_user.name }}</p>
+            <p><strong>Email:</strong> {{ current_user.email }}</p>
+            <p><strong>Roll No:</strong> {{ current_user.roll_no }}</p>
+            <p><strong>Phone:</strong> {{ current_user.phone }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
