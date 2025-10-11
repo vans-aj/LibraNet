@@ -2,39 +2,58 @@
 
 {% block content %}
 <div class="detail-wrapper">
-  <h1>{{ book.title }}</h1>
-  <div class="book-meta">
-    <p><strong>Author:</strong> {{ book.author }}</p>
-    <p><strong>ISBN:</strong> {{ book.isbn or 'Not Available' }}</p>
-    {% if book.related_courses %}
-    <p><strong>Related Courses:</strong> {{ book.related_courses }}</p>
-    {% endif %}
-    <p>
-      <strong>Availability:</strong> {{ book.available_copies }} of {{
-      book.total_copies }} copies are available.
-    </p>
-    {% if book.summary %}
-    <p><strong>Summary:</strong> {{ book.summary }}</p>
-    {% endif %}
-  </div>
+    <div class="book-detail-layout">
+        <div class="book-detail-cover">
+            <img src="{{ book.image_url or url_for('static', filename='images/default_cover.jpg') }}" alt="Cover for {{ book.title }}">
+        </div>
 
-  <div class="actions">
-    <form
-      action="{{ url_for('main.add_to_bag', book_id=book.id) }}"
-      method="post"
-      style="display: inline"
-    >
-      {% if book.available_copies > 0 %}
-      <button type="submit" class="button-primary">Add to Bag</button>
-      {% else %}
-      <button type="submit" class="button-disabled" disabled>
-        Out of Stock
-      </button>
-      {% endif %}
-    </form>
-    <a href="{{ url_for('main.list_books') }}" class="button-secondary"
-      >Back to Catalog</a
-    >
-  </div>
+        <div class="book-detail-info">
+            <h1 class="book-title">{{ book.title }}</h1>
+            <p class="book-author">by {{ book.author }}</p>
+            
+            <div class="availability-status">
+                {% if book.is_available %}
+                    <span class="status-dot available"></span> Available
+                {% else %}
+                    <span class="status-dot unavailable"></span> Out of Stock
+                {% endif %}
+            </div>
+
+            <div class="book-meta">
+                <div class="meta-item">
+                    <span>ISBN</span>
+                    <p>{{ book.isbn or 'N/A' }}</p>
+                </div>
+                <div class="meta-item">
+                    <span>Copies Available</span>
+                    <p>{{ book.available_copies }} / {{ book.total_copies }}</p>
+                </div>
+                {% if book.related_courses %}
+                <div class="meta-item">
+                    <span>Related Courses</span>
+                    <p>{{ book.related_courses }}</p>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if book.summary %}
+            <div class="book-summary">
+                <h2>Summary</h2>
+                <p>{{ book.summary }}</p>
+            </div>
+            {% endif %}
+
+            <div class="actions">
+                <form action="{{ url_for('main.add_to_bag', book_id=book.id) }}" method="post">
+                    {% if book.is_available %}
+                        <button type="submit" class="button-primary">Add to Bag</button>
+                    {% else %}
+                        <button type="submit" class="button-disabled" disabled>Out of Stock</button>
+                    {% endif %}
+                </form>
+                <a href="{{ url_for('main.list_books') }}" class="button-secondary">Back to Catalog</a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

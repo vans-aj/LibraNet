@@ -2,9 +2,10 @@
 
 {% block content %}
 <div class="form-wrapper">
-    <h1>Add a New Book to the Catalog</h1>
+    <h1>{{ title }}</h1>
     <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }} <p>
+        {{ form.hidden_tag() }}
+        <p>
             {{ form.title.label }}<br>
             {{ form.title(size=64) }}<br>
             {% for error in form.title.errors %}
@@ -19,15 +20,16 @@
             {% endfor %}
         </p>
         <p>
-            {{ form.isbn.label }}<br>
-            {{ form.isbn(size=32) }}<br>
-            {% for error in form.isbn.errors %}
+            {{ form.summary.label }}<br>
+            {{ form.summary() }}<br>
+            {% for error in form.summary.errors %}
             <span class="error-message">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
-            {{ form.format.label }}<br>
-            {{ form.format() }}<br> {% for error in form.format.errors %}
+            {{ form.isbn.label }}<br>
+            {{ form.isbn(size=32) }}<br>
+            {% for error in form.isbn.errors %}
             <span class="error-message">[{{ error }}]</span>
             {% endfor %}
         </p>

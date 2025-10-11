@@ -5,39 +5,27 @@
     <h1>Book Catalog</h1>
 
     <form method="GET" action="{{ url_for('main.list_books') }}" class="search-form">
-        <input type="text" name="search" placeholder="Search by title or author..." value="{{ search_term or '' }}">
+        <input type="text" name="q" placeholder="Search by title or author..." value="{{ search_term or '' }}">
         <button type="submit" class="button-primary">Search</button>
     </form>
 
-    <table class="book-table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Available Copies</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for book in books %}
-                <tr>
-                    <td>
-                        <a href="{{ url_for('main.book_detail', book_id=book.id) }}">{{ book.title }}</a>
-                    </td>
-                    <td>{{ book.author }}</td>
-                    <td>{{ book.available_copies }} / {{ book.total_copies }}</td>
-                </tr>
+    {% if books %}
+    <div class="book-grid">
+        {% for book in books %}
+            <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="book-card">
+                <img src="{{ book.image_url or url_for('static', filename='images/default_cover.jpg') }}" alt="Cover for {{ book.title }}">
+                <div class="book-card-title">{{ book.title }}</div>
+            </a>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>
+            {% if search_term %}
+                No books match your search for "{{ search_term }}".
             {% else %}
-                <tr>
-                    <td colspan="3">
-                        {% if search_term %}
-                            No books match your search for "{{ search_term }}".
-                        {% else %}
-                            No books have been added to the library yet.
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                No books have been added to the library yet.
+            {% endif %}
+        </p>
+    {% endif %}
 </div>
 {% endblock %}
