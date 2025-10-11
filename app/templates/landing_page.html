@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>Welcome to LibraNet</h1>
+    <p class="subtitle">Your modern solution for library management. Browse our catalog, borrow books, and manage your account with ease.</p>
+    
+    <div class="hero-actions">
+        {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('main.register') }}" class="button-primary">Register</a>
+            <a href="{{ url_for('main.login') }}" class="button-secondary">Login</a>
+        {% else %}
+            <a href="{{ url_for('main.list_books') }}" class="button-primary">Browse the Catalog</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

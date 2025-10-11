@@ -234,3 +234,26 @@ body {
 .actions form {
     margin-right: 1rem;
 }
+
+/* Styles for the landing page hero section */
+.hero-section {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.hero-section h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+.subtitle {
+    font-size: 1.25rem;
+    color: #6c757d;
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+}
+.hero-actions .button-primary,
+.hero-actions .button-secondary {
+    margin: 0 0.5rem;
+}

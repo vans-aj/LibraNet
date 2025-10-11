@@ -4,8 +4,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Integ
 # Make sure to add Optional and NumberRange to this import
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError, Optional, NumberRange
 from app.models.student import Student
-from app.models.book import Book         # <-- Import the Book model
-from app.models import BookFormatEnum 
+from app.models.physical_book import PhysicalBook         # <-- Import the Book model
 
 class RegistrationForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired(), Length(min=2, max=150)])
@@ -41,8 +40,6 @@ class BookForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=200)])
     author = StringField('Author', validators=[DataRequired(), Length(max=150)])
     isbn = StringField('ISBN', validators=[Optional(), Length(max=20)])
-    format = SelectField('Format', choices=[(f.value, f.name.title()) for f in BookFormatEnum],
-                         validators=[DataRequired()])
     total_copies = IntegerField('Total Copies', validators=[DataRequired(), NumberRange(min=1)])
     submit = SubmitField('Submit Book')
 
@@ -54,8 +51,7 @@ class BookForm(FlaskForm):
     # --- THIS IS THE UPDATED VALIDATOR ---
     def validate_isbn(self, isbn):
         if isbn.data:
-            # Find a book with the submitted ISBN
-            book = Book.query.filter_by(isbn=isbn.data).first()
+            book = PhysicalBook.query.filter_by(isbn=isbn.data).first()
             # If a book is found AND it's a different book from the one we are editing
             if book and (self.original_book is None or book.id != self.original_book.id):
                 raise ValidationError('This ISBN is already registered.')

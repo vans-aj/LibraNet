@@ -4,6 +4,7 @@ from app.routes import main_bp  # Import the blueprint from the __init__.py in t
 from app.forms import LoginForm, RegistrationForm
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models.student import Student
+from app.models.loan import Loan
 
 # Note: We use @main_bp.route instead of @app.route
 @main_bp.route('/register', methods=['GET', 'POST'])
@@ -58,3 +59,13 @@ def logout():
     logout_user() # This function from Flask-Login clears the user's session
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.login'))
+
+@main_bp.route('/my-loans')
+@login_required
+def my_loans():
+    """Displays all the books currently borrowed by the logged-in user."""
+    # This query finds all loans associated with the current user.
+    # We must now use the .book relationship which points to a PhysicalBook.
+    loans = Loan.query.filter_by(student_id=current_user.id).all()
+    
+    return render_template('my_loans.html', title='My Loans', loans=loans)

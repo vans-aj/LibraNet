@@ -12,26 +12,16 @@
   <body>
     <nav class="navbar">
       <div class="nav-container">
-        <a href="{{ url_for('main.list_books') }}" class="nav-brand"
-          >LibraNet</a
-        >
-
+        <a href="{{ url_for('main.landing_page') }}" class="nav-brand">LibraNet</a>
         <div class="nav-links">
     {% if current_user.is_authenticated %}
-        
-        {# Check the user's role #}
-        {% if current_user.role == RoleEnum.ADMIN %}
-            <a href="{{ url_for('main.admin_dashboard') }}">Admin Dashboard</a>
-            <a href="{{ url_for('main.manage_books') }}">Manage Books</a>
-            {% else %}
-            <a href="{{ url_for('main.list_books') }}">Book Catalog</a>
-            <a href="{{ url_for('main.my_loans') }}">My Loans</a>
-        {% endif %}
-        
-        {# The "My Bag" and "Logout" links are for EVERYONE who is logged in #}
+        <a href="{{ url_for('main.list_books') }}">Book Catalog</a>
+        <a href="{{ url_for('main.my_loans') }}">My Loans</a>
+
         {% if session['bag'] %}
             <a href="{{ url_for('main.my_bag') }}">My Bag ({{ session['bag']|length }})</a>
         {% endif %}
+
         <a href="{{ url_for('main.logout') }}">Logout</a>
 
     {% else %}
@@ -39,6 +29,7 @@
         <a href="{{ url_for('main.register') }}">Register</a>
     {% endif %}
 </div>
+      
     </nav>
     <div class="container">
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
