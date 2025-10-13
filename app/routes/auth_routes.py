@@ -1,10 +1,14 @@
 from flask import render_template, redirect, url_for, flash , request
+from datetime import datetime
+from decimal import Decimal
 from app import db
 from app.routes import main_bp  # Import the blueprint from the __init__.py in the same folder
 from app.forms import LoginForm, RegistrationForm
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models.student import Student
 from app.models.loan import Loan
+from app.models.fine import Fine
+from app.models import FineStatusEnum
 
 # Note: We use @main_bp.route instead of @app.route
 @main_bp.route('/register', methods=['GET', 'POST'])
@@ -67,8 +71,68 @@ def my_loans():
     # This query finds all loans associated with the current user.
     # We must now use the .book relationship which points to a PhysicalBook.
     loans = Loan.query.filter_by(student_id=current_user.id).all()
-    
-    return render_template('my_loans.html', title='My Loans', loans=loans)
+
+    # Sync overdue fines (simple rule: 2.00 per overdue day)
+    now_dt = datetime.utcnow()
+    fine_rate_per_day = Decimal('2.00')
+    changes_made = False
+    for loan in loans:
+        if loan.returned_date is None and loan.due_date < now_dt:
+            days_overdue = max((now_dt - loan.due_date).days, 1)
+            amount_due = fine_rate_per_day * days_overdue
+            if loan.fine is None:
+                db.session.add(Fine(amount=amount_due, loan=loan))
+                changes_made = True
+            else:
+                if loan.fine.status == FineStatusEnum.PENDING and loan.fine.amount != amount_due:
+                    loan.fine.amount = amount_due
+                    changes_made = True
+        else:
+            # If no longer overdue and a pending fine exists with zero balance, mark paid
+            if loan.fine and loan.fine.status == FineStatusEnum.PENDING and loan.fine.balance <= 0:
+                loan.fine.status = FineStatusEnum.PAID
+                changes_made = True
+
+    if changes_made:
+        db.session.commit()
+
+    return render_template('my_loans.html', title='My Loans', loans=loans, now=now_dt)
+
+
+@main_bp.route('/dues')
+@login_required
+def dues():
+    """Show current user's fines/dues."""
+    fines = (
+        Fine.query
+        .join(Loan)
+        .filter(Loan.student_id == current_user.id)
+        .order_by(Fine.issued_date.desc())
+        .all()
+    )
+    return render_template('dues.html', title='My Dues', fines=fines)
+
+
+@main_bp.route('/pay_fine/<int:fine_id>', methods=['POST'])
+@login_required
+def pay_fine(fine_id: int):
+    """Mark a fine as paid (mock payment)."""
+    fine = Fine.query.get_or_404(fine_id)
+    # Authorization: ensure fine belongs to current user
+    if fine.loan.student_id != current_user.id:
+        flash('You are not authorized to pay this fine.', 'danger')
+        return redirect(url_for('main.dues'))
+
+    if fine.status == FineStatusEnum.PAID:
+        flash('This fine is already paid.', 'info')
+        return redirect(url_for('main.dues'))
+
+    # Mock payment: settle full outstanding balance
+    fine.paid_amount = fine.amount
+    fine.status = FineStatusEnum.PAID
+    db.session.commit()
+    flash('Payment successful. Your fine has been marked as paid.', 'success')
+    return redirect(url_for('main.dues'))
 
 @main_bp.route('/profile')
 @login_required

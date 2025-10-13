@@ -1,34 +1,114 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="list-wrapper">
+<div class="loans-page">
+    <!-- Page Header -->
+    <div class="loans-header">
         <h1>My Loans</h1>
+        <p>Track all your borrowed books and due dates</p>
+    </div>
+
+    <!-- Content Section -->
+    <div class="loans-content">
         {% if loans %}
-            <table class="book-table">
-                <thead>
-                    <tr>
-                        <th>Book Title</th>
-                        <th>Date Borrowed</th>
-                        <th>Due Date</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for loan in loans %}
+            <!-- Loans Info -->
+            <div class="loans-info">
+                <p>You have <strong>{{ loans|length }}</strong> book(s) on loan</p>
+            </div>
+
+            <!-- Loans Table -->
+            <div class="loans-table-wrapper">
+                <table class="loans-table">
+                    <thead>
                         <tr>
-                            <td>{{ loan.book.title }}</td>
-                            <td>{{ loan.borrowed_date.strftime('%d %b %Y') }}</td>
-                            <td>{{ loan.due_date.strftime('%d %b %Y') }}</td>
-                            <td>{{ loan.status.name.title() }}</td>
+                            <th class="col-book">Book Title</th>
+                            <th class="col-author">Author</th>
+                            <th class="col-rent">Rent Date</th>
+                            <th class="col-due">Due Date</th>
+                            <th class="col-status">Status</th>
+                            <th class="col-action">Action</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for loan in loans %}
+                        <tr class="loan-row {% if loan.status.name == 'OVERDUE' %}overdue-row{% endif %}">
+                            <td class="col-book">
+                                <a href="{{ url_for('main.book_detail', book_id=loan.book.id) }}" class="book-link">
+                                    {{ loan.book.title }}
+                                </a>
+                            </td>
+                            <td class="col-author">{{ loan.book.author }}</td>
+                            <td class="col-rent">
+                                <span class="date-badge">{{ loan.borrowed_date.strftime('%d %b %Y') }}</span>
+                            </td>
+                            <td class="col-due">
+                                <span class="date-badge due-date {% if loan.due_date < now and loan.status.name == 'BORROWED' %}overdue-badge{% endif %}">
+                                    {{ loan.due_date.strftime('%d %b %Y') }}
+                                </span>
+                            </td>
+                            <td class="col-status">
+                                {% if loan.status.name == 'BORROWED' %}
+                                    {% if loan.due_date < now %}
+                                        <span class="status-badge overdue">Overdue</span>
+                                    {% else %}
+                                        <span class="status-badge active">Active</span>
+                                    {% endif %}
+                                {% elif loan.status.name == 'RETURNED' %}
+                                    <span class="status-badge returned">Returned</span>
+                                {% elif loan.status.name == 'OVERDUE' %}
+                                    <span class="status-badge overdue">Overdue</span>
+                                {% elif loan.status.name == 'LOST' %}
+                                    <span class="status-badge lost">Lost</span>
+                                {% endif %}
+                            </td>
+                            <td class="col-action">
+                                <a href="{{ url_for('main.book_detail', book_id=loan.book.id) }}" class="btn-view-book">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Dues Section -->
+            <div class="dues-section">
+                <h3>Outstanding Dues</h3>
+                <div class="dues-info">
+                    {% set overdue_count = loans|selectattr('due_date', 'lt', now)|selectattr('status.name', 'equalto', 'BORROWED')|list|length %}
+                    
+                    {% if overdue_count > 0 %}
+                        <div class="dues-alert">
+                            <span class="dues-icon">⚠️</span>
+                            <div class="dues-text">
+                                <p class="dues-title">You have <strong>{{ overdue_count }}</strong> overdue book(s)</p>
+                                <p class="dues-message">Please return them as soon as possible to avoid fines</p>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="dues-clear">
+                            <span class="clear-icon">✓</span>
+                            <p>No outstanding dues. Great job!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
         {% else %}
-            <p>You have not borrowed any books yet.</p>
-            <div class="actions">
-                <a href="{{ url_for('main.list_books') }}" class="button-secondary">Browse the Catalog</a>
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-icon">📚</div>
+                <h2>No Active Loans</h2>
+                <p>You haven't borrowed any books yet</p>
+                <p class="empty-hint">Browse our catalog and add books to your bag to get started</p>
+                <a href="{{ url_for('main.list_books') }}" class="btn-browse">Browse Books</a>
             </div>
         {% endif %}
     </div>
+</div>
+
+<script>
+    // Get current date for comparison
+    const now = new Date();
+</script>
+
 {% endblock %}

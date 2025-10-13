@@ -1,31 +1,77 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="list-wrapper">
-    <h1>Book Catalog</h1>
+<div class="books-wrapper">
+    <!-- Header Section -->
+    <div class="catalog-header">
+        <h1>Book Catalog</h1>
+        <p>Browse and discover from our collection</p>
+    </div>
 
-    <form method="GET" action="{{ url_for('main.list_books') }}" class="search-form">
-        <input type="text" name="q" placeholder="Search by title or author..." value="{{ search_term or '' }}">
-        <button type="submit" class="button-primary">Search</button>
-    </form>
+    <!-- Search Section -->
+    <div class="search-container">
+        <form method="GET" action="{{ url_for('main.list_books') }}" class="search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input 
+                type="text" 
+                name="q" 
+                placeholder="Search by title or author..." 
+                value="{{ search_term or '' }}"
+                class="search-input"
+            >
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
 
+    <!-- Results Info -->
+    {% if search_term %}
+    <div class="search-results-info">
+        Results for "<strong>{{ search_term }}</strong>"
+        {% if books %}
+            <span class="result-count">({{ books|length }} found)</span>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Books Grid -->
     {% if books %}
-    <div class="book-grid">
+    <div class="books-grid">
         {% for book in books %}
-            <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="book-card">
-                <img src="{{ book.image_url or url_for('static', filename='images/default_cover.jpg') }}" alt="Cover for {{ book.title }}">
-                <div class="book-card-title">{{ book.title }}</div>
+            <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="book-item">
+                <div class="book-image-container">
+                    <img 
+                        src="{{ book.image_url or url_for('static', filename='images/default_cover.jpg') }}" 
+                        alt="{{ book.title }}"
+                        class="book-image"
+                    >
+                    <div class="book-overlay">
+                        <span class="view-details-btn">View Details</span>
+                    </div>
+                    <div class="availability-badge">
+                        {% if book.available_copies > 0 %}
+                            <span class="status-available">Available</span>
+                        {% else %}
+                            <span class="status-unavailable">Unavailable</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="book-info">
+                    <h3 class="book-title">{{ book.title }}</h3>
+                </div>
             </a>
         {% endfor %}
     </div>
     {% else %}
-        <p>
-            {% if search_term %}
-                No books match your search for "{{ search_term }}".
-            {% else %}
-                No books have been added to the library yet.
-            {% endif %}
-        </p>
+    <div class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <h2>No Books Found</h2>
+        {% if search_term %}
+            <p>No results for "<strong>{{ search_term }}</strong>"</p>
+            <p>Try different keywords</p>
+        {% else %}
+            <p>No books available in catalog</p>
+        {% endif %}
+    </div>
     {% endif %}
 </div>
 {% endblock %}

@@ -1,0 +1,660 @@
+/* ===== MY LOANS PAGE STYLES ===== */
+
+.loans-page {
+    background: #f8f9fa;
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+/* ===== HEADER ===== */
+.loans-header {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: white;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.loans-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    letter-spacing: -1px;
+}
+
+.loans-header p {
+    font-size: 1rem;
+    opacity: 0.95;
+    font-weight: 500;
+}
+
+/* ===== CONTENT SECTION ===== */
+.loans-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* ===== LOANS INFO ===== */
+.loans-info {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: white;
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.loans-info p {
+    margin: 0;
+}
+
+.loans-info strong {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+/* ===== LOANS TABLE ===== */
+.loans-table-wrapper {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 3rem;
+}
+
+.loans-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.loans-table thead {
+    background: linear-gradient(135deg, #f3f4f6 0%, #f9fafb 100%);
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.loans-table th {
+    padding: 1.25rem 1rem;
+    text-align: left;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: 0.3px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.loans-table tbody tr {
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.3s ease;
+}
+
+.loans-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.loans-table tbody tr.overdue-row {
+    background: rgba(239, 68, 68, 0.03);
+}
+
+.loans-table td {
+    padding: 1.25rem 1rem;
+    color: #333;
+}
+
+/* ===== TABLE COLUMNS ===== */
+.col-book {
+    width: 25%;
+}
+
+.col-author {
+    width: 20%;
+}
+
+.col-rent {
+    width: 15%;
+}
+
+.col-due {
+    width: 15%;
+}
+
+.col-status {
+    width: 15%;
+}
+
+.col-action {
+    width: 10%;
+}
+
+/* ===== BOOK LINK ===== */
+.book-link {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: block;
+    max-width: 200px;
+    word-break: break-word;
+}
+
+.book-link:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+/* ===== DATE BADGES ===== */
+.date-badge {
+    display: inline-block;
+    padding: 0.6rem 1rem;
+    background: #f3f4f6;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+}
+
+.date-badge.due-date {
+    background: #eef2ff;
+    color: #1d4ed8;
+    border-color: #c7d2fe;
+}
+
+.date-badge.overdue-badge {
+    background: #fee2e2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+/* ===== STATUS BADGES ===== */
+.status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-align: center;
+    min-width: 90px;
+}
+
+.status-badge.active {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.status-badge.returned {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.status-badge.overdue {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    animation: pulse 2s infinite;
+}
+
+.status-badge.lost {
+    background: #fce7f3;
+    color: #9f1239;
+    border: 1px solid #fbcfe8;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* ===== ACTION BUTTONS ===== */
+.btn-view-book {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: #e5e7eb;
+    color: #1a1a1a;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.btn-view-book:hover {
+    background: #d1d5db;
+    color: #000;
+    transform: translateY(-2px);
+}
+
+/* ===== DUES SECTION ===== */
+.dues-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    padding: 2rem;
+    margin-bottom: 3rem;
+}
+
+.dues-section h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 1.5rem 0;
+}
+
+.dues-info {
+    padding: 0;
+}
+
+/* ===== DUES ALERT ===== */
+.dues-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: #fff5f5;
+    border-left: 4px solid #ef4444;
+    border-radius: 8px;
+    border: 1px solid #fecaca;
+}
+
+.dues-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.dues-text {
+    flex: 1;
+}
+
+.dues-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #7f1d1d;
+}
+
+.dues-title strong {
+    color: #ef4444;
+}
+
+.dues-message {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #991b1b;
+    font-weight: 500;
+}
+
+/* ===== DUES CLEAR ===== */
+.dues-clear {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #f0fdf4;
+    border-left: 4px solid #22c55e;
+    border-radius: 8px;
+    border: 1px solid #86efac;
+}
+
+.clear-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.dues-clear p {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #15803d;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 12px;
+    border: 2px dashed #e5e7eb;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state h2 {
+    font-size: 1.75rem;
+    color: #1a1a1a;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+.empty-hint {
+    color: #9ca3af;
+    font-size: 0.95rem !important;
+    margin-bottom: 2rem !important;
+}
+
+.btn-browse {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.btn-browse:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1024px) {
+    .col-book {
+        width: 22%;
+    }
+
+    .col-author {
+        width: 18%;
+    }
+
+    .col-rent {
+        width: 15%;
+    }
+
+    .col-due {
+        width: 15%;
+    }
+
+    .col-status {
+        width: 18%;
+    }
+
+    .col-action {
+        width: 12%;
+    }
+
+    .loans-table th,
+    .loans-table td {
+        padding: 1rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .book-link {
+        max-width: 150px;
+    }
+
+    .btn-view-book {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .date-badge {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .status-badge {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+        min-width: 80px;
+    }
+}
+
+@media (max-width: 768px) {
+    .loans-page {
+        padding: 1.5rem 0;
+    }
+
+    .loans-header {
+        padding: 2rem 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .loans-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .loans-header p {
+        font-size: 0.95rem;
+    }
+
+    .loans-content {
+        padding: 0 1.5rem;
+    }
+
+    .loans-info {
+        margin-bottom: 1.5rem;
+    }
+
+    .loans-table-wrapper {
+        overflow-x: auto;
+        margin-bottom: 2rem;
+    }
+
+    .loans-table {
+        min-width: 800px;
+    }
+
+    .col-book {
+        width: 25%;
+    }
+
+    .col-author {
+        width: 20%;
+    }
+
+    .col-rent {
+        width: 15%;
+    }
+
+    .col-due {
+        width: 15%;
+    }
+
+    .col-status {
+        width: 15%;
+    }
+
+    .col-action {
+        width: 10%;
+    }
+
+    .loans-table th {
+        padding: 1rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .loans-table td {
+        padding: 1rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .book-link {
+        max-width: 120px;
+        font-size: 0.9rem;
+    }
+
+    .date-badge {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    .status-badge {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.75rem;
+        min-width: 70px;
+    }
+
+    .dues-section {
+        padding: 1.5rem;
+    }
+
+    .dues-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    .dues-alert,
+    .dues-clear {
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .dues-icon,
+    .clear-icon {
+        font-size: 1.5rem;
+    }
+
+    .dues-title {
+        font-size: 0.95rem;
+    }
+
+    .dues-message {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .loans-header {
+        padding: 1.5rem 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .loans-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .loans-header p {
+        font-size: 0.9rem;
+    }
+
+    .loans-content {
+        padding: 0 1rem;
+    }
+
+    .loans-table-wrapper {
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .loans-table {
+        min-width: 100%;
+        font-size: 0.85rem;
+    }
+
+    .loans-table th {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .loans-table td {
+        padding: 0.75rem 0.5rem;
+    }
+
+    .col-author,
+    .col-action {
+        display: none;
+    }
+
+    .col-book {
+        width: 35%;
+    }
+
+    .col-rent {
+        width: 20%;
+    }
+
+    .col-due {
+        width: 20%;
+    }
+
+    .col-status {
+        width: 25%;
+    }
+
+    .book-link {
+        max-width: 80px;
+        font-size: 0.85rem;
+    }
+
+    .date-badge {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .status-badge {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+        min-width: 60px;
+    }
+
+    .dues-section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .dues-section h3 {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .dues-alert,
+    .dues-clear {
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .dues-icon,
+    .clear-icon {
+        font-size: 1.25rem;
+    }
+
+    .dues-title {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .dues-message {
+        font-size: 0.85rem;
+    }
+
+    .empty-state {
+        margin: 2rem auto;
+        padding: 2rem 1rem;
+    }
+
+    .empty-icon {
+        font-size: 3rem;
+    }
+
+    .empty-state h2 {
+        font-size: 1.5rem;
+    }
+}

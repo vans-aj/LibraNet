@@ -1,0 +1,455 @@
+/* ===== BOOK DETAIL PAGE ===== */
+
+.book-detail-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: #ffffff;
+}
+
+/* ===== BACK LINK ===== */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 700;
+    margin-bottom: 40px;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.back-link:hover {
+    gap: 12px;
+    color: #2563eb;
+}
+
+.back-link i {
+    font-size: 1.2rem;
+}
+
+/* ===== BOOK DETAIL CONTAINER ===== */
+.book-detail-container {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 60px;
+    align-items: start;
+}
+
+/* ===== BOOK COVER SECTION ===== */
+.book-cover-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.book-cover-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: #f1f5f9;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+    transition: all 0.4s ease;
+}
+
+.book-cover-container:hover {
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18);
+    transform: translateY(-5px);
+}
+
+.book-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.book-cover-container:hover .book-cover {
+    transform: scale(1.02);
+}
+
+/* Availability Badge Large */
+.book-availability-large {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+.status-badge-large {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    backdrop-filter: blur(10px);
+    animation: slideInRight 0.5s ease;
+}
+
+.status-badge-large.available {
+    background: rgba(34, 197, 94, 0.95);
+    color: white;
+}
+
+.status-badge-large.unavailable {
+    background: rgba(239, 68, 68, 0.95);
+    color: white;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ===== BOOK INFO SECTION ===== */
+.book-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* Book Header */
+.book-header {
+    animation: fadeInUp 0.6s ease;
+}
+
+.book-detail-title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+}
+
+.book-detail-author {
+    font-size: 1.2rem;
+    color: #64748b;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.book-detail-author i {
+    color: #3b82f6;
+    font-size: 1.1rem;
+}
+
+/* ===== METADATA ===== */
+.book-metadata {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+    padding: 28px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+}
+
+.metadata-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.metadata-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.metadata-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+}
+
+/* ===== SUMMARY SECTION ===== */
+.summary-section {
+    animation: fadeInUp 0.6s ease 0.1s both;
+}
+
+.summary-section h2 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.summary-section h2::before {
+    content: '';
+    width: 4px;
+    height: 24px;
+    background: #3b82f6;
+    border-radius: 2px;
+}
+
+.summary-text {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #475569;
+    font-weight: 500;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.action-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.action-form {
+    flex: 1;
+    min-width: 200px;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-disabled {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 28px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-decoration: none;
+    width: 100%;
+    letter-spacing: 0.3px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-primary i {
+    font-size: 1.2rem;
+}
+
+.btn-secondary {
+    background: #f1f5f9;
+    color: #3b82f6;
+    border: 2px solid #e2e8f0;
+    flex: 0.5;
+    min-width: 150px;
+    box-shadow: none;
+}
+
+.btn-secondary:hover {
+    background: #e2e8f0;
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+}
+
+.btn-disabled {
+    background: #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+    box-shadow: none;
+    width: 100%;
+}
+
+.btn-disabled:hover {
+    background: #e2e8f0;
+    transform: none;
+}
+
+/* ===== LOAN INFO ===== */
+.loan-info {
+    display: flex;
+    gap: 16px;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, #fef3c7 0%, #fef08a 100%);
+    border-left: 4px solid #f59e0b;
+    border-radius: 10px;
+    animation: slideInUp 0.5s ease;
+}
+
+.loan-info i {
+    font-size: 1.3rem;
+    color: #f59e0b;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.loan-info-content {
+    flex: 1;
+}
+
+.loan-info-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #92400e;
+    margin: 0 0 4px 0;
+}
+
+.loan-info-text {
+    font-size: 0.9rem;
+    color: #b45309;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1024px) {
+    .book-detail-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .book-cover-container {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .book-detail-title {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .book-detail-wrapper {
+        padding: 24px 16px;
+    }
+
+    .book-detail-container {
+        gap: 32px;
+    }
+
+    .back-link {
+        margin-bottom: 24px;
+    }
+
+    .book-cover-container {
+        max-width: 100%;
+        margin: 0;
+    }
+
+    .book-detail-title {
+        font-size: 1.8rem;
+    }
+
+    .book-detail-author {
+        font-size: 1.1rem;
+    }
+
+    .book-metadata {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 20px;
+        gap: 16px;
+    }
+
+    .metadata-value {
+        font-size: 1rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn-secondary {
+        flex: 1;
+        min-width: auto;
+    }
+
+    .summary-section h2 {
+        font-size: 1.2rem;
+    }
+
+    .summary-text {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .book-detail-wrapper {
+        padding: 16px 12px;
+    }
+
+    .book-detail-title {
+        font-size: 1.5rem;
+    }
+
+    .book-detail-author {
+        font-size: 1rem;
+    }
+
+    .book-metadata {
+        grid-template-columns: 1fr;
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .metadata-label {
+        font-size: 0.8rem;
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-disabled {
+        padding: 14px 20px;
+        font-size: 0.95rem;
+    }
+
+    .loan-info {
+        gap: 12px;
+        padding: 14px 16px;
+    }
+
+    .loan-info i {
+        font-size: 1.1rem;
+    }
+}

@@ -1,29 +1,21 @@
 from flask import render_template, flash, redirect, url_for, request, session
-from app.routes import main_bp as main
 from app import db
 from app.models.physical_book import PhysicalBook
 from app.models.loan import Loan
 from flask_login import current_user, login_required
 from datetime import datetime, timedelta
 from sqlalchemy import or_
+from app.routes import main_bp
 
-# All routes are now attached to this blueprint
-book_routes = main
-
-@book_routes.route('/')
+@main_bp.route('/')
 def landing_page():
-    """
-    Renders the main landing page.
-    """
+    """Renders the main landing page."""
     return render_template('landing_page.html', title='Welcome to LibraNet')
 
-@book_routes.route('/books')
+@main_bp.route('/books')
 @login_required
 def list_books():
-    """
-    Displays the list of all books in the catalog.
-    If a search term is provided, it filters the books based on the search term.
-    """
+    """Displays the list of all books in the catalog."""
     search_term = request.args.get('q', '', type=str)
 
     if search_term:
@@ -38,12 +30,10 @@ def list_books():
 
     return render_template('books.html', title='Book Catalog', books=books, search_term=search_term)
 
-@book_routes.route('/book/<int:book_id>')
+@main_bp.route('/book/<int:book_id>')
 @login_required
 def book_detail(book_id):
-    """
-    Displays the details of a specific book.
-    """
+    """Displays the details of a specific book."""
     book = PhysicalBook.query.get_or_404(book_id)
     existing_loan = Loan.query.filter_by(
         student_id=current_user.id,
@@ -53,12 +43,10 @@ def book_detail(book_id):
 
     return render_template('book_detail.html', title=book.title, book=book, existing_loan=existing_loan)
 
-@book_routes.route('/add_to_bag/<int:book_id>', methods=['POST'])
+@main_bp.route('/add_to_bag/<int:book_id>', methods=['POST'])
 @login_required
 def add_to_bag(book_id):
-    """
-    Adds a book to the user's bag stored in the session.
-    """
+    """Adds a book to the user's bag stored in the session."""
     if 'bag' not in session:
         session['bag'] = []
 
@@ -71,41 +59,38 @@ def add_to_bag(book_id):
     session.modified = True
     return redirect(url_for('main.book_detail', book_id=book_id))
 
-@book_routes.route('/my_bag')
+@main_bp.route('/my_bag')
 @login_required
 def my_bag():
-    """
-    Displays the contents of the user's bag.
-    """
+    """Displays the contents of the user's bag."""
     if 'bag' not in session or not session['bag']:
-        return render_template('my_bag.html', title='My Bag', books=[], can_borrow=False)
+        return render_template('my_bag.html', title='My Bag', books=[], can_borrow=False, due_date=datetime.utcnow() + timedelta(days=14))
 
     book_ids = session['bag']
     books = PhysicalBook.query.filter(PhysicalBook.id.in_(book_ids)).all()
 
     active_loans_count = Loan.query.filter_by(student_id=current_user.id, returned_date=None).count()
     can_borrow = (len(books) + active_loans_count) <= 5
+    
+    # Calculate due date (14 days from now)
+    due_date = datetime.utcnow() + timedelta(days=14)
 
-    return render_template('my_bag.html', title='My Bag', books=books, can_borrow=can_borrow)
+    return render_template('my_bag.html', title='My Bag', books=books, can_borrow=can_borrow, due_date=due_date)
 
-@book_routes.route('/remove_from_bag/<int:book_id>', methods=['POST'])
+@main_bp.route('/remove_from_bag/<int:book_id>', methods=['POST'])
 @login_required
 def remove_from_bag(book_id):
-    """
-    Removes a book from the user's bag.
-    """
+    """Removes a book from the user's bag."""
     if 'bag' in session and book_id in session['bag']:
         session['bag'].remove(book_id)
         session.modified = True
         flash('Book removed from your bag.', 'success')
     return redirect(url_for('main.my_bag'))
 
-@book_routes.route('/borrow', methods=['POST'])
+@main_bp.route('/borrow', methods=['POST'])
 @login_required
 def borrow():
-    """
-    Handles the borrowing of all books currently in the bag.
-    """
+    """Handles the borrowing of all books currently in the bag."""
     if 'bag' not in session or not session['bag']:
         flash('Your bag is empty.', 'danger')
         return redirect(url_for('main.my_bag'))
@@ -124,7 +109,7 @@ def borrow():
             loan = Loan(student_id=current_user.id, book_id=book_id)
             db.session.add(loan)
             book.available_copies -= 1
-            borrowed_books +=1
+            borrowed_books += 1
         else:
             flash(f"'{book.title if book else 'A book'}' could not be borrowed as it's not available.", 'danger')
 

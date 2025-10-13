@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="loans-page">
+    <div class="loans-header">
+        <h1>My Dues</h1>
+        <p>Review and pay outstanding fines</p>
+    </div>
+
+    <div class="loans-content">
+        {% if fines %}
+        <div class="loans-table-wrapper">
+            <table class="loans-table">
+                <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Issued</th>
+                        <th>Amount</th>
+                        <th>Paid</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fine in fines %}
+                    <tr>
+                        <td>
+                            {% if fine.loan and fine.loan.book %}
+                                {{ fine.loan.book.title }}
+                            {% else %}
+                                Loan #{{ fine.loan_id }}
+                            {% endif %}
+                        </td>
+                        <td>{{ fine.issued_date.strftime('%d %b %Y') }}</td>
+                        <td>₹{{ '%.2f'|format(fine.amount) }}</td>
+                        <td>₹{{ '%.2f'|format(fine.paid_amount) }}</td>
+                        <td>₹{{ '%.2f'|format(fine.balance) }}</td>
+                        <td>{{ fine.status.name }}</td>
+                        <td>
+                            {% if fine.status.name != 'PAID' and fine.balance > 0 %}
+                            <form action="{{ url_for('main.pay_fine', fine_id=fine.id) }}" method="post" style="display:inline;">
+                                <button type="submit" class="btn-view-book">Pay Now</button>
+                            </form>
+                            {% else %}
+                            <span class="status-badge returned">Paid</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <h2>No Dues</h2>
+            <p>You have no outstanding fines.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+

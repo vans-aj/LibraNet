@@ -1,58 +1,113 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="detail-wrapper">
-    <div class="book-detail-layout">
-        <div class="book-detail-cover">
-            <img src="{{ book.image_url or url_for('static', filename='images/default_cover.jpg') }}" alt="Cover for {{ book.title }}">
+<div class="book-detail-wrapper">
+    <!-- Back Button -->
+    <a href="{{ url_for('main.list_books') }}" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Catalog</span>
+    </a>
+
+    <div class="book-detail-container">
+        <!-- Left Side: Book Cover -->
+        <div class="book-cover-section">
+            <div class="book-cover-container">
+                <img 
+                    src="{{ book.image_url or url_for('static', filename='images/default_cover.jpg') }}" 
+                    alt="{{ book.title }}"
+                    class="book-cover"
+                >
+                <div class="book-availability-large">
+                    {% if book.available_copies > 0 %}
+                        <div class="status-badge-large available">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Available</span>
+                        </div>
+                    {% else %}
+                        <div class="status-badge-large unavailable">
+                            <i class="fas fa-times-circle"></i>
+                            <span>Unavailable</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
 
-        <div class="book-detail-info">
-            <h1 class="book-title">{{ book.title }}</h1>
-            <p class="book-author">by {{ book.author }}</p>
-            
-            <div class="availability-status">
-                {% if book.is_available %}
-                    <span class="status-dot available"></span> Available
-                {% else %}
-                    <span class="status-dot unavailable"></span> Out of Stock
-                {% endif %}
+        <!-- Right Side: Book Information -->
+        <div class="book-info-section">
+            <!-- Title and Author -->
+            <div class="book-header">
+                <h1 class="book-detail-title">{{ book.title }}</h1>
+                <p class="book-detail-author">
+                    <i class="fas fa-pen"></i>
+                    <span>by {{ book.author }}</span>
+                </p>
             </div>
 
-            <div class="book-meta">
-                <div class="meta-item">
-                    <span>ISBN</span>
-                    <p>{{ book.isbn or 'N/A' }}</p>
+            <!-- Book Metadata -->
+            <div class="book-metadata">
+                <div class="metadata-item">
+                    <span class="metadata-label">ISBN</span>
+                    <p class="metadata-value">{{ book.isbn or 'N/A' }}</p>
                 </div>
-                <div class="meta-item">
-                    <span>Copies Available</span>
-                    <p>{{ book.available_copies }} / {{ book.total_copies }}</p>
+                <div class="metadata-item">
+                    <span class="metadata-label">Total Copies</span>
+                    <p class="metadata-value">{{ book.total_copies }}</p>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Available Copies</span>
+                    <p class="metadata-value">{{ book.available_copies }}</p>
                 </div>
                 {% if book.related_courses %}
-                <div class="meta-item">
-                    <span>Related Courses</span>
-                    <p>{{ book.related_courses }}</p>
+                <div class="metadata-item">
+                    <span class="metadata-label">Related Courses</span>
+                    <p class="metadata-value">{{ book.related_courses }}</p>
                 </div>
                 {% endif %}
             </div>
 
+            <!-- Divider -->
+            <div class="divider"></div>
+
+            <!-- Summary Section -->
             {% if book.summary %}
-            <div class="book-summary">
+            <div class="summary-section">
                 <h2>Summary</h2>
-                <p>{{ book.summary }}</p>
+                <p class="summary-text">{{ book.summary }}</p>
             </div>
             {% endif %}
 
-            <div class="actions">
-                <form action="{{ url_for('main.add_to_bag', book_id=book.id) }}" method="post">
-                    {% if book.is_available %}
-                        <button type="submit" class="button-primary">Add to Bag</button>
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <form action="{{ url_for('main.add_to_bag', book_id=book.id) }}" method="post" class="action-form">
+                    {% if book.available_copies > 0 %}
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>Add to Bag</span>
+                        </button>
                     {% else %}
-                        <button type="submit" class="button-disabled" disabled>Out of Stock</button>
+                        <button type="button" class="btn-disabled" disabled>
+                            <i class="fas fa-ban"></i>
+                            <span>Out of Stock</span>
+                        </button>
                     {% endif %}
                 </form>
-                <a href="{{ url_for('main.list_books') }}" class="button-secondary">Back to Catalog</a>
+                <a href="{{ url_for('main.list_books') }}" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back</span>
+                </a>
             </div>
+
+            <!-- Current Loan Info (if user has already borrowed this book) -->
+            {% if existing_loan %}
+            <div class="loan-info">
+                <i class="fas fa-info-circle"></i>
+                <div class="loan-info-content">
+                    <p class="loan-info-title">Already Borrowed</p>
+                    <p class="loan-info-text">You're currently borrowing this book. Due on {{ existing_loan.due_date.strftime('%B %d, %Y') }}</p>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

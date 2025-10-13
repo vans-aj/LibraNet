@@ -1,44 +1,111 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="list-wrapper">
-    <h1>My Bag ({{ books|length }} items)</h1>
+<div class="bag-page">
+    <!-- Page Header -->
+    <div class="bag-header">
+        <h1>My Bag</h1>
+        <p>Review items in your bag before borrowing</p>
+    </div>
 
-    {% if books %}
-        <table class="book-table">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for book in books %}
-                <tr>
-                    <td>{{ book.title }}</td>
-                    <td>{{ book.author }}</td>
-                    <td>
-                        <form action="{{ url_for('main.remove_from_bag', book_id=book.id) }}" method="post">
-                            <button type="submit" class="button-danger">Remove</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        
-        <div class="actions">
-            <form action="{{ url_for('main.borrow') }}" method="post">
-                <button type="submit" class="button-primary">Borrow All Books</button>
-            </form>
-        </div>
+    <!-- Content Section -->
+    <div class="bag-content">
+        {% if books %}
+            <!-- Bag Info -->
+            <div class="bag-info">
+                <p>You have <strong>{{ books|length }}</strong> item(s) in your bag</p>
+            </div>
 
-    {% else %}
-        <p>Your bag is empty.</p>
-        <div class="actions">
-            <a href="{{ url_for('main.list_books') }}" class="button-secondary">Browse Books</a>
-        </div>
-    {% endif %}
+            <!-- Bag Table -->
+            <div class="bag-table-wrapper">
+                <table class="bag-table">
+                    <thead>
+                        <tr>
+                            <th class="col-book">Book Title</th>
+                            <th class="col-author">Author</th>
+                            <th class="col-due">Due Date</th>
+                            <th class="col-price">Fine Per Day</th>
+                            <th class="col-action">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in books %}
+                        <tr class="bag-row">
+                            <td class="col-book">
+                                <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="book-link">
+                                    {{ book.title }}
+                                </a>
+                            </td>
+                            <td class="col-author">{{ book.author }}</td>
+                            <td class="col-due">
+                                <span class="date-badge">
+                                    {{ due_date.strftime('%d %b %Y') }}
+                                </span>
+                            </td>
+                            <td class="col-price">
+                                <span class="price-badge">₹10</span>
+                            </td>
+                            <td class="col-action">
+                                <form action="{{ url_for('main.remove_from_bag', book_id=book.id) }}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn-remove">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Payment Section -->
+            <div class="payment-section">
+                <div class="payment-info">
+                    <h3>Payment Options</h3>
+                    <p class="payment-note">Choose your preferred payment method to proceed with borrowing</p>
+                </div>
+
+                <div class="payment-buttons">
+                    <button class="payment-btn pod-btn" onclick="selectPayment('pod')">
+                        <span class="payment-icon">🚚</span>
+                        <span class="payment-text">
+                            <span class="payment-label">Payment on Delivery</span>
+                            <span class="payment-desc">Pay after receiving books</span>
+                        </span>
+                    </button>
+
+                    <form action="{{ url_for('main.borrow') }}" method="post" style="display: inline;">
+                        <button type="submit" class="payment-btn pay-btn" onclick="selectPayment('pay')">
+                            <span class="payment-icon">💳</span>
+                            <span class="payment-text">
+                                <span class="payment-label">Pay Now</span>
+                                <span class="payment-desc">Instant payment to borrow</span>
+                            </span>
+                        </button>
+                    </form>
+                </div>
+
+                <p class="payment-disclaimer">
+                    By proceeding, you agree to our <a href="#">Terms & Conditions</a>. 
+                    Fine of ₹10 per day applies if books are returned late.
+                </p>
+            </div>
+
+        {% else %}
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-icon">🛍️</div>
+                <h2>Your Bag is Empty</h2>
+                <p>You haven't added any books to your bag yet</p>
+                <p class="empty-hint">Browse our catalog and add books to start borrowing</p>
+                <a href="{{ url_for('main.list_books') }}" class="btn-browse">Browse Books</a>
+            </div>
+        {% endif %}
+    </div>
 </div>
+
+<script>
+    function selectPayment(method) {
+        console.log('Payment method selected:', method);
+    }
+</script>
+
 {% endblock %}
