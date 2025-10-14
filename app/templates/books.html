@@ -1,77 +1,80 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="books-wrapper">
-    <!-- Header Section -->
-    <div class="catalog-header">
+<div class="books-page">
+    <!-- Page Header -->
+    <div class="books-header">
         <h1>Book Catalog</h1>
-        <p>Browse and discover from our collection</p>
+        <p>Discover and borrow from our extensive collection</p>
     </div>
 
-    <!-- Search Section -->
-    <div class="search-container">
-        <form method="GET" action="{{ url_for('main.list_books') }}" class="search-bar">
-            <i class="fas fa-search search-icon"></i>
-            <input 
-                type="text" 
-                name="q" 
-                placeholder="Search by title or author..." 
-                value="{{ search_term or '' }}"
-                class="search-input"
-            >
-            <button type="submit" class="search-button">Search</button>
-        </form>
-    </div>
+    <!-- Content Container -->
+    <div class="books-container">
+        <!-- Search Section -->
+        <div class="search-container">
+            <form method="GET" action="{{ url_for('main.list_books') }}" class="search-bar">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="text" 
+                    name="q" 
+                    placeholder="Search by title or author..." 
+                    value="{{ search_term or '' }}"
+                    class="search-input"
+                >
+                <button type="submit" class="search-button">Search</button>
+            </form>
+        </div>
 
-    <!-- Results Info -->
-    {% if search_term %}
-    <div class="search-results-info">
-        Results for "<strong>{{ search_term }}</strong>"
-        {% if books %}
-            <span class="result-count">({{ books|length }} found)</span>
-        {% endif %}
-    </div>
-    {% endif %}
-
-    <!-- Books Grid -->
-    {% if books %}
-    <div class="books-grid">
-        {% for book in books %}
-            <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="book-item">
-                <div class="book-image-container">
-                    <img 
-                        src="{{ book.image_url or url_for('static', filename='images/default_cover.jpg') }}" 
-                        alt="{{ book.title }}"
-                        class="book-image"
-                    >
-                    <div class="book-overlay">
-                        <span class="view-details-btn">View Details</span>
-                    </div>
-                    <div class="availability-badge">
-                        {% if book.available_copies > 0 %}
-                            <span class="status-available">Available</span>
-                        {% else %}
-                            <span class="status-unavailable">Unavailable</span>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="book-info">
-                    <h3 class="book-title">{{ book.title }}</h3>
-                </div>
-            </a>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="empty-state">
-        <i class="fas fa-inbox"></i>
-        <h2>No Books Found</h2>
+        <!-- Search Results Info -->
         {% if search_term %}
-            <p>No results for "<strong>{{ search_term }}</strong>"</p>
-            <p>Try different keywords</p>
+        <div class="search-results-info">
+            Results for "<strong>{{ search_term }}</strong>"
+            {% if books %}
+                <span class="result-count">({{ books|length }} found)</span>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Books Grid -->
+        {% if books %}
+        <div class="books-grid">
+            {% for book in books %}
+                <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="book-card">
+                    <div class="book-image-container">
+                        <img 
+                            src="{{ book.image_url or url_for('static', filename='images/default_cover.jpg') }}" 
+                            alt="{{ book.title }}"
+                            class="book-image"
+                        >
+                        <div class="book-overlay">
+                            <span class="view-details-btn">View Details</span>
+                        </div>
+                        <div class="availability-badge">
+                            {% if book.available_copies > 0 %}
+                                <span class="status-badge status-available">Available</span>
+                            {% else %}
+                                <span class="status-badge status-unavailable">Unavailable</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">{{ book.title }}</h3>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
         {% else %}
-            <p>No books available in catalog</p>
+        <div class="empty-state">
+            <div class="empty-icon">📚</div>
+            <h2>No Books Found</h2>
+            {% if search_term %}
+                <p>No results for "<strong>{{ search_term }}</strong>"</p>
+                <p class="empty-hint">Try using different keywords</p>
+            {% else %}
+                <p>No books available in the catalog at this moment</p>
+            {% endif %}
+        </div>
         {% endif %}
     </div>
-    {% endif %}
 </div>
 {% endblock %}

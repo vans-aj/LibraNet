@@ -5,7 +5,7 @@
     <!-- Page Header -->
     <div class="bag-header">
         <h1>My Bag</h1>
-        <p>Review items in your bag before borrowing</p>
+        <p>Review your items before borrowing</p>
     </div>
 
     <!-- Content Section -->
@@ -30,7 +30,7 @@
                     </thead>
                     <tbody>
                         {% for book in books %}
-                        <tr class="bag-row">
+                        <tr>
                             <td class="col-book">
                                 <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="book-link">
                                     {{ book.title }}
@@ -60,7 +60,7 @@
             <div class="payment-section">
                 <div class="payment-info">
                     <h3>Payment Options</h3>
-                    <p class="payment-note">Choose your preferred payment method to proceed with borrowing</p>
+                    <p class="payment-note">Choose your preferred payment method</p>
                 </div>
 
                 <div class="payment-buttons">
@@ -72,12 +72,12 @@
                         </span>
                     </button>
 
-                    <form action="{{ url_for('main.borrow') }}" method="post" style="display: inline;">
-                        <button type="submit" class="payment-btn pay-btn" onclick="selectPayment('pay')">
+                    <form action="{{ url_for('main.borrow') }}" method="post" style="display: inline; width: 100%;">
+                        <button type="submit" class="payment-btn pay-btn">
                             <span class="payment-icon">💳</span>
                             <span class="payment-text">
-                                <span class="payment-label">Pay Now</span>
-                                <span class="payment-desc">Instant payment to borrow</span>
+                                <span class="payment-label">Pay Now & Borrow</span>
+                                <span class="payment-desc">Instant borrowing</span>
                             </span>
                         </button>
                     </form>

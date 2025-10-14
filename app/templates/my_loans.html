@@ -49,16 +49,31 @@
                             <td class="col-status">
                                 {% if loan.status.name == 'BORROWED' %}
                                     {% if loan.due_date < now %}
-                                        <span class="status-badge overdue">Overdue</span>
+                                        <span class="status-badge overdue">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            Overdue
+                                        </span>
                                     {% else %}
-                                        <span class="status-badge active">Active</span>
+                                        <span class="status-badge active">
+                                            <i class="fas fa-check-circle"></i>
+                                            Active
+                                        </span>
                                     {% endif %}
                                 {% elif loan.status.name == 'RETURNED' %}
-                                    <span class="status-badge returned">Returned</span>
+                                    <span class="status-badge returned">
+                                        <i class="fas fa-undo"></i>
+                                        Returned
+                                    </span>
                                 {% elif loan.status.name == 'OVERDUE' %}
-                                    <span class="status-badge overdue">Overdue</span>
+                                    <span class="status-badge overdue">
+                                        <i class="fas fa-clock"></i>
+                                        Overdue
+                                    </span>
                                 {% elif loan.status.name == 'LOST' %}
-                                    <span class="status-badge lost">Lost</span>
+                                    <span class="status-badge lost">
+                                        <i class="fas fa-ban"></i>
+                                        Lost
+                                    </span>
                                 {% endif %}
                             </td>
                             <td class="col-action">

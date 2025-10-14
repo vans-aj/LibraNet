@@ -57,7 +57,7 @@
 
                 <div class="form-group">
                     {{ form.name.label }}
-                    {{ form.name(size=32, placeholder="John Doe") }}
+                    {{ form.name(size=32, placeholder="John Doe", class="form-control") }}
                     {% for error in form.name.errors %}
                     <div class="form-error">{{ error }}</div>
                     {% endfor %}
@@ -65,7 +65,7 @@
 
                 <div class="form-group">
                     {{ form.roll_no.label }}
-                    {{ form.roll_no(size=32, placeholder="22UCS001") }}
+                    {{ form.roll_no(size=32, placeholder="22UCS001", class="form-control") }}
                     {% for error in form.roll_no.errors %}
                     <div class="form-error">{{ error }}</div>
                     {% endfor %}
@@ -73,7 +73,7 @@
 
                 <div class="form-group">
                     {{ form.phone.label }}
-                    {{ form.phone(size=32, placeholder="+91 98765 43210") }}
+                    {{ form.phone(size=32, placeholder="+91 98765 43210", class="form-control") }}
                     {% for error in form.phone.errors %}
                     <div class="form-error">{{ error }}</div>
                     {% endfor %}
@@ -81,7 +81,7 @@
 
                 <div class="form-group">
                     {{ form.email.label }}
-                    {{ form.email(size=32, placeholder="you@university.edu") }}
+                    {{ form.email(size=32, placeholder="you@university.edu", class="form-control") }}
                     {% for error in form.email.errors %}
                     <div class="form-error">{{ error }}</div>
                     {% endfor %}
@@ -89,7 +89,7 @@
 
                 <div class="form-group">
                     {{ form.password.label }}
-                    {{ form.password(size=32, placeholder="••••••••") }}
+                    {{ form.password(size=32, placeholder="••••••••", class="form-control") }}
                     {% for error in form.password.errors %}
                     <div class="form-error">{{ error }}</div>
                     {% endfor %}
@@ -97,13 +97,16 @@
 
                 <div class="form-group">
                     {{ form.confirm_password.label }}
-                    {{ form.confirm_password(size=32, placeholder="••••••••") }}
+                    {{ form.confirm_password(size=32, placeholder="••••••••", class="form-control") }}
                     {% for error in form.confirm_password.errors %}
                     <div class="form-error">{{ error }}</div>
                     {% endfor %}
                 </div>
 
-                {{ form.submit(class="submit-btn", value="Create Account") }}
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-user-plus"></i>
+                    Create Account
+                </button>
             </form>
 
             <div class="auth-divider">

@@ -1,17 +1,109 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="hero-section">
-    <h1>Welcome to LibraNet</h1>
-    <p class="subtitle">Your modern solution for library management. Browse our catalog, borrow books, and manage your account with ease.</p>
-    
-    <div class="hero-actions">
-        {% if not current_user.is_authenticated %}
-            <a href="{{ url_for('main.register') }}" class="button-primary">Register</a>
-            <a href="{{ url_for('main.login') }}" class="button-secondary">Login</a>
-        {% else %}
-            <a href="{{ url_for('main.list_books') }}" class="button-primary">Browse the Catalog</a>
-        {% endif %}
+<div class="landing-page">
+    <!-- Background Animations -->
+    <div class="bg-animation">
+        <div class="blob-1"></div>
+        <div class="blob-2"></div>
+        <div class="blob-3"></div>
     </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-sparkles"></i>
+                Welcome to LibraNet
+            </div>
+
+            <h1 class="hero-title">
+                Your Modern
+                <span class="hero-title-gradient">Library Management</span>
+                Solution
+            </h1>
+
+            <p class="hero-subtitle">
+                Browse our vast collection of books, manage your borrowing effortlessly, and stay on top of your reading journey. All in one place.
+            </p>
+
+            <div class="hero-buttons">
+                {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('main.register') }}" class="btn-hero btn-hero-primary">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Get Started</span>
+                    </a>
+                    <a href="{{ url_for('main.login') }}" class="btn-hero btn-hero-secondary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Sign In</span>
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('main.list_books') }}" class="btn-hero btn-hero-primary">
+                        <i class="fas fa-book-open"></i>
+                        <span>Browse Catalog</span>
+                    </a>
+                    <a href="{{ url_for('main.my_loans') }}" class="btn-hero btn-hero-secondary">
+                        <i class="fas fa-bookmark"></i>
+                        <span>My Loans</span>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="features-container">
+            <div class="features-header">
+                <h2>Why Choose LibraNet?</h2>
+                <p>Experience the future of library management with our cutting-edge platform</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Vast Collection</h3>
+                    <p>Access thousands of books across multiple genres and categories. Find exactly what you're looking for.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant Borrowing</h3>
+                    <p>Borrow books in seconds with our streamlined checkout process. No waiting in long queues.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Track Loans</h3>
+                    <p>Keep track of all your borrowed books, due dates, and fines in one convenient dashboard.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3>Secure & Safe</h3>
+                    <p>Your personal data is encrypted and protected with modern security standards.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-card">
+            <h2>Ready to Start Your Library Journey?</h2>
+            <p>Join thousands of book lovers who are already using LibraNet to manage their reading experience.</p>
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('main.register') }}" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i>
+                    Create Your Account
+                </a>
+            {% else %}
+                <a href="{{ url_for('main.list_books') }}" class="btn btn-primary">
+                    <i class="fas fa-book-open"></i>
+                    Explore Our Catalog
+                </a>
+            {% endif %}
+        </div>
+    </section>
 </div>
 {% endblock %}

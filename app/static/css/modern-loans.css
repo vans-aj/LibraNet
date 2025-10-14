@@ -1,0 +1,472 @@
+/* ===== MODERN LOANS PAGE ===== */
+
+.loans-page {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+/* ===== LOANS HEADER ===== */
+.loans-header {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.loans-header h1 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 0.5rem;
+    letter-spacing: -1px;
+}
+
+.loans-header p {
+    font-size: 1rem;
+    color: #cbd5e0;
+    font-weight: 500;
+}
+
+/* ===== CONTENT ===== */
+.loans-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* ===== LOANS INFO ===== */
+.loans-info {
+    margin-bottom: 2rem;
+    padding: 1.2rem;
+    background: rgba(99, 102, 241, 0.05);
+    backdrop-filter: blur(10px);
+    border-left: 4px solid #6366f1;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    color: white;
+    animation: slideInDown 0.6s ease-out;
+}
+
+.loans-info p {
+    margin: 0;
+    color: #cbd5e0;
+}
+
+.loans-info strong {
+    color: #818cf8;
+    font-weight: 700;
+}
+
+/* ===== LOANS TABLE ===== */
+.loans-table-wrapper {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.loans-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.loans-table thead {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.loans-table th {
+    padding: 1.25rem 1rem;
+    text-align: left;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: 0.3px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.loans-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.3s ease;
+}
+
+.loans-table tbody tr:hover {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.loans-table tbody tr.overdue-row {
+    background: rgba(239, 68, 68, 0.02);
+}
+
+.loans-table tbody tr.overdue-row:hover {
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.loans-table td {
+    padding: 1.25rem 1rem;
+    color: #334155;
+}
+
+/* ===== TABLE COLUMNS ===== */
+.col-book { width: 28%; }
+.col-author { width: 18%; }
+.col-rent { width: 15%; }
+.col-due { width: 15%; }
+.col-status { width: 14%; }
+.col-action { width: 10%; }
+
+/* ===== BOOK LINK ===== */
+.book-link {
+    color: #6366f1;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: block;
+    max-width: 220px;
+    word-break: break-word;
+}
+
+.book-link:hover {
+    color: #4f46e5;
+    text-decoration: underline;
+}
+
+/* ===== DATE BADGES ===== */
+.date-badge {
+    display: inline-block;
+    padding: 0.6rem 1rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4f46e5;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.date-badge.due-date {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+    color: #4f46e5;
+}
+
+.date-badge.overdue-badge {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+    color: #dc2626;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* ===== STATUS BADGES ===== */
+.status-badge {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid transparent;
+}
+
+.status-badge.active {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+    color: #059669;
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.status-badge.overdue {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+    color: #dc2626;
+    border-color: rgba(239, 68, 68, 0.2);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.status-badge.returned {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+    color: #4f46e5;
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.status-badge.lost {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+    color: #be185d;
+    border-color: rgba(236, 72, 153, 0.2);
+}
+
+/* ===== ACTION BUTTONS ===== */
+.btn-view-book {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+    color: #4f46e5;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.btn-view-book:hover {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0.1) 100%);
+    color: #4338ca;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+/* ===== DUES SECTION ===== */
+.dues-section {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e2e8f0;
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.dues-section h3 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dues-section h3::before {
+    content: '';
+    width: 4px;
+    height: 24px;
+    background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+    border-radius: 2px;
+}
+
+.dues-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* ===== DUES ALERT ===== */
+.dues-alert {
+    display: flex;
+    gap: 16px;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.02) 100%);
+    border-left: 4px solid #ef4444;
+    border-radius: 12px;
+    animation: slideInUp 0.5s ease-out;
+}
+
+.dues-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.dues-text {
+    flex: 1;
+}
+
+.dues-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #7f1d1d;
+    margin: 0 0 0.25rem 0;
+}
+
+.dues-message {
+    font-size: 0.9rem;
+    color: #991b1b;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* ===== DUES CLEAR ===== */
+.dues-clear {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%);
+    border-left: 4px solid #10b981;
+    border-radius: 12px;
+}
+
+.clear-icon {
+    font-size: 1.5rem;
+}
+
+.dues-clear p {
+    margin: 0;
+    font-weight: 600;
+    color: #065f46;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 16px;
+    border: 2px dashed #e2e8f0;
+    text-align: center;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state h2 {
+    font-size: 1.75rem;
+    color: #0f172a;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    font-size: 1rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+}
+
+.empty-hint {
+    color: #94a3b8;
+    font-size: 0.95rem !important;
+    margin-bottom: 2rem !important;
+}
+
+.btn-browse {
+    display: inline-block;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+}
+
+.btn-browse:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.4);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .col-book { width: 26%; }
+    .col-author { width: 16%; }
+    .col-rent { width: 14%; }
+    .col-due { width: 14%; }
+    .col-status { width: 14%; }
+    .col-action { width: 16%; }
+
+    .loans-table th,
+    .loans-table td {
+        padding: 1rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .book-link {
+        max-width: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .loans-page {
+        padding: 1.5rem 0;
+    }
+
+    .loans-header {
+        padding: 2rem 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .loans-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .loans-content {
+        padding: 0 1.5rem;
+    }
+
+    .loans-table-wrapper {
+        overflow-x: auto;
+        margin-bottom: 2rem;
+    }
+
+    .loans-table {
+        min-width: 900px;
+    }
+
+    .dues-section {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .loans-header {
+        padding: 1.5rem 1rem;
+    }
+
+    .loans-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .loans-content {
+        padding: 0 1rem;
+    }
+
+    .loans-table {
+        min-width: 100%;
+        font-size: 0.85rem;
+    }
+
+    .loans-table th {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .loans-table td {
+        padding: 0.75rem 0.5rem;
+    }
+
+    .col-author {
+        display: none;
+    }
+
+    .col-book { width: 35%; }
+    .col-rent { width: 15%; }
+    .col-due { width: 15%; }
+    .col-status { width: 20%; }
+    .col-action { width: 15%; }
+
+    .empty-state {
+        margin: 2rem auto;
+        padding: 2rem 1rem;
+    }
+
+    .empty-icon {
+        font-size: 3rem;
+    }
+
+    .empty-state h2 {
+        font-size: 1.5rem;
+    }
+
+    .dues-section h3 {
+        font-size: 1.1rem;
+    }
+}

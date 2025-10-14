@@ -1,35 +1,36 @@
-/* ===== MY BAG PAGE STYLES ===== */
+/* ===== MODERN BAG/CART PAGE ===== */
 
 .bag-page {
-    background: #f8f9fa;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     min-height: 100vh;
     padding: 2rem 0;
 }
 
-/* ===== HEADER ===== */
+/* ===== BAG HEADER ===== */
 .bag-header {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    color: white;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
     padding: 3rem 2rem;
     text-align: center;
     margin-bottom: 3rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .bag-header h1 {
     font-size: 2.5rem;
-    font-weight: 800;
+    font-weight: 900;
+    color: white;
     margin-bottom: 0.5rem;
     letter-spacing: -1px;
 }
 
 .bag-header p {
     font-size: 1rem;
-    opacity: 0.95;
+    color: #cbd5e0;
     font-weight: 500;
 }
 
-/* ===== CONTENT SECTION ===== */
+/* ===== CONTENT ===== */
 .bag-content {
     max-width: 1200px;
     margin: 0 auto;
@@ -39,31 +40,35 @@
 /* ===== BAG INFO ===== */
 .bag-info {
     margin-bottom: 2rem;
-    padding: 1rem;
-    background: white;
-    border-left: 4px solid #2563eb;
-    border-radius: 8px;
+    padding: 1.2rem;
+    background: rgba(99, 102, 241, 0.05);
+    backdrop-filter: blur(10px);
+    border-left: 4px solid #6366f1;
+    border-radius: 12px;
     font-size: 0.95rem;
-    color: #333;
+    color: white;
+    animation: slideInDown 0.6s ease-out;
 }
 
 .bag-info p {
     margin: 0;
+    color: #cbd5e0;
 }
 
 .bag-info strong {
-    color: #2563eb;
+    color: #818cf8;
     font-weight: 700;
 }
 
-/* ===== BAG TABLE ===== */
+/* ===== TABLE WRAPPER ===== */
 .bag-table-wrapper {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
     overflow: hidden;
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
     margin-bottom: 3rem;
+    animation: fadeInUp 0.6s ease-out;
 }
 
 .bag-table {
@@ -73,22 +78,22 @@
 }
 
 .bag-table thead {
-    background: linear-gradient(135deg, #f3f4f6 0%, #f9fafb 100%);
-    border-bottom: 2px solid #e5e7eb;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 2px solid #e2e8f0;
 }
 
 .bag-table th {
     padding: 1.25rem 1rem;
     text-align: left;
     font-weight: 700;
-    color: #1a1a1a;
+    color: #0f172a;
     letter-spacing: 0.3px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
 }
 
 .bag-table tbody tr {
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid #f1f5f9;
     transition: all 0.3s ease;
 }
 
@@ -98,33 +103,19 @@
 
 .bag-table td {
     padding: 1.25rem 1rem;
-    color: #333;
+    color: #334155;
 }
 
 /* ===== TABLE COLUMNS ===== */
-.col-book {
-    width: 30%;
-}
-
-.col-author {
-    width: 22%;
-}
-
-.col-due {
-    width: 18%;
-}
-
-.col-price {
-    width: 15%;
-}
-
-.col-action {
-    width: 15%;
-}
+.col-book { width: 30%; }
+.col-author { width: 22%; }
+.col-due { width: 18%; }
+.col-price { width: 15%; }
+.col-action { width: 15%; }
 
 /* ===== BOOK LINK ===== */
 .book-link {
-    color: #2563eb;
+    color: #6366f1;
     text-decoration: none;
     font-weight: 600;
     transition: all 0.2s ease;
@@ -134,42 +125,41 @@
 }
 
 .book-link:hover {
-    color: #1d4ed8;
+    color: #4f46e5;
     text-decoration: underline;
 }
 
-/* ===== DATE BADGES ===== */
+/* ===== BADGES ===== */
 .date-badge {
     display: inline-block;
     padding: 0.6rem 1rem;
-    background: #eef2ff;
-    border-radius: 6px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+    border-radius: 8px;
     font-size: 0.9rem;
     font-weight: 600;
-    color: #1d4ed8;
-    border: 1px solid #c7d2fe;
+    color: #4f46e5;
+    border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
-/* ===== PRICE BADGES ===== */
 .price-badge {
     display: inline-block;
     padding: 0.6rem 1.2rem;
-    background: #d1fae5;
-    border-radius: 6px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+    border-radius: 8px;
     font-size: 0.9rem;
     font-weight: 700;
-    color: #065f46;
-    border: 1px solid #a7f3d0;
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 /* ===== REMOVE BUTTON ===== */
 .btn-remove {
     display: inline-block;
     padding: 0.6rem 1.2rem;
-    background: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
-    border-radius: 6px;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 600;
     font-size: 0.85rem;
@@ -179,19 +169,21 @@
 }
 
 .btn-remove:hover {
-    background: #fecaca;
-    color: #7f1d1d;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%);
+    color: #991b1b;
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
 }
 
 /* ===== PAYMENT SECTION ===== */
 .payment-section {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e2e8f0;
     padding: 2.5rem;
     margin-bottom: 3rem;
+    animation: fadeInUp 0.6s ease-out 0.2s both;
 }
 
 .payment-info {
@@ -200,14 +192,14 @@
 
 .payment-info h3 {
     font-size: 1.5rem;
-    font-weight: 700;
-    color: #1a1a1a;
+    font-weight: 800;
+    color: #0f172a;
     margin: 0 0 0.5rem 0;
 }
 
 .payment-note {
     font-size: 0.95rem;
-    color: #6b7280;
+    color: #64748b;
     margin: 0;
     font-weight: 500;
 }
@@ -225,29 +217,29 @@
     align-items: center;
     gap: 1rem;
     padding: 1.5rem;
-    border: 2px solid #e5e7eb;
-    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
     background: white;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     text-align: left;
     font-size: 1rem;
     font-family: inherit;
 }
 
 .payment-btn:hover {
-    border-color: #2563eb;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-    transform: translateY(-2px);
+    border-color: #6366f1;
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+    transform: translateY(-3px);
 }
 
-.pod-btn:hover {
-    background: #f0f9ff;
+.payment-btn.pod-btn:hover {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(99, 102, 241, 0.02) 100%);
     border-color: #0284c7;
 }
 
-.pay-btn:hover {
-    background: #f0fdf4;
+.payment-btn.pay-btn:hover {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%);
     border-color: #16a34a;
 }
 
@@ -265,14 +257,14 @@
 .payment-label {
     display: block;
     font-weight: 700;
-    color: #1a1a1a;
+    color: #0f172a;
     font-size: 1rem;
 }
 
 .payment-desc {
     display: block;
     font-size: 0.85rem;
-    color: #6b7280;
+    color: #64748b;
     font-weight: 500;
 }
 
@@ -287,14 +279,14 @@
 /* ===== PAYMENT DISCLAIMER ===== */
 .payment-disclaimer {
     font-size: 0.9rem;
-    color: #6b7280;
+    color: #64748b;
     text-align: center;
     margin: 0;
     line-height: 1.6;
 }
 
 .payment-disclaimer a {
-    color: #2563eb;
+    color: #6366f1;
     text-decoration: none;
     font-weight: 600;
 }
@@ -309,9 +301,10 @@
     margin: 4rem auto;
     padding: 4rem 2rem;
     background: white;
-    border-radius: 12px;
-    border: 2px dashed #e5e7eb;
+    border-radius: 16px;
+    border: 2px dashed #e2e8f0;
     text-align: center;
+    animation: fadeInUp 0.6s ease-out;
 }
 
 .empty-icon {
@@ -321,62 +314,48 @@
 
 .empty-state h2 {
     font-size: 1.75rem;
-    color: #1a1a1a;
-    font-weight: 700;
+    color: #0f172a;
+    font-weight: 800;
     margin-bottom: 0.5rem;
 }
 
 .empty-state p {
     font-size: 1rem;
-    color: #6b7280;
+    color: #64748b;
     margin-bottom: 0.5rem;
 }
 
 .empty-hint {
-    color: #9ca3af;
+    color: #94a3b8;
     font-size: 0.95rem !important;
     margin-bottom: 2rem !important;
 }
 
 .btn-browse {
     display: inline-block;
-    padding: 0.85rem 2rem;
-    background: #2563eb;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     color: white;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-weight: 700;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
 }
 
 .btn-browse:hover {
-    background: #1d4ed8;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.4);
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
-    .col-book {
-        width: 28%;
-    }
-
-    .col-author {
-        width: 20%;
-    }
-
-    .col-due {
-        width: 18%;
-    }
-
-    .col-price {
-        width: 16%;
-    }
-
-    .col-action {
-        width: 18%;
-    }
+    .col-book { width: 28%; }
+    .col-author { width: 20%; }
+    .col-due { width: 18%; }
+    .col-price { width: 16%; }
+    .col-action { width: 18%; }
 
     .bag-table th,
     .bag-table td {
@@ -386,17 +365,6 @@
 
     .book-link {
         max-width: 180px;
-    }
-
-    .btn-remove {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.8rem;
-    }
-
-    .date-badge,
-    .price-badge {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.85rem;
     }
 }
 
@@ -414,16 +382,8 @@
         font-size: 1.75rem;
     }
 
-    .bag-header p {
-        font-size: 0.95rem;
-    }
-
     .bag-content {
         padding: 0 1.5rem;
-    }
-
-    .bag-info {
-        margin-bottom: 1.5rem;
     }
 
     .bag-table-wrapper {
@@ -443,49 +403,19 @@
     .payment-section {
         padding: 1.5rem;
     }
-
-    .payment-info h3 {
-        font-size: 1.25rem;
-    }
-
-    .payment-btn {
-        padding: 1.25rem;
-    }
-
-    .payment-icon {
-        font-size: 2rem;
-    }
-
-    .payment-label {
-        font-size: 0.95rem;
-    }
-
-    .payment-desc {
-        font-size: 0.8rem;
-    }
 }
 
 @media (max-width: 480px) {
     .bag-header {
         padding: 1.5rem 1rem;
-        margin-bottom: 1.5rem;
     }
 
     .bag-header h1 {
         font-size: 1.5rem;
     }
 
-    .bag-header p {
-        font-size: 0.9rem;
-    }
-
     .bag-content {
         padding: 0 1rem;
-    }
-
-    .bag-table-wrapper {
-        border-radius: 8px;
-        margin-bottom: 1.5rem;
     }
 
     .bag-table {
@@ -506,79 +436,10 @@
         display: none;
     }
 
-    .col-book {
-        width: 35%;
-    }
-
-    .col-due {
-        width: 22%;
-    }
-
-    .col-price {
-        width: 18%;
-    }
-
-    .col-action {
-        width: 25%;
-    }
-
-    .book-link {
-        max-width: 100px;
-        font-size: 0.85rem;
-    }
-
-    .date-badge,
-    .price-badge {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.75rem;
-    }
-
-    .btn-remove {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.75rem;
-    }
-
-    .payment-section {
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .payment-info h3 {
-        font-size: 1.1rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .payment-note {
-        font-size: 0.9rem;
-    }
-
-    .payment-buttons {
-        gap: 0.75rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .payment-btn {
-        padding: 1rem;
-        gap: 0.75rem;
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .payment-icon {
-        font-size: 1.75rem;
-    }
-
-    .payment-label {
-        font-size: 0.9rem;
-    }
-
-    .payment-desc {
-        font-size: 0.75rem;
-    }
-
-    .payment-disclaimer {
-        font-size: 0.85rem;
-    }
+    .col-book { width: 35%; }
+    .col-due { width: 22%; }
+    .col-price { width: 18%; }
+    .col-action { width: 25%; }
 
     .empty-state {
         margin: 2rem auto;

@@ -1,16 +1,117 @@
 {% extends "base.html" %}
 
-{% block title %}{{ title }} - LibraNet{% endblock %}
-
 {% block content %}
-<div class="container">
-    <div class="profile-wrapper">
-        <h1 class="page-title">My Profile</h1>
-        <div class="profile-details">
-            <p><strong>Name:</strong> {{ current_user.name }}</p>
-            <p><strong>Email:</strong> {{ current_user.email }}</p>
-            <p><strong>Roll No:</strong> {{ current_user.roll_no }}</p>
-            <p><strong>Phone:</strong> {{ current_user.phone }}</p>
+<div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; padding: 3rem 2rem;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <!-- Profile Header -->
+        <div style="text-align: center; margin-bottom: 3rem; animation: fadeInDown 0.6s ease-out;">
+            <h1 style="font-size: 2.5rem; font-weight: 900; color: white; margin-bottom: 0.5rem; letter-spacing: -1px;">
+                My Profile
+            </h1>
+            <p style="font-size: 1rem; color: #cbd5e0;">Manage your account information</p>
+        </div>
+
+        <!-- Profile Card -->
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); border: 1px solid #e2e8f0; animation: fadeInUp 0.6s ease-out;">
+            <!-- Avatar Section -->
+            <div style="text-align: center; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e2e8f0;">
+                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; margin-bottom: 1rem; font-size: 2rem; color: white;">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h2 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin: 0;">{{ current_user.name }}</h2>
+                <p style="color: #64748b; margin-top: 0.5rem;">Student Account</p>
+            </div>
+
+            <!-- Profile Details Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                <!-- Name -->
+                <div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 0.5rem;">
+                        Full Name
+                    </div>
+                    <div style="font-size: 1rem; font-weight: 700; color: #0f172a;">
+                        {{ current_user.name }}
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 0.5rem;">
+                        Email Address
+                    </div>
+                    <div style="font-size: 1rem; font-weight: 700; color: #0f172a;">
+                        {{ current_user.email }}
+                    </div>
+                </div>
+
+                <!-- Roll Number -->
+                <div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 0.5rem;">
+                        Roll Number
+                    </div>
+                    <div style="font-size: 1rem; font-weight: 700; color: #0f172a;">
+                        {{ current_user.roll_no }}
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 0.5rem;">
+                        Phone Number
+                    </div>
+                    <div style="font-size: 1rem; font-weight: 700; color: #0f172a;">
+                        {{ current_user.phone }}
+                    </div>
+                </div>
+
+                <!-- Account Status -->
+                <div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 0.5rem;">
+                        Account Status
+                    </div>
+                    <div style="display: inline-block; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); color: #059669; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2); font-weight: 700; font-size: 0.9rem;">
+                        <i class="fas fa-check-circle"></i> Active
+                    </div>
+                </div>
+
+                <!-- Member Since -->
+                <div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 0.5rem;">
+                        Member Since
+                    </div>
+                    <div style="font-size: 1rem; font-weight: 700; color: #0f172a;">
+                        {% if current_user.created_at %}
+                            {{ current_user.created_at.strftime('%B %d, %Y') }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 1rem; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0; flex-wrap: wrap;">
+                <a href="{{ url_for('main.list_books') }}" style="flex: 1; min-width: 150px; padding: 12px 24px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: 700; text-align: center; transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3); display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-book-open"></i>
+                    Browse Books
+                </a>
+                <a href="{{ url_for('main.my_loans') }}" style="flex: 1; min-width: 150px; padding: 12px 24px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%); color: #4f46e5; border: 2px solid rgba(99, 102, 241, 0.2); text-decoration: none; border-radius: 10px; font-weight: 700; text-align: center; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-bookmark"></i>
+                    My Loans
+                </a>
+                <a href="{{ url_for('main.logout') }}" style="flex: 1; min-width: 150px; padding: 12px 24px; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%); color: #dc2626; border: 2px solid rgba(239, 68, 68, 0.2); text-decoration: none; border-radius: 10px; font-weight: 700; text-align: center; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Info Box -->
+        <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(99, 102, 241, 0.05); backdrop-filter: blur(10px); border-left: 4px solid #6366f1; border-radius: 12px; animation: fadeInUp 0.6s ease-out 0.2s both;">
+            <p style="color: #cbd5e0; margin: 0;">
+                <i class="fas fa-info-circle" style="color: #6366f1; margin-right: 0.5rem;"></i>
+                For any account-related queries or assistance, please contact our support team.
+            </p>
         </div>
     </div>
 </div>

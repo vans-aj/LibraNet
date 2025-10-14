@@ -4,20 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title }} - LibraNet</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
-    />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/books.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/book_detail.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/loans.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bag.css') }}">
+    <!-- Modern CSS Files -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-landing.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-books.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-book-detail.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-bag.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-loans.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-auth.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-footer.css') }}">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   </head>
   <body>
     {% if 'login' not in request.endpoint and 'register' not in request.endpoint %}
-    <!-- IMPROVED NAVBAR -->
+    <!-- MODERN NAVBAR -->
     <nav class="navbar">
       <div class="nav-container">
         <!-- Logo/Brand -->
@@ -37,31 +39,40 @@
         <div class="nav-menu" id="navMenu">
           {% if current_user.is_authenticated %}
             <!-- Authenticated User Menu -->
-            <div class="nav-links">
-              <a href="{{ url_for('main.list_books') }}" class="nav-link">
-                <i class="fas fa-book"></i>
-                <span>Catalog</span>
-              </a>
+            <ul class="nav-links">
+              <li>
+                <a href="{{ url_for('main.list_books') }}" class="nav-link">
+                  <i class="fas fa-book"></i>
+                  <span>Catalog</span>
+                </a>
+              </li>
               
-              <a href="{{ url_for('main.my_loans') }}" class="nav-link">
-                <i class="fas fa-bookmark"></i>
-                <span>My Loans</span>
-              </a>
-              <a href="{{ url_for('main.dues') }}" class="nav-link">
-                <i class="fas fa-wallet"></i>
-                <span>My Dues</span>
-              </a>
+              <li>
+                <a href="{{ url_for('main.my_loans') }}" class="nav-link">
+                  <i class="fas fa-bookmark"></i>
+                  <span>My Loans</span>
+                </a>
+              </li>
 
-              <a href="{{ url_for('main.my_bag') }}" class="nav-link nav-bag">
-                <i class="fas fa-shopping-bag"></i>
-                <span>Bag</span>
-                {% if session.get('bag') %}
-                  <span class="badge">{{ session['bag']|length }}</span>
-                {% endif %}
-              </a>
+              <li>
+                <a href="{{ url_for('main.dues') }}" class="nav-link">
+                  <i class="fas fa-wallet"></i>
+                  <span>My Dues</span>
+                </a>
+              </li>
+
+              <li>
+                <a href="{{ url_for('main.my_bag') }}" class="nav-link nav-bag">
+                  <i class="fas fa-shopping-bag"></i>
+                  <span>Bag</span>
+                  {% if session.get('bag') %}
+                    <span class="badge">{{ session['bag']|length }}</span>
+                  {% endif %}
+                </a>
+              </li>
 
               <!-- User Dropdown Menu -->
-              <div class="nav-dropdown">
+              <li class="nav-dropdown">
                 <button class="nav-link dropdown-toggle">
                   <i class="fas fa-user-circle"></i>
                   <span>{{ current_user.name.split()[0] }}</span>
@@ -87,20 +98,24 @@
                     Logout
                   </a>
                 </div>
-              </div>
-            </div>
+              </li>
+            </ul>
           {% else %}
             <!-- Non-Authenticated User Menu -->
-            <div class="nav-links">
-              <a href="{{ url_for('main.login') }}" class="nav-link">
-                <i class="fas fa-sign-in-alt"></i>
-                <span>Login</span>
-              </a>
-              <a href="{{ url_for('main.register') }}" class="nav-link nav-register-btn">
-                <i class="fas fa-user-plus"></i>
-                <span>Register</span>
-              </a>
-            </div>
+            <ul class="nav-links">
+              <li>
+                <a href="{{ url_for('main.login') }}" class="nav-link">
+                  <i class="fas fa-sign-in-alt"></i>
+                  <span>Login</span>
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('main.register') }}" class="nav-link nav-register-btn">
+                  <i class="fas fa-user-plus"></i>
+                  <span>Register</span>
+                </a>
+              </li>
+            </ul>
           {% endif %}
         </div>
       </div>
@@ -112,7 +127,10 @@
         {% if messages %}
         <div class="flashes">
           {% for category, message in messages %}
-          <div class="flash {{ category }}">{{ message }}</div>
+          <div class="alert alert-{{ category }}">
+            <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}times-circle{% else %}info-circle{% endif %}"></i>
+            <span>{{ message }}</span>
+          </div>
           {% endfor %}
         </div>
         {% endif %}
