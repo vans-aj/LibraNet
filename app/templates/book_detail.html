@@ -2,108 +2,88 @@
 
 {% block content %}
 <div class="book-detail-page">
-    <div class="book-detail-wrapper">
-        <!-- Back Button -->
-        <a href="{{ url_for('main.list_books') }}" class="back-button">
+    <div class="book-detail-container">
+        <a href="{{ url_for('main.list_books') }}" class="back-link">
             <i class="fas fa-arrow-left"></i>
             <span>Back to Catalog</span>
         </a>
 
-        <!-- Detail Container -->
-        <div class="detail-container">
-            <!-- Left: Book Cover Section -->
-            <div class="cover-section">
-                <div class="cover-container">
-                    <img 
-                        src="{{ book.image_url or url_for('static', filename='images/default_cover.jpg') }}" 
-                        alt="{{ book.title }}"
-                        class="book-cover"
-                    >
-                    <div class="availability-large">
-                        {% if book.available_copies > 0 %}
-                            <div class="badge-large badge-available">
-                                <i class="fas fa-check-circle"></i>
-                                <span>Available</span>
-                            </div>
-                        {% else %}
-                            <div class="badge-large badge-unavailable">
-                                <i class="fas fa-times-circle"></i>
-                                <span>Unavailable</span>
-                            </div>
-                        {% endif %}
-                    </div>
+        <div class="book-detail-grid">
+            <div class="book-cover-wrapper">
+                <img
+                    src="{{ book.image_url or url_for('static', filename='images/default_cover.jpg') }}"
+                    alt="Cover of {{ book.title }}"
+                    class="book-cover-image"
+                >
+                <div class="availability-status">
+                    {% if book.available_copies > 0 %}
+                        <span class="status-pill available">
+                            <i class="fas fa-check-circle"></i> Available
+                        </span>
+                    {% else %}
+                        <span class="status-pill unavailable">
+                            <i class="fas fa-times-circle"></i> Unavailable
+                        </span>
+                    {% endif %}
                 </div>
             </div>
 
-            <!-- Right: Book Information Section -->
-            <div class="info-section">
-                <!-- Header -->
-                <div class="book-header">
-                    <h1 class="book-title">{{ book.title }}</h1>
-                    <p class="book-author">
-                        <i class="fas fa-pen"></i>
-                        <span>by {{ book.author }}</span>
-                    </p>
-                </div>
+            <div class="book-info-wrapper">
+                <header class="book-main-info">
+                    <h1 class="book-main-title">{{ book.title }}</h1>
+                    <p class="book-main-author">by {{ book.author }}</p>
+                </header>
 
-                <!-- Metadata -->
-                <div class="metadata-grid">
-                    <div class="metadata-item">
-                        <span class="metadata-label">ISBN</span>
-                        <p class="metadata-value">{{ book.isbn or 'N/A' }}</p>
+                <div class="book-meta-grid">
+                    <div class="meta-item">
+                        <span class="meta-label">ISBN</span>
+                        <span class="meta-value">{{ book.isbn or 'N/A' }}</span>
                     </div>
-                    <div class="metadata-item">
-                        <span class="metadata-label">Total Copies</span>
-                        <p class="metadata-value">{{ book.total_copies }}</p>
+                    <div class="meta-item">
+                        <span class="meta-label">Total Copies</span>
+                        <span class="meta-value">{{ book.total_copies }}</span>
                     </div>
-                    <div class="metadata-item">
-                        <span class="metadata-label">Available Copies</span>
-                        <p class="metadata-value">{{ book.available_copies }}</p>
+                    <div class="meta-item">
+                        <span class="meta-label">Available</span>
+                        <span class="meta-value">{{ book.available_copies }}</span>
                     </div>
-                    {% if book.related_courses %}
-                    <div class="metadata-item">
-                        <span class="metadata-label">Related Courses</span>
-                        <p class="metadata-value">{{ book.related_courses }}</p>
+                     {% if book.related_courses %}
+                    <div class="meta-item">
+                        <span class="meta-label">Related Courses</span>
+                        <p class="meta-value">{{ book.related_courses }}</p>
                     </div>
                     {% endif %}
                 </div>
 
-                <!-- Summary -->
                 {% if book.summary %}
-                <div class="summary-section">
+                <div class="book-summary">
                     <h2>Summary</h2>
-                    <p class="summary-text">{{ book.summary }}</p>
+                    <p>{{ book.summary }}</p>
                 </div>
                 {% endif %}
 
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <form action="{{ url_for('main.add_to_bag', book_id=book.id) }}" method="post" class="action-form">
+                <div class="book-actions">
+                    <form action="{{ url_for('main.add_to_bag', book_id=book.id) }}" method="post">
                         {% if book.available_copies > 0 %}
-                            <button type="submit" class="btn-detail btn-add-bag">
+                            <button type="submit" class="action-btn primary-action">
                                 <i class="fas fa-shopping-bag"></i>
                                 <span>Add to Bag</span>
                             </button>
                         {% else %}
-                            <button type="button" class="btn-detail btn-out-of-stock" disabled>
+                            <button type="button" class="action-btn disabled-action" disabled>
                                 <i class="fas fa-ban"></i>
                                 <span>Out of Stock</span>
                             </button>
                         {% endif %}
                     </form>
-                    <a href="{{ url_for('main.list_books') }}" class="btn-detail btn-detail-secondary">
-                        <i class="fas fa-arrow-left"></i>
-                        <span>Back</span>
-                    </a>
                 </div>
 
-                <!-- Current Loan Info -->
-                {% if existing_loan %}
-                <div class="loan-alert">
+                 {% if existing_loan %}
+                <div class="loan-info-alert">
                     <i class="fas fa-info-circle"></i>
-                    <div class="loan-alert-content">
-                        <p class="loan-alert-title">Already Borrowed</p>
-                        <p class="loan-alert-text">You're currently borrowing this book. Due on {{ existing_loan.due_date.strftime('%B %d, %Y') }}</p>
+                    <div>
+                        <h4>Already on Loan</h4>
+                        <p>You are currently borrowing this book. It is due on {{ existing_loan.due_date.strftime('%B %d, %Y') }}.</p>
                     </div>
                 </div>
                 {% endif %}
