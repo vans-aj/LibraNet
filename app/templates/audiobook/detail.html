@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="book-detail-page">
+    <div class="book-detail-container">
+        <a href="{{ url_for('main.list_audiobooks') }}" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Audiobooks</span>
+        </a>
+
+        <div class="book-detail-grid">
+            <div class="book-cover-wrapper">
+                <img
+                    src="{{ audiobook.image_url or url_for('static', filename='images/default_audiobook.jpg') }}"
+                    alt="Cover of {{ audiobook.title }}"
+                    class="book-cover-image"
+                >
+                <div class="availability-status">
+                    <span class="status-pill available" style="background-color: rgba(236, 72, 153, 0.1); color: #ec4899;">
+                        <i class="fas fa-headphones"></i> Audiobook
+                    </span>
+                </div>
+            </div>
+
+            <div class="book-info-wrapper">
+                <header class="book-main-info">
+                    <h1 class="book-main-title">{{ audiobook.title }}</h1>
+                    <p class="book-main-author">by {{ audiobook.author }}</p>
+                </header>
+
+                <div class="book-meta-grid">
+                    <div class="meta-item">
+                        <span class="meta-label">Narrator</span>
+                        <span class="meta-value">{{ audiobook.narrator or 'Unknown' }}</span>
+                    </div>
+                    {% if audiobook.duration_minutes %}
+                    <div class="meta-item">
+                        <span class="meta-label">Duration</span>
+                        <span class="meta-value">{{ (audiobook.duration_minutes // 60)|int }}h {{ audiobook.duration_minutes % 60 }}m</span>
+                    </div>
+                    {% endif %}
+                    <div class="meta-item">
+                        <span class="meta-label">Format</span>
+                        <span class="meta-value">{{ audiobook.file_format }}</span>
+                    </div>
+                    {% if audiobook.file_size_mb %}
+                    <div class="meta-item">
+                        <span class="meta-label">File Size</span>
+                        <span class="meta-value">{{ '%.1f'|format(audiobook.file_size_mb) }} MB</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if audiobook.summary %}
+                <div class="book-summary">
+                    <h2>Summary</h2>
+                    <p>{{ audiobook.summary }}</p>
+                </div>
+                {% endif %}
+
+                <div class="book-actions" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="{{ url_for('main.listen_audiobook', audiobook_id=audiobook.id) }}" class="action-btn primary-action">
+                        <i class="fas fa-play"></i>
+                        <span>Listen Now</span>
+                    </a>
+                    <a href="{{ url_for('main.download_audiobook', audiobook_id=audiobook.id) }}" class="action-btn" style="background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);">
+                        <i class="fas fa-download"></i>
+                        <span>Download</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

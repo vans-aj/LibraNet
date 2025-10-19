@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="books-page">
+    <div class="books-header">
+        <h1>🎧 Audiobooks Collection</h1>
+        <p>Listen to your favorite books on the go</p>
+    </div>
+
+    <div class="books-container">
+        <div class="filter-container">
+            <form method="GET" action="{{ url_for('main.list_audiobooks') }}" class="search-bar">
+                <i class="fas fa-search search-icon"></i>
+                <input
+                    type="text"
+                    name="q"
+                    placeholder="Search audiobooks by title, author, or narrator..."
+                    value="{{ search_term or '' }}"
+                    class="search-input"
+                >
+                <button type="submit" class="search-button">Search</button>
+            </form>
+        </div>
+
+        {% if search_term %}
+        <div class="search-results-info">
+            Results for "<strong>{{ search_term }}</strong>"
+            {% if audiobooks %}
+                <span class="result-count">({{ audiobooks|length }} found)</span>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if audiobooks %}
+        <div class="books-grid">
+            {% for audiobook in audiobooks %}
+                <a href="{{ url_for('main.audiobook_detail', audiobook_id=audiobook.id) }}" class="book-card">
+                    <div class="book-image-container">
+                        <img
+                            src="{{ audiobook.image_url or url_for('static', filename='images/default_audiobook.jpg') }}"
+                            alt="Cover of {{ audiobook.title }}"
+                            class="book-image"
+                        >
+                        <div class="book-overlay">
+                            <span class="view-details-btn">Listen Now</span>
+                        </div>
+                        <div class="availability-badge">
+                            <span class="status-badge status-available" style="background: rgba(236, 72, 153, 0.8);">
+                                <i class="fas fa-headphones"></i> Audio
+                            </span>
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">{{ audiobook.title }}</h3>
+                        <p class="book-author">{{ audiobook.author }}</p>
+                        <p class="book-author" style="font-size: 0.85rem; color: #94a3b8;">
+                            <i class="fas fa-microphone"></i> {{ audiobook.narrator or 'Unknown Narrator' }}
+                            {% if audiobook.duration_minutes %}
+                            • {{ (audiobook.duration_minutes // 60)|int }}h {{ audiobook.duration_minutes % 60 }}m
+                            {% endif %}
+                        </p>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🎧</div>
+            <h2>No Audiobooks Found</h2>
+            {% if search_term %}
+                <p>No results for "<strong>{{ search_term }}</strong>"</p>
+                <p class="empty-hint">Try using different keywords</p>
+            {% else %}
+                <p>No audiobooks available at this moment</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

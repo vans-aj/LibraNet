@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; padding: 3rem 2rem;">
+    <div style="max-width: 1000px; margin: 0 auto;">
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 3rem; animation: fadeInDown 0.6s ease-out;">
+            <h1 style="font-size: 2.5rem; font-weight: 900; color: white; margin-bottom: 0.5rem;">
+                My Subscription
+            </h1>
+            <p style="font-size: 1rem; color: #cbd5e0;">Manage your subscription plan</p>
+        </div>
+
+        <!-- Current Subscription Card -->
+        <div style="background: white; border-radius: 20px; padding: 2.5rem; margin-bottom: 2rem; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); animation: fadeInUp 0.6s ease-out;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem;">
+                        {{ plan.name }} Plan
+                    </h2>
+                    <p style="color: #64748b; margin: 0;">
+                        {% if subscription.tier.name != 'FREE' %}
+                            {% if subscription.is_expired %}
+                                <span style="color: #ef4444; font-weight: 600;">Expired</span>
+                            {% else %}
+                                Active until {{ subscription.end_date.strftime('%B %d, %Y') }}
+                            {% endif %}
+                        {% else %}
+                            Free plan - No expiration
+                        {% endif %}
+                    </p>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 2.5rem; font-weight: 900; color: #6366f1;">
+                        ₹{{ plan.price }}
+                        {% if plan.price > 0 %}
+                        <span style="font-size: 1rem; color: #64748b;">/month</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar for Paid Plans -->
+            {% if subscription.tier.name != 'FREE' and not subscription.is_expired %}
+            <div style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="font-size: 0.9rem; font-weight: 600; color: #64748b;">Days Remaining</span>
+                    <span style="font-size: 0.9rem; font-weight: 700; color: #6366f1;">{{ subscription.days_remaining }} days</span>
+                </div>
+                <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                    <div style="height: 100%; background: linear-gradient(90deg, #6366f1, #ec4899); width: {{ (subscription.days_remaining / plan.duration_days * 100)|int }}%; transition: width 0.3s ease;"></div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Features -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem;">Your Benefits</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    {% for feature in plan.features %}
+                    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #f8fafc; border-radius: 8px;">
+                        <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.1rem;"></i>
+                        <span style="color: #334155; font-weight: 500;">{{ feature }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                {% if subscription.tier.name == 'FREE' %}
+                <a href="{{ url_for('main.subscriptions') }}" style="flex: 1; min-width: 200px; padding: 14px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 700; text-align: center; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
+                    <i class="fas fa-arrow-up"></i> Upgrade Plan
+                </a>
+                {% else %}
+                <a href="{{ url_for('main.subscriptions') }}" style="flex: 1; min-width: 200px; padding: 14px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 700; text-align: center; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
+                    <i class="fas fa-sync-alt"></i> Change Plan
+                </a>
+                <form action="{{ url_for('main.cancel_subscription') }}" method="post" style="flex: 1; min-width: 200px;" onsubmit="return confirm('Are you sure you want to cancel your subscription?')">
+                    <button type="submit" style="width: 100%; padding: 14px; background: #f1f5f9; color: #ef4444; border: 2px solid #fee2e2; border-radius: 12px; font-weight: 700; cursor: pointer;">
+                        <i class="fas fa-times-circle"></i> Cancel Subscription
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Subscription History -->
+        {% if subscription_history|length > 1 %}
+        <div style="background: white; border-radius: 20px; padding: 2.5rem; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); animation: fadeInUp 0.6s ease-out 0.2s; animation-fill-mode: both;">
+            <h3 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 1.5rem;">
+                Subscription History
+            </h3>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+                            <th style="padding: 1rem; text-align: left; font-weight: 700; color: #0f172a;">Plan</th>
+                            <th style="padding: 1rem; text-align: left; font-weight: 700; color: #0f172a;">Start Date</th>
+                            <th style="padding: 1rem; text-align: left; font-weight: 700; color: #0f172a;">End Date</th>
+                            <th style="padding: 1rem; text-align: left; font-weight: 700; color: #0f172a;">Amount</th>
+                            <th style="padding: 1rem; text-align: left; font-weight: 700; color: #0f172a;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sub in subscription_history %}
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 1rem; color: #334155; font-weight: 600;">{{ sub.tier.value.title() }}</td>
+                            <td style="padding: 1rem; color: #64748b;">{{ sub.start_date.strftime('%d %b %Y') }}</td>
+                            <td style="padding: 1rem; color: #64748b;">
+                                {% if sub.end_date %}
+                                    {{ sub.end_date.strftime('%d %b %Y') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td style="padding: 1rem; color: #334155; font-weight: 600;">₹{{ sub.price_paid }}</td>
+                            <td style="padding: 1rem;">
+                                {% if sub.is_active and not sub.is_expired %}
+                                <span style="padding: 0.5rem 1rem; background: rgba(16, 185, 129, 0.1); color: #059669; border-radius: 20px; font-size: 0.85rem; font-weight: 700;">
+                                    Active
+                                </span>
+                                {% elif sub.is_expired %}
+                                <span style="padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.1); color: #dc2626; border-radius: 20px; font-size: 0.85rem; font-weight: 700;">
+                                    Expired
+                                </span>
+                                {% else %}
+                                <span style="padding: 0.5rem 1rem; background: rgba(148, 163, 184, 0.1); color: #64748b; border-radius: 20px; font-size: 0.85rem; font-weight: 700;">
+                                    Inactive
+                                </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

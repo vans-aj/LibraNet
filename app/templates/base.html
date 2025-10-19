@@ -1,3 +1,6 @@
+<!-- ========================================
+FILE: app/templates/base.html (CORRECTED)
+======================================== -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -40,10 +43,44 @@
           {% if current_user.is_authenticated %}
             <!-- Authenticated User Menu -->
             <ul class="nav-links">
+              <!-- Physical Books - Available for BASIC, PRO, MAX -->
+              {% if current_user.has_access_to_physical_books() %}
               <li>
                 <a href="{{ url_for('main.list_books') }}" class="nav-link">
                   <i class="fas fa-book"></i>
-                  <span>Catalog</span>
+                  <span>Physical Books</span>
+                </a>
+              </li>
+              {% endif %}
+              
+              <!-- Ebooks - Available for PRO, MAX -->
+              {% if current_user.has_access_to_ebooks() %}
+              <li>
+                <a href="{{ url_for('main.list_ebooks') }}" class="nav-link">
+                  <i class="fas fa-tablet-alt"></i>
+                  <span>Ebooks</span>
+                </a>
+              </li>
+              {% endif %}
+              
+              <!-- Audiobooks - Available for MAX only -->
+              {% if current_user.has_access_to_audiobooks() %}
+              <li>
+                <a href="{{ url_for('main.list_audiobooks') }}" class="nav-link">
+                  <i class="fas fa-headphones"></i>
+                  <span>Audiobooks</span>
+                </a>
+              </li>
+              {% endif %}
+              
+              <!-- Subscription Link -->
+              <li>
+                <a href="{{ url_for('main.subscriptions') }}" class="nav-link">
+                  <i class="fas fa-crown"></i>
+                  <span>Plans</span>
+                  {% if current_user.subscription_tier.name == 'FREE' %}
+                  <span class="badge" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">FREE</span>
+                  {% endif %}
                 </a>
               </li>
               
@@ -61,6 +98,8 @@
                 </a>
               </li>
 
+              <!-- Bag only for physical books -->
+              {% if current_user.has_access_to_physical_books() %}
               <li>
                 <a href="{{ url_for('main.my_bag') }}" class="nav-link nav-bag">
                   <i class="fas fa-shopping-bag"></i>
@@ -70,6 +109,7 @@
                   {% endif %}
                 </a>
               </li>
+              {% endif %}
 
               <!-- User Dropdown Menu -->
               <li class="nav-dropdown">
@@ -83,6 +123,10 @@
                   <a href="{{ url_for('main.profile') }}" class="dropdown-item">
                     <i class="fas fa-user"></i>
                     My Profile
+                  </a>
+                  <a href="{{ url_for('main.my_subscription') }}" class="dropdown-item">
+                    <i class="fas fa-crown"></i>
+                    My Subscription
                   </a>
                   <a href="{{ url_for('main.my_loans') }}" class="dropdown-item">
                     <i class="fas fa-history"></i>
@@ -103,6 +147,12 @@
           {% else %}
             <!-- Non-Authenticated User Menu -->
             <ul class="nav-links">
+              <li>
+                <a href="{{ url_for('main.subscriptions') }}" class="nav-link">
+                  <i class="fas fa-crown"></i>
+                  <span>Plans</span>
+                </a>
+              </li>
               <li>
                 <a href="{{ url_for('main.login') }}" class="nav-link">
                   <i class="fas fa-sign-in-alt"></i>

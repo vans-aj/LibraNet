@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: #1e1e1e; min-height: 100vh; padding: 2rem;">
+    <div style="max-width: 900px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+        <!-- Reader Header -->
+        <div style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 style="color: white; font-size: 1.25rem; font-weight: 700; margin: 0;">{{ ebook.title }}</h2>
+                <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin: 0.25rem 0 0;">by {{ ebook.author }}</p>
+            </div>
+            <a href="{{ url_for('main.ebook_detail', ebook_id=ebook.id) }}" style="color: white; text-decoration: none; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-times"></i> Close
+            </a>
+        </div>
+
+        <!-- Reader Content Area -->
+        <div style="padding: 3rem; font-family: 'Georgia', serif; line-height: 1.8; font-size: 1.1rem; color: #333; min-height: 600px;">
+            <h1 style="font-size: 2rem; margin-bottom: 1.5rem; color: #0f172a;">Chapter 1</h1>
+            <p style="margin-bottom: 1.5rem;">
+                This is a demo ebook reader. In production, this would render the actual ebook content from {{ ebook.file_path }}.
+            </p>
+            <p style="margin-bottom: 1.5rem;">
+                The reader would support:
+            </p>
+            <ul style="margin-bottom: 1.5rem; padding-left: 2rem;">
+                <li>PDF rendering for PDF files</li>
+                <li>EPUB reader for EPUB format</li>
+                <li>Text zoom controls</li>
+                <li>Night mode</li>
+                <li>Bookmarks</li>
+                <li>Progress tracking</li>
+            </ul>
+            <p>
+                Integration with libraries like PDF.js or EPUBjs would be used for actual implementation.
+            </p>
+        </div>
+
+        <!-- Reader Controls -->
+        <div style="background: #f8f9fa; padding: 1rem; display: flex; justify-content: center; gap: 1rem; border-top: 1px solid #e2e8f0;">
+            <button style="padding: 0.5rem 1.5rem; background: #6366f1; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            <button style="padding: 0.5rem 1.5rem; background: #6366f1; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                Page 1 of 250
+            </button>
+            <button style="padding: 0.5rem 1.5rem; background: #6366f1; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

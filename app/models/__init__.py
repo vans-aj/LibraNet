@@ -1,6 +1,9 @@
 from enum import Enum
 from datetime import datetime, timedelta
 
+from enum import Enum
+from datetime import datetime, timedelta
+
 class LoanStatusEnum(Enum):
     BORROWED = "borrowed"
     RETURNED = "returned"
@@ -16,3 +19,9 @@ class PaymentStatusEnum(Enum):
     PENDING = "pending"
     COMPLETED = "completed"
     FAILED = "failed"
+
+class SubscriptionTierEnum(Enum):
+    FREE = "free"
+    BASIC = "basic"
+    PRO = "pro"
+    MAX = "max"

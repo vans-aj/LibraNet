@@ -1,8 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, SelectField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, SelectField, TextAreaField, FloatField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError, Optional, NumberRange
 from app.models.student import Student
 from app.models.physical_book import PhysicalBook
+from app.models.ebook import Ebook
+from app.models.audiobook import Audiobook
 
 class RegistrationForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired(), Length(min=2, max=150)])
@@ -30,7 +32,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 class BookForm(FlaskForm):
-    """Form for admins to add or edit a book."""
+    """Form for admins to add or edit a physical book."""
     title = StringField('Title', validators=[DataRequired(), Length(max=200)])
     author = StringField('Author', validators=[DataRequired(), Length(max=150)])
     summary = TextAreaField('Summary')
@@ -47,3 +49,31 @@ class BookForm(FlaskForm):
             book = PhysicalBook.query.filter_by(isbn=isbn.data).first()
             if book and (self.original_book is None or book.id != self.original_book.id):
                 raise ValidationError('This ISBN is already registered.')
+
+
+class EbookForm(FlaskForm):
+    """Form for admins to add or edit an ebook."""
+    title = StringField('Title', validators=[DataRequired(), Length(max=200)])
+    author = StringField('Author', validators=[DataRequired(), Length(max=150)])
+    summary = TextAreaField('Summary')
+    file_path = StringField('File Path', validators=[DataRequired(), Length(max=255)])
+    file_format = SelectField('File Format', 
+                             choices=[('PDF', 'PDF'), ('EPUB', 'EPUB'), ('MOBI', 'MOBI')],
+                             validators=[DataRequired()])
+    file_size_mb = FloatField('File Size (MB)', validators=[Optional(), NumberRange(min=0)])
+    submit = SubmitField('Submit Ebook')
+
+
+class AudiobookForm(FlaskForm):
+    """Form for admins to add or edit an audiobook."""
+    title = StringField('Title', validators=[DataRequired(), Length(max=200)])
+    author = StringField('Author', validators=[DataRequired(), Length(max=150)])
+    narrator = StringField('Narrator', validators=[Optional(), Length(max=150)])
+    summary = TextAreaField('Summary')
+    file_path = StringField('File Path', validators=[DataRequired(), Length(max=255)])
+    duration_minutes = IntegerField('Duration (minutes)', validators=[Optional(), NumberRange(min=1)])
+    file_format = SelectField('File Format', 
+                             choices=[('MP3', 'MP3'), ('M4B', 'M4B'), ('AAC', 'AAC')],
+                             validators=[DataRequired()])
+    file_size_mb = FloatField('File Size (MB)', validators=[Optional(), NumberRange(min=0)])
+    submit = SubmitField('Submit Audiobook')

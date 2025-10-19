@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; padding: 3rem 2rem;">
+    <div style="max-width: 1400px; margin: 0 auto;">
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 4rem; animation: fadeInDown 0.6s ease-out;">
+            <h1 style="font-size: 3rem; font-weight: 900; color: white; margin-bottom: 1rem; letter-spacing: -1px;">
+                Choose Your Plan
+            </h1>
+            <p style="font-size: 1.25rem; color: #cbd5e0;">Select the perfect subscription for your reading journey</p>
+        </div>
+
+        <!-- Current Subscription Alert -->
+        {% if current_subscription.tier.name != 'FREE' %}
+        <div style="max-width: 900px; margin: 0 auto 3rem; padding: 1.5rem; background: rgba(99, 102, 241, 0.1); border-left: 4px solid #6366f1; border-radius: 12px; color: #cbd5e0;">
+            <p style="margin: 0;">
+                <i class="fas fa-info-circle" style="color: #6366f1;"></i>
+                You are currently on the <strong style="color: #818cf8;">{{ current_subscription.tier.value.title() }}</strong> plan
+                {% if not current_subscription.is_expired %}
+                    ({{ current_subscription.days_remaining }} days remaining)
+                {% else %}
+                    {% if current_subscription.tier == tier and not current_subscription.is_expired %}
+                    <button disabled style="width: 100%; padding: 14px; background: #10b981; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: not-allowed;">
+                        <i class="fas fa-check"></i> Active Plan
+                    </button>
+                    {% else %}
+                    <a href="{{ url_for('main.subscribe', tier=tier.name.lower()) }}" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 12px; font-weight: 700; text-align: center; display: block; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
+                        {% if current_subscription.tier.value == 'free' %}
+                            Upgrade Now
+                        {% else %}
+                            Switch Plan
+                        {% endif %}
+                    </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            {% endif %}
+            
+        </div>
+
+        <!-- FAQ Section -->
+        <div style="max-width: 900px; margin: 4rem auto 0; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 20px; padding: 3rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <h2 style="font-size: 2rem; font-weight: 800; color: white; text-align: center; margin-bottom: 2rem;">
+                Frequently Asked Questions
+            </h2>
+            
+            <div style="display: grid; gap: 1.5rem;">
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
+                    <h4 style="color: #818cf8; font-weight: 700; margin-bottom: 0.5rem;">Can I cancel anytime?</h4>
+                    <p style="color: #cbd5e0; margin: 0;">Yes, you can cancel your subscription at any time. You'll continue to have access until the end of your billing period.</p>
+                </div>
+                
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
+                    <h4 style="color: #818cf8; font-weight: 700; margin-bottom: 0.5rem;">What payment methods do you accept?</h4>
+                    <p style="color: #cbd5e0; margin: 0;">We accept all major credit/debit cards, UPI, and net banking through Razorpay secure payment gateway.</p>
+                </div>
+                
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
+                    <h4 style="color: #818cf8; font-weight: 700; margin-bottom: 0.5rem;">Can I upgrade or downgrade my plan?</h4>
+                    <p style="color: #cbd5e0; margin: 0;">Yes, you can change your plan at any time. When upgrading, you'll be charged the difference. When downgrading, changes take effect at the end of your current billing cycle.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

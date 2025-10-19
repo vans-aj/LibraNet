@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="books-page">
+    <div class="books-header">
+        <h1>📚 Ebooks Collection</h1>
+        <p>Read digital books anytime, anywhere</p>
+    </div>
+
+    <div class="books-container">
+        <div class="filter-container">
+            <form method="GET" action="{{ url_for('main.list_ebooks') }}" class="search-bar">
+                <i class="fas fa-search search-icon"></i>
+                <input
+                    type="text"
+                    name="q"
+                    placeholder="Search ebooks by title or author..."
+                    value="{{ search_term or '' }}"
+                    class="search-input"
+                >
+                <button type="submit" class="search-button">Search</button>
+            </form>
+        </div>
+
+        {% if search_term %}
+        <div class="search-results-info">
+            Results for "<strong>{{ search_term }}</strong>"
+            {% if ebooks %}
+                <span class="result-count">({{ ebooks|length }} found)</span>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if ebooks %}
+        <div class="books-grid">
+            {% for ebook in ebooks %}
+                <a href="{{ url_for('main.ebook_detail', ebook_id=ebook.id) }}" class="book-card">
+                    <div class="book-image-container">
+                        <img
+                            src="{{ ebook.image_url or url_for('static', filename='images/default_ebook.jpg') }}"
+                            alt="Cover of {{ ebook.title }}"
+                            class="book-image"
+                        >
+                        <div class="book-overlay">
+                            <span class="view-details-btn">Read Now</span>
+                        </div>
+                        <div class="availability-badge">
+                            <span class="status-badge status-available">
+                                <i class="fas fa-tablet-alt"></i> Ebook
+                            </span>
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">{{ ebook.title }}</h3>
+                        <p class="book-author">{{ ebook.author }}</p>
+                        <p class="book-author" style="font-size: 0.85rem; color: #94a3b8;">
+                            <i class="fas fa-file"></i> {{ ebook.file_format }} 
+                            {% if ebook.file_size_mb %}
+                            • {{ '%.1f'|format(ebook.file_size_mb) }} MB
+                            {% endif %}
+                        </p>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📚</div>
+            <h2>No Ebooks Found</h2>
+            {% if search_term %}
+                <p>No results for "<strong>{{ search_term }}</strong>"</p>
+                <p class="empty-hint">Try using different keywords</p>
+            {% else %}
+                <p>No ebooks available at this moment</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

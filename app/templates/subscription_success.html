@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; padding: 3rem 2rem; display: flex; align-items: center; justify-content: center;">
+    <div style="max-width: 600px; width: 100%; text-align: center; animation: fadeInUp 0.6s ease-out;">
+        <!-- Success Icon -->
+        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; font-size: 4rem; animation: bounceIn 0.8s ease-out;">
+            ✓
+        </div>
+
+        <!-- Success Message -->
+        <div style="background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); margin-bottom: 2rem;">
+            <h1 style="font-size: 2.5rem; font-weight: 900; color: #0f172a; margin-bottom: 1rem;">
+                Subscription Successful!
+            </h1>
+            <p style="font-size: 1.1rem; color: #64748b; margin-bottom: 2rem;">
+                Welcome to {{ plan.name }} plan
+            </p>
+
+            <!-- Subscription Details -->
+            <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; text-align: left;">
+                <div style="display: grid; gap: 1rem;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="font-weight: 600; color: #64748b;">Plan:</span>
+                        <span style="font-weight: 700; color: #0f172a;">{{ plan.name }}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="font-weight: 600; color: #64748b;">Start Date:</span>
+                        <span style="font-weight: 700; color: #0f172a;">{{ subscription.start_date.strftime('%d %b %Y') }}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="font-weight: 600; color: #64748b;">End Date:</span>
+                        <span style="font-weight: 700; color: #0f172a;">{{ subscription.end_date.strftime('%d %b %Y') }}</span>
+                    </div>
+                    <div style="border-top: 2px solid #e2e8f0; padding-top: 1rem; margin-top: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-weight: 700; color: #0f172a;">Amount Paid:</span>
+                            <span style="font-weight: 900; color: #6366f1; font-size: 1.25rem;">₹{{ subscription.price_paid }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: grid; gap: 1rem;">
+                {% if subscription.tier.name == 'BASIC' %}
+                <a href="{{ url_for('main.list_books') }}" style="padding: 14px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border-radius: 12px; font-weight: 700; text-decoration: none; display: block; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
+                    <i class="fas fa-book"></i> Browse Physical Books
+                </a>
+                {% elif subscription.tier.name == 'PRO' %}
+                <a href="{{ url_for('main.list_ebooks') }}" style="padding: 14px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border-radius: 12px; font-weight: 700; text-decoration: none; display: block; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
+                    <i class="fas fa-tablet-alt"></i> Explore Ebooks
+                </a>
+                {% elif subscription.tier.name == 'MAX' %}
+                <a href="{{ url_for('main.list_audiobooks') }}" style="padding: 14px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border-radius: 12px; font-weight: 700; text-decoration: none; display: block; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
+                    <i class="fas fa-headphones"></i> Listen to Audiobooks
+                </a>
+                {% endif %}
+                
+                <a href="{{ url_for('main.my_subscription') }}" style="padding: 14px; background: #f1f5f9; color: #64748b; border-radius: 12px; font-weight: 700; text-decoration: none; display: block;">
+                    View My Subscription
+                </a>
+            </div>
+        </div>
+
+        <!-- Receipt Note -->
+        <p style="color: #cbd5e0; font-size: 0.9rem;">
+            <i class="fas fa-envelope"></i> A confirmation email has been sent to your registered email address
+        </p>
+    </div>
+</div>
+
+<style>
+@keyframes bounceIn {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+</style>
+{% endblock %}
+                    (Expired)
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+
+        <!-- Pricing Cards Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+            {% for tier, info in plans.items() %}
+            <div style="background: white; border-radius: 20px; padding: 2.5rem; position: relative; transition: all 0.3s ease; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); animation: fadeInUp 0.6s ease-out; animation-delay: {{ loop.index0 * 0.1 }}s; animation-fill-mode: both;">
+                <!-- Badge for current plan -->
+                {% if current_subscription.tier == tier %}
+                <div style="position: absolute; top: 20px; right: 20px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">
+                    CURRENT
+                </div>
+                {% endif %}
+
+                <!-- Plan Header -->
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <h3 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem;">
+                        {{ info.name }}
+                    </h3>
+                    <div style="font-size: 3rem; font-weight: 900; color: #6366f1; margin-bottom: 0.5rem;">
+                        ₹{{ info.price }}
+                        {% if info.price > 0 %}
+                        <span style="font-size: 1rem; color: #64748b; font-weight: 600;">/month</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Features List -->
+                <div style="margin-bottom: 2rem;">
+                    <h4 style="font-size: 0.9rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 1rem; letter-spacing: 0.5px;">
+                        Features
+                    </h4>
+                    <ul style="list-style: none; padding: 0;">
+                        {% for feature in info.features %}
+                        <li style="padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 0.75rem;">
+                            <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.1rem;"></i>
+                            <span style="color: #334155; font-weight: 500;">{{ feature }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Restrictions -->
+                {% if info.restrictions %}
+                <div style="margin-bottom: 2rem;">
+                    <h4 style="font-size: 0.9rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 1rem; letter-spacing: 0.5px;">
+                        Restrictions
+                    </h4>
+                    <ul style="list-style: none; padding: 0;">
+                        {% for restriction in info.restrictions %}
+                        <li style="padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 0.75rem;">
+                            <i class="fas fa-times-circle" style="color: #ef4444; font-size: 1.1rem;"></i>
+                            <span style="color: #64748b; font-weight: 500;">{{ restriction }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Subscribe Button -->
+                {% if tier.name == 'FREE' %}
+                    {% if current_subscription.tier == tier %}
+                    <button disabled style="width: 100%; padding: 14px; background: #e2e8f0; color: #94a3b8; border: none; border-radius: 12px; font-weight: 700; cursor: not-allowed;">
+                        Current Plan
+                    </button>
+                    {% else %}
+                    <a href="{{ url_for('main.cancel_subscription') }}" onclick="return confirm('Are you sure you want to downgrade to Free?')" style="width: 100%; padding: 14px; background: #e2e8f0; color: #64748b; border: none; border-radius: 12px; font-weight: 700; text-align: center; display: block; text-decoration: none;">
+                        Downgrade to Free
+                    </a>
+                    {% endif %}
+                {% else %}
