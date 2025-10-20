@@ -5,63 +5,233 @@
     <div style="max-width: 1400px; margin: 0 auto;">
         <!-- Header -->
         <div style="text-align: center; margin-bottom: 4rem; animation: fadeInDown 0.6s ease-out;">
-            <h1 style="font-size: 3rem; font-weight: 900; color: white; margin-bottom: 1rem; letter-spacing: -1px;">
-                Choose Your Plan
+            <div style="display: inline-block; padding: 8px 20px; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 50px; color: #818cf8; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem;">
+                <i class="fas fa-crown"></i> Premium Plans
+            </div>
+            <h1 style="font-size: 3.5rem; font-weight: 900; color: white; margin-bottom: 1rem; letter-spacing: -1.5px;">
+                Unlock Advanced Features
             </h1>
-            <p style="font-size: 1.25rem; color: #cbd5e0;">Select the perfect subscription for your reading journey</p>
+            <p style="font-size: 1.25rem; color: #cbd5e0; max-width: 600px; margin: 0 auto;">
+                Choose the perfect plan for your reading journey and access exclusive content
+            </p>
         </div>
 
         <!-- Current Subscription Alert -->
         {% if current_subscription.tier.name != 'FREE' %}
-        <div style="max-width: 900px; margin: 0 auto 3rem; padding: 1.5rem; background: rgba(99, 102, 241, 0.1); border-left: 4px solid #6366f1; border-radius: 12px; color: #cbd5e0;">
-            <p style="margin: 0;">
-                <i class="fas fa-info-circle" style="color: #6366f1;"></i>
-                You are currently on the <strong style="color: #818cf8;">{{ current_subscription.tier.value.title() }}</strong> plan
-                {% if not current_subscription.is_expired %}
-                    ({{ current_subscription.days_remaining }} days remaining)
+        <div style="max-width: 900px; margin: 0 auto 3rem; padding: 1.5rem 2rem; background: rgba(99, 102, 241, 0.1); backdrop-filter: blur(10px); border-left: 4px solid #6366f1; border-radius: 12px; color: white; display: flex; align-items: center; gap: 1rem;">
+            <i class="fas fa-info-circle" style="color: #818cf8; font-size: 1.5rem;"></i>
+            <div style="flex: 1;">
+                <p style="margin: 0; font-weight: 600;">
+                    You are currently on the <strong style="color: #818cf8;">{{ current_subscription.tier.value.title() }}</strong> plan
+                    {% if not current_subscription.is_expired %}
+                        <span style="color: #cbd5e0;">({{ current_subscription.days_remaining }} days remaining)</span>
+                    {% else %}
+                        <span style="color: #ef4444;">(Expired)</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Pricing Cards Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto 3rem;">
+            {% for tier, info in plans.items() %}
+            <div style="background: {% if tier.name == 'PRO' %}linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%){% else %}rgba(30, 41, 59, 0.8){% endif %}; backdrop-filter: blur(10px); border: {% if tier.name == 'PRO' %}2px solid #6366f1{% else %}1px solid rgba(148, 163, 184, 0.2){% endif %}; border-radius: 20px; padding: 2.5rem; position: relative; transition: all 0.3s ease; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); animation: fadeInUp 0.6s ease-out; animation-delay: {{ loop.index0 * 0.1 }}s; animation-fill-mode: both; display: flex; flex-direction: column;">
+                
+                <!-- Popular Badge -->
+                {% if tier.name == 'PRO' %}
+                <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); color: white; padding: 6px 20px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);">
+                    <i class="fas fa-star"></i> Most Popular
+                </div>
+                {% endif %}
+
+                <!-- Current Plan Badge -->
+                {% if current_subscription.tier == tier %}
+                <div style="position: absolute; top: 20px; right: 20px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);">
+                    <i class="fas fa-check"></i> CURRENT
+                </div>
+                {% endif %}
+
+                <!-- Plan Icon & Header -->
+                <div style="text-align: center; margin-bottom: 2rem; margin-top: {% if tier.name == 'PRO' %}1rem{% else %}0{% endif %};">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">
+                        {% if tier.name == 'FREE' %}🆓
+                        {% elif tier.name == 'BASIC' %}📚
+                        {% elif tier.name == 'PRO' %}⭐
+                        {% elif tier.name == 'MAX' %}👑
+                        {% endif %}
+                    </div>
+                    <h3 style="font-size: 2rem; font-weight: 900; color: white; margin-bottom: 0.75rem; letter-spacing: -0.5px;">
+                        {{ info.name }}
+                    </h3>
+                    <div style="margin-bottom: 1rem;">
+                        <span style="font-size: 3.5rem; font-weight: 900; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                            ₹{{ info.price }}
+                        </span>
+                        {% if info.price > 0 %}
+                        <span style="font-size: 1.1rem; color: #94a3b8; font-weight: 600;">
+                            /month
+                        </span>
+                        <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 0.5rem;">
+                            (inclusive of GST)
+                        </p>
+                        {% else %}
+                        <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 0.5rem;">
+                            Forever free
+                        </p>
+                        {% endif %}
+                    </div>
+                    <p style="color: #cbd5e0; font-size: 0.95rem; line-height: 1.6;">
+                        {% if tier.name == 'FREE' %}
+                            Basic access to explore our library
+                        {% elif tier.name == 'BASIC' %}
+                            Perfect for physical book lovers
+                        {% elif tier.name == 'PRO' %}
+                            Best for digital reading enthusiasts
+                        {% elif tier.name == 'MAX' %}
+                            Ultimate all-access experience
+                        {% endif %}
+                    </p>
+                </div>
+
+                <!-- Features List -->
+                <div style="flex-grow: 1; margin-bottom: 2rem;">
+                    <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+                        {% for feature in info.features %}
+                        <li style="display: flex; align-items: flex-start; gap: 0.75rem; color: white;">
+                            <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.2rem; margin-top: 2px; flex-shrink: 0;"></i>
+                            <span style="font-weight: 500; line-height: 1.5;">{{ feature }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    {% if info.restrictions %}
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(148, 163, 184, 0.2);">
+                        <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+                            {% for restriction in info.restrictions %}
+                            <li style="display: flex; align-items: flex-start; gap: 0.75rem; color: #94a3b8;">
+                                <i class="fas fa-times-circle" style="color: #ef4444; font-size: 1.2rem; margin-top: 2px; flex-shrink: 0;"></i>
+                                <span style="font-weight: 500; line-height: 1.5;">{{ restriction }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Subscribe Button -->
+                {% if tier.name == 'FREE' %}
+                    {% if current_subscription.tier == tier %}
+                    <button disabled style="width: 100%; padding: 16px; background: rgba(148, 163, 184, 0.2); color: #94a3b8; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: not-allowed;">
+                        <i class="fas fa-check"></i> Your Current Plan
+                    </button>
+                    {% else %}
+                    <form action="{{ url_for('main.cancel_subscription') }}" method="post" onsubmit="return confirm('Are you sure you want to downgrade to Free?')">
+                        <button type="submit" style="width: 100%; padding: 16px; background: rgba(148, 163, 184, 0.2); color: #cbd5e0; border: 2px solid rgba(148, 163, 184, 0.3); border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s ease;">
+                            Downgrade to Free
+                        </button>
+                    </form>
+                    {% endif %}
                 {% else %}
                     {% if current_subscription.tier == tier and not current_subscription.is_expired %}
-                    <button disabled style="width: 100%; padding: 14px; background: #10b981; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: not-allowed;">
+                    <button disabled style="width: 100%; padding: 16px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: not-allowed; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
                         <i class="fas fa-check"></i> Active Plan
                     </button>
                     {% else %}
-                    <a href="{{ url_for('main.subscribe', tier=tier.name.lower()) }}" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 12px; font-weight: 700; text-align: center; display: block; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
+                    <a href="{{ url_for('main.subscribe', tier=tier.name.lower()) }}" style="width: 100%; padding: 16px; background: {% if tier.name == 'PRO' %}linear-gradient(135deg, #6366f1 0%, #4f46e5 100%){% else %}linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%){% endif %}; color: white; border: {% if tier.name == 'PRO' %}none{% else %}2px solid rgba(99, 102, 241, 0.4){% endif %}; border-radius: 12px; font-weight: 700; font-size: 1rem; text-align: center; display: block; text-decoration: none; transition: all 0.3s ease; box-shadow: {% if tier.name == 'PRO' %}0 4px 15px rgba(99, 102, 241, 0.4){% else %}none{% endif %};">
                         {% if current_subscription.tier.value == 'free' %}
-                            Upgrade Now
+                            <i class="fas fa-arrow-up"></i> Upgrade Now
                         {% else %}
-                            Switch Plan
+                            <i class="fas fa-sync-alt"></i> Switch Plan
                         {% endif %}
                     </a>
                     {% endif %}
                 {% endif %}
             </div>
-            {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Benefits Section -->
+        <div style="max-width: 900px; margin: 4rem auto; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 20px; padding: 3rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <h2 style="font-size: 2rem; font-weight: 800; color: white; text-align: center; margin-bottom: 2rem;">
+                Why Choose Our Premium Plans?
+            </h2>
             
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                <div style="text-align: center;">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.5rem;">
+                        🔒
+                    </div>
+                    <h4 style="color: #818cf8; font-weight: 700; margin-bottom: 0.5rem;">Secure Payments</h4>
+                    <p style="color: #cbd5e0; margin: 0; font-size: 0.95rem;">Protected by Razorpay</p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.5rem;">
+                        ⚡
+                    </div>
+                    <h4 style="color: #818cf8; font-weight: 700; margin-bottom: 0.5rem;">Instant Access</h4>
+                    <p style="color: #cbd5e0; margin: 0; font-size: 0.95rem;">Start reading immediately</p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.5rem;">
+                        🔄
+                    </div>
+                    <h4 style="color: #818cf8; font-weight: 700; margin-bottom: 0.5rem;">Cancel Anytime</h4>
+                    <p style="color: #cbd5e0; margin: 0; font-size: 0.95rem;">No long-term commitment</p>
+                </div>
+            </div>
         </div>
 
         <!-- FAQ Section -->
         <div style="max-width: 900px; margin: 4rem auto 0; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 20px; padding: 3rem; border: 1px solid rgba(255, 255, 255, 0.1);">
             <h2 style="font-size: 2rem; font-weight: 800; color: white; text-align: center; margin-bottom: 2rem;">
-                Frequently Asked Questions
+                <i class="fas fa-question-circle"></i> Frequently Asked Questions
             </h2>
             
             <div style="display: grid; gap: 1.5rem;">
-                <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
-                    <h4 style="color: #818cf8; font-weight: 700; margin-bottom: 0.5rem;">Can I cancel anytime?</h4>
-                    <p style="color: #cbd5e0; margin: 0;">Yes, you can cancel your subscription at any time. You'll continue to have access until the end of your billing period.</p>
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #6366f1;">
+                    <h4 style="color: #818cf8; font-weight: 700; margin-bottom: 0.75rem; font-size: 1.1rem;">
+                        <i class="fas fa-times-circle"></i> Can I cancel anytime?
+                    </h4>
+                    <p style="color: #cbd5e0; margin: 0; line-height: 1.6;">Yes, you can cancel your subscription at any time. You'll continue to have access until the end of your billing period.</p>
                 </div>
                 
-                <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
-                    <h4 style="color: #818cf8; font-weight: 700; margin-bottom: 0.5rem;">What payment methods do you accept?</h4>
-                    <p style="color: #cbd5e0; margin: 0;">We accept all major credit/debit cards, UPI, and net banking through Razorpay secure payment gateway.</p>
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #ec4899;">
+                    <h4 style="color: #f9a8d4; font-weight: 700; margin-bottom: 0.75rem; font-size: 1.1rem;">
+                        <i class="fas fa-credit-card"></i> What payment methods do you accept?
+                    </h4>
+                    <p style="color: #cbd5e0; margin: 0; line-height: 1.6;">We accept all major credit/debit cards, UPI, net banking, and digital wallets through Razorpay secure payment gateway.</p>
                 </div>
                 
-                <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
-                    <h4 style="color: #818cf8; font-weight: 700; margin-bottom: 0.5rem;">Can I upgrade or downgrade my plan?</h4>
-                    <p style="color: #cbd5e0; margin: 0;">Yes, you can change your plan at any time. When upgrading, you'll be charged the difference. When downgrading, changes take effect at the end of your current billing cycle.</p>
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #10b981;">
+                    <h4 style="color: #6ee7b7; font-weight: 700; margin-bottom: 0.75rem; font-size: 1.1rem;">
+                        <i class="fas fa-sync-alt"></i> Can I upgrade or downgrade my plan?
+                    </h4>
+                    <p style="color: #cbd5e0; margin: 0; line-height: 1.6;">Yes, you can change your plan at any time. When upgrading, you'll get instant access. When downgrading, changes take effect at the end of your current billing cycle.</p>
+                </div>
+
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #f59e0b;">
+                    <h4 style="color: #fbbf24; font-weight: 700; margin-bottom: 0.75rem; font-size: 1.1rem;">
+                        <i class="fas fa-shield-alt"></i> Is my payment information secure?
+                    </h4>
+                    <p style="color: #cbd5e0; margin: 0; line-height: 1.6;">Absolutely! We use Razorpay's secure payment infrastructure. We never store your card details on our servers.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
 {% endblock %}

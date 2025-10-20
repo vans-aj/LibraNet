@@ -12,8 +12,9 @@ def list_ebooks():
     """Display list of ebooks."""
     # Check subscription access
     if not current_user.has_access_to_ebooks():
-        flash('You need a Pro or Max subscription to access ebooks.', 'warning')
-        return redirect(url_for('main.subscriptions'))
+        return render_template('upgrade_required.html', 
+                             title='Upgrade Required',
+                             feature='ebooks')
     
     search_term = request.args.get('q', '', type=str)
     
@@ -41,8 +42,9 @@ def ebook_detail(ebook_id):
     """Display ebook details."""
     # Check subscription access
     if not current_user.has_access_to_ebooks():
-        flash('You need a Pro or Max subscription to access ebooks.', 'warning')
-        return redirect(url_for('main.subscriptions'))
+        return render_template('upgrade_required.html', 
+                             title='Upgrade Required',
+                             feature='ebooks')
     
     ebook = Ebook.query.get_or_404(ebook_id)
     
@@ -59,8 +61,9 @@ def read_ebook(ebook_id):
     """Read/view ebook."""
     # Check subscription access
     if not current_user.has_access_to_ebooks():
-        flash('You need a Pro or Max subscription to access ebooks.', 'warning')
-        return redirect(url_for('main.subscriptions'))
+        return render_template('upgrade_required.html', 
+                             title='Upgrade Required',
+                             feature='ebooks')
     
     ebook = Ebook.query.get_or_404(ebook_id)
     
@@ -77,8 +80,9 @@ def download_ebook(ebook_id):
     """Download ebook file."""
     # Check subscription access
     if not current_user.has_access_to_ebooks():
-        flash('You need a Pro or Max subscription to download ebooks.', 'warning')
-        return redirect(url_for('main.subscriptions'))
+        return render_template('upgrade_required.html', 
+                             title='Upgrade Required',
+                             feature='ebooks')
     
     ebook = Ebook.query.get_or_404(ebook_id)
     

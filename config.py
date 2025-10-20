@@ -24,3 +24,5 @@ class Config:
     # This is a Flask-SQLAlchemy configuration setting that we can disable
     # to save resources, as we are not using the event system.
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID')
+    RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET') or 'YOUR_KEY_SECRET'

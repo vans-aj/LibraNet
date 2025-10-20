@@ -11,8 +11,9 @@ def list_audiobooks():
     """Display list of audiobooks."""
     # Check subscription access
     if not current_user.has_access_to_audiobooks():
-        flash('You need a Max subscription to access audiobooks.', 'warning')
-        return redirect(url_for('main.subscriptions'))
+        return render_template('upgrade_required.html', 
+                             title='Upgrade Required',
+                             feature='audiobooks')
     
     search_term = request.args.get('q', '', type=str)
     
@@ -41,8 +42,9 @@ def audiobook_detail(audiobook_id):
     """Display audiobook details."""
     # Check subscription access
     if not current_user.has_access_to_audiobooks():
-        flash('You need a Max subscription to access audiobooks.', 'warning')
-        return redirect(url_for('main.subscriptions'))
+        return render_template('upgrade_required.html', 
+                             title='Upgrade Required',
+                             feature='audiobooks')
     
     audiobook = Audiobook.query.get_or_404(audiobook_id)
     
@@ -59,8 +61,9 @@ def listen_audiobook(audiobook_id):
     """Listen to audiobook."""
     # Check subscription access
     if not current_user.has_access_to_audiobooks():
-        flash('You need a Max subscription to access audiobooks.', 'warning')
-        return redirect(url_for('main.subscriptions'))
+        return render_template('upgrade_required.html', 
+                             title='Upgrade Required',
+                             feature='audiobooks')
     
     audiobook = Audiobook.query.get_or_404(audiobook_id)
     
@@ -77,8 +80,9 @@ def download_audiobook(audiobook_id):
     """Download audiobook file."""
     # Check subscription access
     if not current_user.has_access_to_audiobooks():
-        flash('You need a Max subscription to download audiobooks.', 'warning')
-        return redirect(url_for('main.subscriptions'))
+        return render_template('upgrade_required.html', 
+                             title='Upgrade Required',
+                             feature='audiobooks')
     
     audiobook = Audiobook.query.get_or_404(audiobook_id)
     

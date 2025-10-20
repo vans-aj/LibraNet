@@ -6,64 +6,173 @@
         <!-- Header -->
         <div style="text-align: center; margin-bottom: 2rem;">
             <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2.5rem;">
-                {% if tier.name == 'BASIC' %}🎯
-                {% elif tier.name == 'PRO' %}📚
-                {% elif tier.name == 'MAX' %}🎧
+                {% if tier.name == 'BASIC' %}📚
+                {% elif tier.name == 'PRO' %}⭐
+                {% elif tier.name == 'MAX' %}👑
                 {% endif %}
             </div>
             <h1 style="font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem;">
                 Confirm Subscription
             </h1>
-            <p style="color: #64748b;">You're about to subscribe to {{ plan.name }}</p>
+            <p style="color: #64748b; font-size: 1.1rem;">You're about to subscribe to <strong style="color: #6366f1;">{{ plan.name }}</strong></p>
         </div>
 
         <!-- Plan Summary -->
-        <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; padding: 2rem; margin-bottom: 2rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <span style="font-weight: 700; color: #0f172a;">Plan:</span>
-                <span style="font-weight: 700; color: #6366f1;">{{ plan.name }}</span>
+        <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; border: 2px solid #e2e8f0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
+                <span style="font-weight: 700; color: #64748b; font-size: 0.95rem;">Plan:</span>
+                <span style="font-weight: 800; color: #6366f1; font-size: 1.1rem;">{{ plan.name }}</span>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <span style="font-weight: 700; color: #0f172a;">Duration:</span>
-                <span style="font-weight: 700; color: #0f172a;">{{ plan.duration_days }} days</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
+                <span style="font-weight: 700; color: #64748b; font-size: 0.95rem;">Duration:</span>
+                <span style="font-weight: 700; color: #0f172a;">{{ plan.duration_days }} days (1 month)</span>
             </div>
-            <div style="border-top: 2px solid #e2e8f0; padding-top: 1rem; margin-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
+                <span style="font-weight: 700; color: #64748b; font-size: 0.95rem;">Base Price:</span>
+                <span style="font-weight: 700; color: #0f172a;">₹{{ (plan.price / 1.18)|round(2) }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
+                <span style="font-weight: 700; color: #64748b; font-size: 0.95rem;">GST (18%):</span>
+                <span style="font-weight: 700; color: #0f172a;">₹{{ (plan.price - (plan.price / 1.18))|round(2) }}</span>
+            </div>
+            <div style="padding-top: 1rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">Total:</span>
-                    <span style="font-size: 1.75rem; font-weight: 900; color: #6366f1;">₹{{ plan.price }}</span>
+                    <span style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">Total Amount:</span>
+                    <span style="font-size: 2rem; font-weight: 900; color: #6366f1;">₹{{ plan.price }}</span>
                 </div>
             </div>
         </div>
 
         <!-- Features Preview -->
-        <div style="margin-bottom: 2rem;">
-            <h3 style="font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem;">What you'll get:</h3>
-            <ul style="list-style: none; padding: 0;">
-                {% for feature in plan.features[:3] %}
-                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.75rem; color: #334155;">
-                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
-                    {{ feature }}
+        <div style="margin-bottom: 2rem; background: rgba(99, 102, 241, 0.05); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.1);">
+            <h3 style="font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-gift" style="color: #6366f1;"></i>
+                What you'll get:
+            </h3>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for feature in plan.features[:4] %}
+                <li style="padding: 0.75rem 0; display: flex; align-items: center; gap: 0.75rem; color: #334155; {% if not loop.last %}border-bottom: 1px solid rgba(99, 102, 241, 0.1);{% endif %}">
+                    <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.1rem;"></i>
+                    <span style="font-weight: 500;">{{ feature }}</span>
                 </li>
                 {% endfor %}
             </ul>
         </div>
 
-        <!-- Confirm Form -->
-        <form action="{{ url_for('main.subscribe', tier=tier.name.lower()) }}" method="post">
+        <!-- Payment Button with Razorpay -->
+        <form id="subscriptionForm" method="post">
             <div style="display: grid; gap: 1rem;">
-                <button type="submit" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
-                    <i class="fas fa-credit-card"></i> Proceed to Payment
+                <button type="button" id="razorpayButton" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+                    <i class="fas fa-lock"></i>
+                    <span>Proceed to Secure Payment</span>
                 </button>
-                <a href="{{ url_for('main.subscriptions') }}" style="width: 100%; padding: 14px; background: #f1f5f9; color: #64748b; border: none; border-radius: 12px; font-weight: 700; text-align: center; display: block; text-decoration: none;">
-                    Cancel
+                
+                <a href="{{ url_for('main.subscriptions') }}" style="width: 100%; padding: 14px; background: #f1f5f9; color: #64748b; border: 2px solid #e2e8f0; border-radius: 12px; font-weight: 700; text-align: center; display: block; text-decoration: none; transition: all 0.3s ease;">
+                    <i class="fas fa-arrow-left"></i> Back to Plans
                 </a>
             </div>
         </form>
 
         <!-- Security Note -->
-        <p style="text-align: center; margin-top: 2rem; font-size: 0.85rem; color: #94a3b8;">
-            <i class="fas fa-lock"></i> Secured by Razorpay - Your payment information is encrypted
-        </p>
+        <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(16, 185, 129, 0.05); border-left: 4px solid #10b981; border-radius: 8px;">
+            <p style="text-align: center; margin: 0; font-size: 0.9rem; color: #059669; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <i class="fas fa-shield-alt"></i>
+                Secured by Razorpay - Your payment information is encrypted
+            </p>
+        </div>
+
+        <!-- Payment Logos -->
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.75rem;">We accept</p>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                <span style="padding: 0.5rem 1rem; background: #f8fafc; border-radius: 6px; font-weight: 600; color: #64748b; font-size: 0.85rem;">💳 Cards</span>
+                <span style="padding: 0.5rem 1rem; background: #f8fafc; border-radius: 6px; font-weight: 600; color: #64748b; font-size: 0.85rem;">📱 UPI</span>
+                <span style="padding: 0.5rem 1rem; background: #f8fafc; border-radius: 6px; font-weight: 600; color: #64748b; font-size: 0.85rem;">🏦 Net Banking</span>
+                <span style="padding: 0.5rem 1rem; background: #f8fafc; border-radius: 6px; font-weight: 600; color: #64748b; font-size: 0.85rem;">💰 Wallets</span>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Razorpay Checkout Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById('razorpayButton').addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    var options = {
+        "key": "{{ razorpay_key_id }}", // Your Razorpay Key ID
+        "amount": "{{ (plan.price * 100)|int }}", // Amount in paise
+        "currency": "INR",
+        "name": "LibraNet",
+        "description": "{{ plan.name }} Subscription",
+        "image": "https://your-logo-url.com/logo.png", // Your logo URL
+        "handler": function (response) {
+            // Payment successful
+            // Send payment details to server
+            fetch("{{ url_for('main.verify_payment') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature,
+                    tier: "{{ tier.name.lower() }}"
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "{{ url_for('main.subscription_success', subscription_id=0) }}".replace('/0', '/' + data.subscription_id);
+                } else {
+                    alert('Payment verification failed. Please contact support.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Something went wrong. Please try again.');
+            });
+        },
+        "prefill": {
+            "name": "{{ current_user.name }}",
+            "email": "{{ current_user.email }}",
+            "contact": "{{ current_user.phone or '' }}"
+        },
+        "notes": {
+            "student_id": "{{ current_user.id }}",
+            "tier": "{{ tier.name }}"
+        },
+        "theme": {
+            "color": "#6366f1"
+        },
+        "modal": {
+            "ondismiss": function() {
+                console.log('Payment cancelled by user');
+            }
+        }
+    };
+    
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+        alert('Payment failed: ' + response.error.description);
+    });
+    
+    rzp1.open();
+});
+</script>
+
+<style>
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#razorpayButton:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.5);
+}
+</style>
 {% endblock %}

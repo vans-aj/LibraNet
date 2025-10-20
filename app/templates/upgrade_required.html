@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 80vh; padding: 4rem 2rem; display: flex; align-items: center; justify-content: center;">
+    <div style="max-width: 600px; width: 100%; text-align: center;">
+        <!-- Lock Icon -->
+        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; animation: pulse 2s ease-in-out infinite;">
+            <i class="fas fa-lock" style="font-size: 3.5rem; color: #f59e0b;"></i>
+        </div>
+
+        <!-- Message -->
+        <div style="background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); animation: fadeInUp 0.6s ease-out;">
+            <h1 style="font-size: 2.5rem; font-weight: 900; color: #0f172a; margin-bottom: 1rem; letter-spacing: -1px;">
+                {% if feature == 'ebooks' %}
+                    📚 Ebooks Access Required
+                {% elif feature == 'audiobooks' %}
+                    🎧 Audiobooks Access Required
+                {% elif feature == 'physical_books' %}
+                    📖 Physical Books Access Required
+                {% else %}
+                    🔒 Premium Feature
+                {% endif %}
+            </h1>
+            
+            <p style="font-size: 1.1rem; color: #64748b; margin-bottom: 2rem; line-height: 1.6;">
+                {% if feature == 'ebooks' %}
+                    Upgrade to <strong style="color: #6366f1;">Pro</strong> or <strong style="color: #6366f1;">Max</strong> plan to access our entire ebook collection.
+                {% elif feature == 'audiobooks' %}
+                    Upgrade to <strong style="color: #6366f1;">Max</strong> plan to listen to unlimited audiobooks.
+                {% elif feature == 'physical_books' %}
+                    Upgrade to <strong style="color: #6366f1;">Basic</strong>, <strong style="color: #6366f1;">Pro</strong>, or <strong style="color: #6366f1;">Max</strong> plan to borrow physical books.
+                {% else %}
+                    This feature requires a premium subscription.
+                {% endif %}
+            </p>
+
+            <!-- Current Plan -->
+            <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%); padding: 1rem; border-radius: 12px; margin-bottom: 2rem;">
+                <p style="margin: 0; color: #6366f1; font-weight: 600;">
+                    <i class="fas fa-info-circle"></i>
+                    Current Plan: <strong>{{ current_user.subscription_tier.value.title() }}</strong>
+                </p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: grid; gap: 1rem;">
+                <a href="{{ url_for('main.subscriptions') }}" style="padding: 16px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border-radius: 12px; font-weight: 700; font-size: 1rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.75rem; box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); transition: all 0.3s ease;">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Upgrade Now</span>
+                </a>
+                
+                <a href="{{ url_for('main.landing_page') }}" style="padding: 14px; background: #f1f5f9; color: #64748b; border-radius: 12px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+                    <i class="fas fa-home"></i>
+                    <span>Go Home</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <div style="margin-top: 3rem; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 16px; padding: 2rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <h3 style="color: white; font-weight: 700; margin-bottom: 1rem; font-size: 1.1rem;">
+                ✨ What Premium Members Get:
+            </h3>
+            <div style="display: grid; gap: 0.75rem; text-align: left;">
+                {% if feature == 'ebooks' %}
+                <div style="color: #cbd5e0; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    <span>Unlimited ebook downloads</span>
+                </div>
+                <div style="color: #cbd5e0; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    <span>Offline reading support</span>
+                </div>
+                <div style="color: #cbd5e0; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    <span>Access to latest releases</span>
+                </div>
+                {% elif feature == 'audiobooks' %}
+                <div style="color: #cbd5e0; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    <span>Unlimited audiobook streaming</span>
+                </div>
+                <div style="color: #cbd5e0; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    <span>Offline listening</span>
+                </div>
+                <div style="color: #cbd5e0; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    <span>Multiple device sync</span>
+                </div>
+                {% elif feature == 'physical_books' %}
+                <div style="color: #cbd5e0; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    <span>Borrow up to 5 books at once</span>
+                </div>
+                <div style="color: #cbd5e0; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    <span>14-day loan periods</span>
+                </div>
+                <div style="color: #cbd5e0; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    <span>Priority book reservations</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+a[href*="subscriptions"]:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.5);
+}
+</style>
+{% endblock %}

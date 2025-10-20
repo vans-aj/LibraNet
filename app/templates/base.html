@@ -1,5 +1,5 @@
 <!-- ========================================
-FILE: app/templates/base.html (CORRECTED)
+FILE: app/templates/base.html (FIXED)
 ======================================== -->
 <!DOCTYPE html>
 <html lang="en">
@@ -44,34 +44,37 @@ FILE: app/templates/base.html (CORRECTED)
             <!-- Authenticated User Menu -->
             <ul class="nav-links">
               <!-- Physical Books - Available for BASIC, PRO, MAX -->
-              {% if current_user.has_access_to_physical_books() %}
               <li>
-                <a href="{{ url_for('main.list_books') }}" class="nav-link">
+                <a href="{{ url_for('main.list_books') }}" class="nav-link {% if not current_user.has_access_to_physical_books() %}nav-link-locked{% endif %}">
                   <i class="fas fa-book"></i>
-                  <span>Physical Books</span>
+                  <span>Books</span>
+                  {% if not current_user.has_access_to_physical_books() %}
+                  <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6;"></i>
+                  {% endif %}
                 </a>
               </li>
-              {% endif %}
               
               <!-- Ebooks - Available for PRO, MAX -->
-              {% if current_user.has_access_to_ebooks() %}
               <li>
-                <a href="{{ url_for('main.list_ebooks') }}" class="nav-link">
+                <a href="{% if current_user.has_access_to_ebooks() %}{{ url_for('main.list_ebooks') }}{% else %}{{ url_for('main.subscriptions') }}{% endif %}" class="nav-link {% if not current_user.has_access_to_ebooks() %}nav-link-locked{% endif %}">
                   <i class="fas fa-tablet-alt"></i>
                   <span>Ebooks</span>
+                  {% if not current_user.has_access_to_ebooks() %}
+                  <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6;"></i>
+                  {% endif %}
                 </a>
               </li>
-              {% endif %}
               
               <!-- Audiobooks - Available for MAX only -->
-              {% if current_user.has_access_to_audiobooks() %}
               <li>
-                <a href="{{ url_for('main.list_audiobooks') }}" class="nav-link">
+                <a href="{% if current_user.has_access_to_audiobooks() %}{{ url_for('main.list_audiobooks') }}{% else %}{{ url_for('main.subscriptions') }}{% endif %}" class="nav-link {% if not current_user.has_access_to_audiobooks() %}nav-link-locked{% endif %}">
                   <i class="fas fa-headphones"></i>
                   <span>Audiobooks</span>
+                  {% if not current_user.has_access_to_audiobooks() %}
+                  <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6;"></i>
+                  {% endif %}
                 </a>
               </li>
-              {% endif %}
               
               <!-- Subscription Link -->
               <li>
@@ -94,12 +97,11 @@ FILE: app/templates/base.html (CORRECTED)
               <li>
                 <a href="{{ url_for('main.dues') }}" class="nav-link">
                   <i class="fas fa-wallet"></i>
-                  <span>My Dues</span>
+                  <span>Dues</span>
                 </a>
               </li>
 
-              <!-- Bag only for physical books -->
-              {% if current_user.has_access_to_physical_books() %}
+              <!-- Bag - Always visible but shows upgrade notice if no access -->
               <li>
                 <a href="{{ url_for('main.my_bag') }}" class="nav-link nav-bag">
                   <i class="fas fa-shopping-bag"></i>
@@ -109,7 +111,6 @@ FILE: app/templates/base.html (CORRECTED)
                   {% endif %}
                 </a>
               </li>
-              {% endif %}
 
               <!-- User Dropdown Menu -->
               <li class="nav-dropdown">
@@ -130,7 +131,7 @@ FILE: app/templates/base.html (CORRECTED)
                   </a>
                   <a href="{{ url_for('main.my_loans') }}" class="dropdown-item">
                     <i class="fas fa-history"></i>
-                    My Loans
+                    Loan History
                   </a>
                   <a href="{{ url_for('main.dues') }}" class="dropdown-item">
                     <i class="fas fa-wallet"></i>
@@ -178,7 +179,7 @@ FILE: app/templates/base.html (CORRECTED)
         <div class="flashes">
           {% for category, message in messages %}
           <div class="alert alert-{{ category }}">
-            <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}times-circle{% else %}info-circle{% endif %}"></i>
+            <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}times-circle{% elif category == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
             <span>{{ message }}</span>
           </div>
           {% endfor %}
@@ -202,6 +203,110 @@ FILE: app/templates/base.html (CORRECTED)
                 max-width: none;
             }
         {% endif %}
+
+        /* Locked link styling */
+        .nav-link-locked {
+            opacity: 0.7;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-link-locked:hover {
+            opacity: 0.9;
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .nav-link-locked .fa-lock {
+            margin-left: 4px;
+        }
+
+        /* Flash messages styling */
+        .flashes {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 400px;
+        }
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid;
+            animation: slideInRight 0.3s ease-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .alert i {
+            font-size: 1.2rem;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            color: #065f46;
+            border-left-color: #10b981;
+        }
+
+        .alert-success i {
+            color: #10b981;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+            color: #7f1d1d;
+            border-left-color: #ef4444;
+        }
+
+        .alert-danger i {
+            color: #ef4444;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+            color: #78350f;
+            border-left-color: #f59e0b;
+        }
+
+        .alert-warning i {
+            color: #f59e0b;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+            color: #312e81;
+            border-left-color: #6366f1;
+        }
+
+        .alert-info i {
+            color: #6366f1;
+        }
+
+        @media (max-width: 768px) {
+            .flashes {
+                top: 70px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+        }
     </style>
 
     <script>
@@ -243,6 +348,35 @@ FILE: app/templates/base.html (CORRECTED)
         link.addEventListener('click', function() {
           mobileMenuToggle?.classList.remove('active');
           navMenu?.classList.remove('active');
+        });
+      });
+
+      // Auto-dismiss flash messages after 5 seconds
+      setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+          alert.style.animation = 'slideOutRight 0.3s ease-out';
+          setTimeout(() => alert.remove(), 300);
+        });
+      }, 5000);
+
+      // Handle locked nav links
+      document.querySelectorAll('.nav-link-locked').forEach(link => {
+        link.addEventListener('click', function(e) {
+          const hasLock = this.querySelector('.fa-lock');
+          if (hasLock) {
+            e.preventDefault();
+            // Show upgrade message
+            const message = document.createElement('div');
+            message.className = 'alert alert-warning';
+            message.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Upgrade your plan to access this feature!</span>';
+            document.querySelector('.flashes')?.appendChild(message) || document.body.appendChild(message);
+            
+            setTimeout(() => {
+              message.style.animation = 'slideOutRight 0.3s ease-out';
+              setTimeout(() => message.remove(), 300);
+            }, 3000);
+          }
         });
       });
     </script>

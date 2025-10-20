@@ -16,6 +16,12 @@ def landing_page():
 @login_required
 def list_books():
     """Displays the list of all books in the catalog."""
+    # Check subscription access
+    if not current_user.has_access_to_physical_books():
+        return render_template('upgrade_required.html', 
+                             title='Upgrade Required',
+                             feature='physical_books')
+    
     search_term = request.args.get('q', '', type=str)
 
     if search_term:
@@ -34,6 +40,12 @@ def list_books():
 @login_required
 def book_detail(book_id):
     """Displays the details of a specific book."""
+    # Check subscription access
+    if not current_user.has_access_to_physical_books():
+        return render_template('upgrade_required.html', 
+                             title='Upgrade Required',
+                             feature='physical_books')
+    
     book = PhysicalBook.query.get_or_404(book_id)
     existing_loan = Loan.query.filter_by(
         student_id=current_user.id,
@@ -47,6 +59,11 @@ def book_detail(book_id):
 @login_required
 def add_to_bag(book_id):
     """Adds a book to the user's bag stored in the session."""
+    # Check subscription access
+    if not current_user.has_access_to_physical_books():
+        flash('Upgrade your plan to borrow physical books!', 'warning')
+        return redirect(url_for('main.subscriptions'))
+    
     if 'bag' not in session:
         session['bag'] = []
 
@@ -63,6 +80,12 @@ def add_to_bag(book_id):
 @login_required
 def my_bag():
     """Displays the contents of the user's bag."""
+    # Check subscription access
+    if not current_user.has_access_to_physical_books():
+        return render_template('upgrade_required.html', 
+                             title='Upgrade Required',
+                             feature='physical_books')
+    
     if 'bag' not in session or not session['bag']:
         return render_template('my_bag.html', title='My Bag', books=[], can_borrow=False, due_date=datetime.utcnow() + timedelta(days=14))
 
@@ -91,6 +114,11 @@ def remove_from_bag(book_id):
 @login_required
 def borrow():
     """Handles the borrowing of all books currently in the bag."""
+    # Check subscription access
+    if not current_user.has_access_to_physical_books():
+        flash('Upgrade your plan to borrow physical books!', 'warning')
+        return redirect(url_for('main.subscriptions'))
+    
     if 'bag' not in session or not session['bag']:
         flash('Your bag is empty.', 'danger')
         return redirect(url_for('main.my_bag'))

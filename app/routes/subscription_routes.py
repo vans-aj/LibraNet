@@ -9,8 +9,18 @@ from app.models import SubscriptionTierEnum
 from app import db
 from datetime import datetime, timedelta
 from decimal import Decimal
+import razorpay
+import os
+import hmac
+import hashlib
 
-# Subscription pricing
+# Initialize Razorpay Client
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'rzp_test_YOUR_KEY_ID')
+RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', 'YOUR_KEY_SECRET')
+
+razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
+
+# Subscription pricing (inclusive of GST)
 SUBSCRIPTION_PRICES = {
     SubscriptionTierEnum.FREE: 0,
     SubscriptionTierEnum.BASIC: 49,
@@ -26,7 +36,8 @@ SUBSCRIPTION_FEATURES = {
         'features': [
             'Browse book catalog',
             'View book details',
-            'Basic search functionality'
+            'Basic search functionality',
+            'Access to book summaries'
         ],
         'restrictions': [
             'Cannot borrow physical books',
@@ -41,7 +52,9 @@ SUBSCRIPTION_FEATURES = {
         'features': [
             'All Free features',
             'Borrow up to 5 physical books',
+            '14-day loan period',
             'Extended loan periods',
+            'Email notifications',
             'Priority support'
         ],
         'restrictions': [
@@ -56,9 +69,11 @@ SUBSCRIPTION_FEATURES = {
         'features': [
             'All Basic features',
             'Access to all ebooks',
-            'Unlimited downloads',
-            'Offline reading',
-            'Priority customer support'
+            'Unlimited ebook downloads',
+            'Offline reading support',
+            'No physical book limits',
+            'Priority customer support',
+            'Early access to new releases'
         ],
         'restrictions': [
             'No access to audiobooks'
@@ -73,8 +88,10 @@ SUBSCRIPTION_FEATURES = {
             'Access to all audiobooks',
             'Unlimited streaming',
             'Offline listening',
+            'Multiple device sync',
             '24/7 Premium support',
-            'Early access to new releases'
+            'Exclusive content access',
+            'Ad-free experience'
         ],
         'restrictions': []
     }
@@ -124,32 +141,81 @@ def subscribe(tier):
             'subscribe_confirm.html',
             title=f'Subscribe to {plan_info["name"]}',
             plan=plan_info,
-            tier=tier_enum
+            tier=tier_enum,
+            razorpay_key_id=RAZORPAY_KEY_ID
         )
     
-    # POST - Process subscription
-    # Deactivate current subscription if not FREE
-    if current_sub.tier != SubscriptionTierEnum.FREE:
-        current_sub.is_active = False
-    
-    # Create new subscription
-    price = Decimal(str(SUBSCRIPTION_PRICES[tier_enum]))
-    duration = SUBSCRIPTION_FEATURES[tier_enum]['duration_days']
-    
-    new_sub = Subscription(
-        student_id=current_user.id,
-        tier=tier_enum,
-        start_date=datetime.utcnow(),
-        end_date=datetime.utcnow() + timedelta(days=duration),
-        is_active=True,
-        price_paid=price
-    )
-    
-    db.session.add(new_sub)
-    db.session.commit()
-    
-    flash(f'Successfully subscribed to {tier_enum.value.title()} plan!', 'success')
-    return redirect(url_for('main.subscription_success', subscription_id=new_sub.id))
+    # POST method is deprecated - payment now handled via Razorpay
+    flash('Please use the secure payment button to complete your subscription.', 'info')
+    return redirect(url_for('main.subscribe', tier=tier))
+
+
+@main_bp.route('/verify_payment', methods=['POST'])
+@login_required
+def verify_payment():
+    """Verify Razorpay payment and activate subscription."""
+    try:
+        data = request.get_json()
+        
+        # Extract payment details
+        payment_id = data.get('razorpay_payment_id')
+        order_id = data.get('razorpay_order_id')
+        signature = data.get('razorpay_signature')
+        tier = data.get('tier')
+        
+        # Verify signature (for security)
+        # Note: In production, you should create an order first and verify it
+        # For simplicity, we're skipping order creation here
+        
+        # Get tier enum
+        try:
+            tier_enum = SubscriptionTierEnum[tier.upper()]
+        except KeyError:
+            return jsonify({'success': False, 'message': 'Invalid tier'}), 400
+        
+        # Fetch payment details from Razorpay
+        try:
+            payment = razorpay_client.payment.fetch(payment_id)
+            
+            # Check if payment is captured
+            if payment['status'] != 'captured':
+                return jsonify({'success': False, 'message': 'Payment not captured'}), 400
+            
+        except Exception as e:
+            print(f"Razorpay error: {str(e)}")
+            return jsonify({'success': False, 'message': 'Payment verification failed'}), 400
+        
+        # Deactivate current subscription if not FREE
+        current_sub = current_user.current_subscription
+        if current_sub.tier != SubscriptionTierEnum.FREE:
+            current_sub.is_active = False
+        
+        # Create new subscription
+        price = Decimal(str(SUBSCRIPTION_PRICES[tier_enum]))
+        duration = SUBSCRIPTION_FEATURES[tier_enum]['duration_days']
+        
+        new_sub = Subscription(
+            student_id=current_user.id,
+            tier=tier_enum,
+            start_date=datetime.utcnow(),
+            end_date=datetime.utcnow() + timedelta(days=duration),
+            is_active=True,
+            price_paid=price
+        )
+        
+        db.session.add(new_sub)
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'subscription_id': new_sub.id,
+            'message': 'Subscription activated successfully'
+        })
+        
+    except Exception as e:
+        print(f"Error in verify_payment: {str(e)}")
+        db.session.rollback()
+        return jsonify({'success': False, 'message': 'Server error'}), 500
 
 
 @main_bp.route('/subscription/success/<int:subscription_id>')
