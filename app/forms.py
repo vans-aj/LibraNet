@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, SelectField, TextAreaField, FloatField
-from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError, Optional, NumberRange
+from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError, Optional, NumberRange, Regexp
 from app.models.student import Student
 from app.models.physical_book import PhysicalBook
 from app.models.ebook import Ebook
@@ -9,27 +9,46 @@ from app.models.audiobook import Audiobook
 class RegistrationForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired(), Length(min=2, max=150)])
     roll_no = StringField('University Roll Number', validators=[DataRequired(), Length(min=4, max=64)])
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    email = StringField('Email', validators=[
+        DataRequired(), 
+        Email(),
+        Regexp(r'^[a-zA-Z0-9._%+-]+@gehu\.ac\.in$', message='Only @gehu.ac.in email addresses are allowed')
+    ])
+    phone = StringField('Phone', validators=[Length(min=10, max=10)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password', message='Passwords must match.')])
-    phone = StringField('Phone',validators=[Length(min=10,max=10)])
-    submit = SubmitField('Register')
+    confirm_password = PasswordField('Confirm Password', validators=[
+        DataRequired(), 
+        EqualTo('password', message='Passwords must match.')
+    ])
+    submit = SubmitField('Send OTP')
 
     def validate_email(self, email):
         user = Student.query.filter_by(email=email.data).first()
         if user:
-            raise ValidationError('That email is already taken. Please choose a different one.')
+            raise ValidationError('That email is already registered. Please login instead.')
 
     def validate_roll_no(self, roll_no):
         user = Student.query.filter_by(roll_no=roll_no.data).first()
         if user:
             raise ValidationError('That roll number is already registered.')
 
+
+class OTPVerificationForm(FlaskForm):
+    otp = StringField('Enter OTP', validators=[
+        DataRequired(),
+        Length(min=6, max=6, message='OTP must be 6 digits'),
+        Regexp(r'^\d{6}$', message='OTP must contain only numbers')
+    ])
+    submit = SubmitField('Verify OTP')
+
+
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+# ... rest of your forms remain the same ...
 
 class BookForm(FlaskForm):
     """Form for admins to add or edit a physical book."""

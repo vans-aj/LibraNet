@@ -71,6 +71,11 @@
 </div>
 
 <style>
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes bounceIn {
     0% { transform: scale(0); opacity: 0; }
     50% { transform: scale(1.1); }
@@ -78,77 +83,3 @@
 }
 </style>
 {% endblock %}
-                    (Expired)
-                {% endif %}
-            </p>
-        </div>
-        {% endif %}
-
-        <!-- Pricing Cards Grid -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
-            {% for tier, info in plans.items() %}
-            <div style="background: white; border-radius: 20px; padding: 2.5rem; position: relative; transition: all 0.3s ease; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); animation: fadeInUp 0.6s ease-out; animation-delay: {{ loop.index0 * 0.1 }}s; animation-fill-mode: both;">
-                <!-- Badge for current plan -->
-                {% if current_subscription.tier == tier %}
-                <div style="position: absolute; top: 20px; right: 20px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">
-                    CURRENT
-                </div>
-                {% endif %}
-
-                <!-- Plan Header -->
-                <div style="text-align: center; margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem;">
-                        {{ info.name }}
-                    </h3>
-                    <div style="font-size: 3rem; font-weight: 900; color: #6366f1; margin-bottom: 0.5rem;">
-                        ₹{{ info.price }}
-                        {% if info.price > 0 %}
-                        <span style="font-size: 1rem; color: #64748b; font-weight: 600;">/month</span>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <!-- Features List -->
-                <div style="margin-bottom: 2rem;">
-                    <h4 style="font-size: 0.9rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 1rem; letter-spacing: 0.5px;">
-                        Features
-                    </h4>
-                    <ul style="list-style: none; padding: 0;">
-                        {% for feature in info.features %}
-                        <li style="padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 0.75rem;">
-                            <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.1rem;"></i>
-                            <span style="color: #334155; font-weight: 500;">{{ feature }}</span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-                <!-- Restrictions -->
-                {% if info.restrictions %}
-                <div style="margin-bottom: 2rem;">
-                    <h4 style="font-size: 0.9rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 1rem; letter-spacing: 0.5px;">
-                        Restrictions
-                    </h4>
-                    <ul style="list-style: none; padding: 0;">
-                        {% for restriction in info.restrictions %}
-                        <li style="padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 0.75rem;">
-                            <i class="fas fa-times-circle" style="color: #ef4444; font-size: 1.1rem;"></i>
-                            <span style="color: #64748b; font-weight: 500;">{{ restriction }}</span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endif %}
-
-                <!-- Subscribe Button -->
-                {% if tier.name == 'FREE' %}
-                    {% if current_subscription.tier == tier %}
-                    <button disabled style="width: 100%; padding: 14px; background: #e2e8f0; color: #94a3b8; border: none; border-radius: 12px; font-weight: 700; cursor: not-allowed;">
-                        Current Plan
-                    </button>
-                    {% else %}
-                    <a href="{{ url_for('main.cancel_subscription') }}" onclick="return confirm('Are you sure you want to downgrade to Free?')" style="width: 100%; padding: 14px; background: #e2e8f0; color: #64748b; border: none; border-radius: 12px; font-weight: 700; text-align: center; display: block; text-decoration: none;">
-                        Downgrade to Free
-                    </a>
-                    {% endif %}
-                {% else %}

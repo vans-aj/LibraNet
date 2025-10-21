@@ -25,7 +25,7 @@
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
                 <span style="font-weight: 700; color: #64748b; font-size: 0.95rem;">Duration:</span>
-                <span style="font-weight: 700; color: #0f172a;">{{ plan.duration_days }} days (1 month)</span>
+                <span style="font-weight: 700; color: #0f172a;">{{ plan.duration_days }} days (6 months)</span>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
                 <span style="font-weight: 700; color: #64748b; font-size: 0.95rem;">Base Price:</span>
@@ -59,19 +59,17 @@
             </ul>
         </div>
 
-        <!-- Payment Button with Razorpay -->
-        <form id="subscriptionForm" method="post">
-            <div style="display: grid; gap: 1rem;">
-                <button type="button" id="razorpayButton" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
-                    <i class="fas fa-lock"></i>
-                    <span>Proceed to Secure Payment</span>
-                </button>
-                
-                <a href="{{ url_for('main.subscriptions') }}" style="width: 100%; padding: 14px; background: #f1f5f9; color: #64748b; border: 2px solid #e2e8f0; border-radius: 12px; font-weight: 700; text-align: center; display: block; text-decoration: none; transition: all 0.3s ease;">
-                    <i class="fas fa-arrow-left"></i> Back to Plans
-                </a>
-            </div>
-        </form>
+        <!-- Payment Button -->
+        <div style="display: grid; gap: 1rem;">
+            <button type="button" id="razorpayButton" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+                <i class="fas fa-lock"></i>
+                <span>Proceed to Secure Payment</span>
+            </button>
+            
+            <a href="{{ url_for('main.subscriptions') }}" style="width: 100%; padding: 14px; background: #f1f5f9; color: #64748b; border: 2px solid #e2e8f0; border-radius: 12px; font-weight: 700; text-align: center; display: block; text-decoration: none; transition: all 0.3s ease;">
+                <i class="fas fa-arrow-left"></i> Back to Plans
+            </a>
+        </div>
 
         <!-- Security Note -->
         <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(16, 185, 129, 0.05); border-left: 4px solid #10b981; border-radius: 8px;">
@@ -91,24 +89,54 @@
                 <span style="padding: 0.5rem 1rem; background: #f8fafc; border-radius: 6px; font-weight: 600; color: #64748b; font-size: 0.85rem;">💰 Wallets</span>
             </div>
         </div>
+
+        <!-- Test Mode Notice -->
+        <div style="margin-top: 2rem; padding: 1rem; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2);">
+            <p style="margin: 0; font-size: 0.85rem; color: #92400e; text-align: center;">
+                <i class="fas fa-info-circle"></i>
+                <strong>Test Mode:</strong> Use card 4111 1111 1111 1111 for testing
+            </p>
+        </div>
     </div>
 </div>
 
-<!-- Razorpay Checkout Script -->
+<!-- Load Razorpay Script -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <script>
+console.log('Page loaded, initializing payment button...');
+
+// Check if Razorpay is loaded
+if (typeof Razorpay === 'undefined') {
+    console.error('Razorpay library not loaded!');
+    alert('Payment gateway is not available. Please refresh the page and try again.');
+} else {
+    console.log('Razorpay library loaded successfully');
+}
+
 document.getElementById('razorpayButton').addEventListener('click', function(e) {
     e.preventDefault();
+    console.log('Payment button clicked');
+    
+    // Check again if Razorpay is available
+    if (typeof Razorpay === 'undefined') {
+        alert('Payment gateway is not loaded. Please refresh the page and try again.');
+        return;
+    }
     
     var options = {
-        "key": "{{ razorpay_key_id }}", // Your Razorpay Key ID
-        "amount": "{{ (plan.price * 100)|int }}", // Amount in paise
+        "key": "{{ razorpay_key_id }}",
+        "amount": "{{ (plan.price * 100)|int }}",
         "currency": "INR",
         "name": "LibraNet",
         "description": "{{ plan.name }} Subscription",
-        "image": "https://your-logo-url.com/logo.png", // Your logo URL
+        "image": "https://cdn-icons-png.flaticon.com/512/2232/2232688.png",
         "handler": function (response) {
-            // Payment successful
+            console.log('Payment successful:', response);
+            
+            // Show loading message
+            alert('Payment successful! Processing your subscription...');
+            
             // Send payment details to server
             fetch("{{ url_for('main.verify_payment') }}", {
                 method: 'POST',
@@ -117,22 +145,26 @@ document.getElementById('razorpayButton').addEventListener('click', function(e) 
                 },
                 body: JSON.stringify({
                     razorpay_payment_id: response.razorpay_payment_id,
-                    razorpay_order_id: response.razorpay_order_id,
-                    razorpay_signature: response.razorpay_signature,
                     tier: "{{ tier.name.lower() }}"
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.json();
+            })
             .then(data => {
+                console.log('Server response:', data);
                 if (data.success) {
                     window.location.href = "{{ url_for('main.subscription_success', subscription_id=0) }}".replace('/0', '/' + data.subscription_id);
                 } else {
-                    alert('Payment verification failed. Please contact support.');
+                    alert('Payment verification failed: ' + (data.message || 'Unknown error'));
+                    window.location.href = "{{ url_for('main.subscriptions') }}";
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Something went wrong. Please try again.');
+                alert('Something went wrong. Please contact support with payment ID: ' + response.razorpay_payment_id);
+                window.location.href = "{{ url_for('main.subscriptions') }}";
             });
         },
         "prefill": {
@@ -149,17 +181,27 @@ document.getElementById('razorpayButton').addEventListener('click', function(e) 
         },
         "modal": {
             "ondismiss": function() {
-                console.log('Payment cancelled by user');
+                console.log('Payment popup closed by user');
             }
         }
     };
     
-    var rzp1 = new Razorpay(options);
-    rzp1.on('payment.failed', function (response){
-        alert('Payment failed: ' + response.error.description);
-    });
+    console.log('Opening Razorpay with options:', options);
     
-    rzp1.open();
+    try {
+        var rzp1 = new Razorpay(options);
+        
+        rzp1.on('payment.failed', function (response){
+            console.error('Payment failed:', response.error);
+            alert('Payment failed: ' + response.error.description + '\n\nTest Card: 4111 1111 1111 1111\nCVV: Any 3 digits\nExpiry: Any future date');
+        });
+        
+        rzp1.open();
+        console.log('Razorpay popup opened');
+    } catch (error) {
+        console.error('Error opening Razorpay:', error);
+        alert('Failed to open payment gateway: ' + error.message);
+    }
 });
 </script>
 
