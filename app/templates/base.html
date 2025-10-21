@@ -1,13 +1,9 @@
-<!-- ========================================
-FILE: app/templates/base.html (FIXED)
-======================================== -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title }} - LibraNet</title>
-    <!-- Modern CSS Files -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-global.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-landing.css') }}">
@@ -17,91 +13,91 @@ FILE: app/templates/base.html (FIXED)
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-loans.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-auth.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-footer.css') }}">
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   </head>
   <body>
     {% if 'login' not in request.endpoint and 'register' not in request.endpoint %}
-    <!-- MODERN NAVBAR -->
     <nav class="navbar">
       <div class="nav-container">
-        <!-- Logo/Brand -->
         <a href="{{ url_for('main.landing_page') }}" class="nav-brand">
           <i class="fas fa-book-open"></i>
           <span>LibraNet</span>
         </a>
 
-        <!-- Mobile Menu Toggle -->
         <button class="mobile-menu-toggle" id="mobileMenuToggle">
           <span></span>
           <span></span>
           <span></span>
         </button>
 
-        <!-- Navigation Links -->
         <div class="nav-menu" id="navMenu">
-          {% if current_user.is_authenticated %}
-            <!-- Authenticated User Menu -->
-            <ul class="nav-links">
-              <!-- Physical Books - Available for BASIC, PRO, MAX -->
-              <li>
-                <a href="{{ url_for('main.list_books') }}" class="nav-link {% if not current_user.has_access_to_physical_books() %}nav-link-locked{% endif %}">
+          <ul class="nav-links">
+
+            <li class="nav-dropdown">
+              <button class="nav-link dropdown-toggle">
+                <i class="fas fa-search"></i>
+                <span>Browse</span>
+                <i class="fas fa-chevron-down"></i>
+              </button>
+              <div class="dropdown-menu">
+                <a href="{{ url_for('main.list_books') }}" 
+                   class="dropdown-item {% if current_user.is_authenticated and not current_user.has_access_to_physical_books() %}nav-link-locked{% endif %}">
                   <i class="fas fa-book"></i>
                   <span>Books</span>
-                  {% if not current_user.has_access_to_physical_books() %}
-                  <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6;"></i>
+                  {% if current_user.is_authenticated and not current_user.has_access_to_physical_books() %}
+                    <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6;"></i>
                   {% endif %}
                 </a>
-              </li>
-              
-              <!-- Ebooks - Available for PRO, MAX -->
-              <li>
-                <a href="{% if current_user.has_access_to_ebooks() %}{{ url_for('main.list_ebooks') }}{% else %}{{ url_for('main.subscriptions') }}{% endif %}" class="nav-link {% if not current_user.has_access_to_ebooks() %}nav-link-locked{% endif %}">
+                
+                <a href="{{ url_for('main.list_ebooks') }}" 
+                   class="dropdown-item {% if current_user.is_authenticated and not current_user.has_access_to_ebooks() %}nav-link-locked{% endif %}">
                   <i class="fas fa-tablet-alt"></i>
                   <span>Ebooks</span>
-                  {% if not current_user.has_access_to_ebooks() %}
-                  <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6;"></i>
+                  {% if current_user.is_authenticated and not current_user.has_access_to_ebooks() %}
+                    <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6;"></i>
                   {% endif %}
                 </a>
-              </li>
-              
-              <!-- Audiobooks - Available for MAX only -->
-              <li>
-                <a href="{% if current_user.has_access_to_audiobooks() %}{{ url_for('main.list_audiobooks') }}{% else %}{{ url_for('main.subscriptions') }}{% endif %}" class="nav-link {% if not current_user.has_access_to_audiobooks() %}nav-link-locked{% endif %}">
+                
+                <a href="{{ url_for('main.list_audiobooks') }}" 
+                   class="dropdown-item {% if current_user.is_authenticated and not current_user.has_access_to_audiobooks() %}nav-link-locked{% endif %}">
                   <i class="fas fa-headphones"></i>
                   <span>Audiobooks</span>
-                  {% if not current_user.has_access_to_audiobooks() %}
-                  <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6;"></i>
+                  {% if current_user.is_authenticated and not current_user.has_access_to_audiobooks() %}
+                    <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6;"></i>
                   {% endif %}
                 </a>
-              </li>
-              
-              <!-- Subscription Link -->
-              <li>
-                <a href="{{ url_for('main.subscriptions') }}" class="nav-link">
-                  <i class="fas fa-crown"></i>
-                  <span>Plans</span>
-                  {% if current_user.subscription_tier.name == 'FREE' %}
+              </div>
+            </li>
+            
+            <li>
+              <a href="{{ url_for('main.subscriptions') }}" class="nav-link">
+                <i class="fas fa-crown"></i>
+                <span>Plans</span>
+                {% if current_user.is_authenticated and current_user.subscription_tier.name == 'FREE' %}
                   <span class="badge" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">FREE</span>
-                  {% endif %}
-                </a>
-              </li>
-              
-              <li>
-                <a href="{{ url_for('main.my_loans') }}" class="nav-link">
+                {% endif %}
+              </a>
+            </li>
+
+            {% if current_user.is_authenticated %}
+              <li class="nav-dropdown">
+                <button class="nav-link dropdown-toggle">
                   <i class="fas fa-bookmark"></i>
-                  <span>My Loans</span>
-                </a>
+                  <span>My Library</span>
+                  <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <a href="{{ url_for('main.my_loans') }}" class="dropdown-item">
+                    <i class="fas fa-bookmark"></i>
+                    <span>My Loans</span>
+                  </a>
+                  <a href="{{ url_for('main.dues') }}" class="dropdown-item">
+                    <i class="fas fa-wallet"></i>
+                    <span>My Dues</span>
+                  </a>
+                </div>
               </li>
 
-              <li>
-                <a href="{{ url_for('main.dues') }}" class="nav-link">
-                  <i class="fas fa-wallet"></i>
-                  <span>Dues</span>
-                </a>
-              </li>
-
-              <!-- Bag - Always visible but shows upgrade notice if no access -->
               <li>
                 <a href="{{ url_for('main.my_bag') }}" class="nav-link nav-bag">
                   <i class="fas fa-shopping-bag"></i>
@@ -112,7 +108,6 @@ FILE: app/templates/base.html (FIXED)
                 </a>
               </li>
 
-              <!-- User Dropdown Menu -->
               <li class="nav-dropdown">
                 <button class="nav-link dropdown-toggle">
                   <i class="fas fa-user-circle"></i>
@@ -144,16 +139,7 @@ FILE: app/templates/base.html (FIXED)
                   </a>
                 </div>
               </li>
-            </ul>
-          {% else %}
-            <!-- Non-Authenticated User Menu -->
-            <ul class="nav-links">
-              <li>
-                <a href="{{ url_for('main.subscriptions') }}" class="nav-link">
-                  <i class="fas fa-crown"></i>
-                  <span>Plans</span>
-                </a>
-              </li>
+            {% else %}
               <li>
                 <a href="{{ url_for('main.login') }}" class="nav-link">
                   <i class="fas fa-sign-in-alt"></i>
@@ -166,8 +152,8 @@ FILE: app/templates/base.html (FIXED)
                   <span>Register</span>
                 </a>
               </li>
-            </ul>
-          {% endif %}
+            {% endif %}
+          </ul>
         </div>
       </div>
     </nav>
@@ -205,19 +191,19 @@ FILE: app/templates/base.html (FIXED)
         {% endif %}
 
         /* Locked link styling */
-        .nav-link-locked {
+        .nav-link-locked, .dropdown-item.nav-link-locked {
             opacity: 0.7;
             position: relative;
             cursor: pointer;
         }
 
-        .nav-link-locked:hover {
+        .nav-link-locked:hover, .dropdown-item.nav-link-locked:hover {
             opacity: 0.9;
             background: rgba(245, 158, 11, 0.1);
             color: #f59e0b;
         }
 
-        .nav-link-locked .fa-lock {
+        .nav-link-locked .fa-lock, .dropdown-item.nav-link-locked .fa-lock {
             margin-left: 4px;
         }
 
@@ -252,6 +238,17 @@ FILE: app/templates/base.html (FIXED)
             to {
                 opacity: 1;
                 transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100px);
             }
         }
 
@@ -325,12 +322,19 @@ FILE: app/templates/base.html (FIXED)
         toggle.addEventListener('click', function(e) {
           e.preventDefault();
           const dropdown = this.closest('.nav-dropdown');
-          dropdown.classList.toggle('open');
           
-          // Close other dropdowns
+          // Check if this dropdown is already open
+          const wasOpen = dropdown.classList.contains('open');
+
+          // Close all dropdowns
           document.querySelectorAll('.nav-dropdown').forEach(other => {
-            if (other !== dropdown) other.classList.remove('open');
+            other.classList.remove('open');
           });
+
+          // If it wasn't open, open it
+          if (!wasOpen) {
+            dropdown.classList.add('open');
+          }
         });
       });
 
@@ -343,8 +347,8 @@ FILE: app/templates/base.html (FIXED)
         }
       });
 
-      // Close mobile menu when clicking a link
-      document.querySelectorAll('.nav-link').forEach(link => {
+      // Close mobile menu when clicking a link (but not a dropdown toggle)
+      document.querySelectorAll('.nav-link:not(.dropdown-toggle), .dropdown-item').forEach(link => {
         link.addEventListener('click', function() {
           mobileMenuToggle?.classList.remove('active');
           navMenu?.classList.remove('active');
@@ -355,13 +359,13 @@ FILE: app/templates/base.html (FIXED)
       setTimeout(function() {
         const alerts = document.querySelectorAll('.alert');
         alerts.forEach(alert => {
-          alert.style.animation = 'slideOutRight 0.3s ease-out';
+          alert.style.animation = 'slideOutRight 0.3s ease-out forwards';
           setTimeout(() => alert.remove(), 300);
         });
       }, 5000);
 
       // Handle locked nav links
-      document.querySelectorAll('.nav-link-locked').forEach(link => {
+      document.querySelectorAll('.nav-link-locked, .dropdown-item.nav-link-locked').forEach(link => {
         link.addEventListener('click', function(e) {
           const hasLock = this.querySelector('.fa-lock');
           if (hasLock) {
@@ -370,10 +374,17 @@ FILE: app/templates/base.html (FIXED)
             const message = document.createElement('div');
             message.className = 'alert alert-warning';
             message.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Upgrade your plan to access this feature!</span>';
-            document.querySelector('.flashes')?.appendChild(message) || document.body.appendChild(message);
+            
+            let flashesContainer = document.querySelector('.flashes');
+            if (!flashesContainer) {
+                flashesContainer = document.createElement('div');
+                flashesContainer.className = 'flashes';
+                document.body.appendChild(flashesContainer);
+            }
+            flashesContainer.appendChild(message);
             
             setTimeout(() => {
-              message.style.animation = 'slideOutRight 0.3s ease-out';
+              message.style.animation = 'slideOutRight 0.3s ease-out forwards';
               setTimeout(() => message.remove(), 300);
             }, 3000);
           }

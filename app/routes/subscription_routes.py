@@ -48,12 +48,11 @@ SUBSCRIPTION_FEATURES = {
     SubscriptionTierEnum.BASIC: {
         'name': 'Basic',
         'price': 49,
-        'duration_days': 30,
+        'duration_days': 182,
         'features': [
             'All Free features',
             'Borrow up to 5 physical books',
-            '14-day loan period',
-            'Extended loan periods',
+            '6-month loan period',
             'Email notifications',
             'Priority support'
         ],
@@ -65,7 +64,7 @@ SUBSCRIPTION_FEATURES = {
     SubscriptionTierEnum.PRO: {
         'name': 'Pro',
         'price': 150,
-        'duration_days': 30,
+        'duration_days': 182,
         'features': [
             'All Basic features',
             'Access to all ebooks',
@@ -82,7 +81,7 @@ SUBSCRIPTION_FEATURES = {
     SubscriptionTierEnum.MAX: {
         'name': 'Max',
         'price': 300,
-        'duration_days': 30,
+        'duration_days': 182,
         'features': [
             'All Pro features',
             'Access to all audiobooks',
@@ -130,7 +129,7 @@ def subscribe(tier):
     current_sub = current_user.current_subscription
     
     # Check if already subscribed to this tier
-    if current_sub.tier == tier_enum and not current_sub.is_expired:
+    if current_sub and current_sub.tier == tier_enum and not current_sub.is_expired:
         flash(f'You are already subscribed to {tier_enum.value.title()} plan.', 'info')
         return redirect(url_for('main.subscriptions'))
     
@@ -163,10 +162,6 @@ def verify_payment():
         signature = data.get('razorpay_signature')
         tier = data.get('tier')
         
-        # Verify signature (for security)
-        # Note: In production, you should create an order first and verify it
-        # For simplicity, we're skipping order creation here
-        
         # Get tier enum
         try:
             tier_enum = SubscriptionTierEnum[tier.upper()]
@@ -185,10 +180,16 @@ def verify_payment():
             print(f"Razorpay error: {str(e)}")
             return jsonify({'success': False, 'message': 'Payment verification failed'}), 400
         
-        # Deactivate current subscription if not FREE
-        current_sub = current_user.current_subscription
-        if current_sub.tier != SubscriptionTierEnum.FREE:
-            current_sub.is_active = False
+        # ==================================
+        # HERE IS THE FIX (Bug 1)
+        # Deactivate ALL currently active subscriptions for this user
+        # This handles both None and existing 'FREE' subscriptions correctly.
+        # ==================================
+        Subscription.query.filter_by(
+            student_id=current_user.id, 
+            is_active=True
+        ).update({'is_active': False})
+
         
         # Create new subscription
         price = Decimal(str(SUBSCRIPTION_PRICES[tier_enum]))
@@ -245,7 +246,7 @@ def cancel_subscription():
     """Cancel current subscription."""
     current_sub = current_user.current_subscription
     
-    if current_sub.tier == SubscriptionTierEnum.FREE:
+    if not current_sub or current_sub.tier == SubscriptionTierEnum.FREE:
         flash('Cannot cancel free subscription.', 'warning')
         return redirect(url_for('main.subscriptions'))
     
@@ -271,16 +272,32 @@ def cancel_subscription():
 @login_required
 def my_subscription():
     """View current subscription details."""
+    # ==================================
+    # HERE IS THE FIX (Bug 2)
+    # 1. Get the current subscription object (which might be None)
+    # 2. Get the tier *enum* (which defaults to FREE, thanks to your Student model)
+    # 3. Get the plan_info dict using the tier enum
+    # ==================================
     current_sub = current_user.current_subscription
-    plan_info = SUBSCRIPTION_FEATURES[current_sub.tier]
+    current_tier_enum = current_user.subscription_tier
+    plan_info = SUBSCRIPTION_FEATURES[current_tier_enum]
     
     # Get subscription history
     all_subs = Subscription.query.filter_by(student_id=current_user.id).order_by(Subscription.start_date.desc()).all()
     
+    # If the user is new and has no subscription object yet, create a
+    # temporary one just for display on this page (don't save to DB)
+    if not current_sub:
+        current_sub = Subscription(
+            student_id=current_user.id,
+            tier=SubscriptionTierEnum.FREE,
+            is_active=True
+        )
+
     return render_template(
         'my_subscription.html',
         title='My Subscription',
         subscription=current_sub,
-        plan=plan_info,
+        plan=plan_info, # 'plan' is now guaranteed to be the correct dictionary
         subscription_history=all_subs
     )

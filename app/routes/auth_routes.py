@@ -72,17 +72,27 @@ def my_loans():
     # We must now use the .book relationship which points to a PhysicalBook.
     loans = Loan.query.filter_by(student_id=current_user.id).all()
 
-    # Sync overdue fines (simple rule: 2.00 per overdue day)
+    # --- CHANGED: Sync overdue fines (₹500.00 per week) ---
     now_dt = datetime.utcnow()
-    fine_rate_per_day = Decimal('2.00')
+    fine_rate_per_week = Decimal('500.00') # New rate
     changes_made = False
+    
     for loan in loans:
         if loan.returned_date is None and loan.due_date < now_dt:
-            days_overdue = max((now_dt - loan.due_date).days, 1)
-            amount_due = fine_rate_per_day * days_overdue
+            days_overdue = (now_dt - loan.due_date).days
+            
+            if days_overdue > 0:
+                # Calculate weeks overdue, rounding up.
+                # (1-7 days = 1 week, 8-14 days = 2 weeks, etc.)
+                weeks_overdue = (days_overdue - 1) // 7 + 1
+                amount_due = fine_rate_per_week * weeks_overdue
+            else:
+                amount_due = Decimal('0.00')
+
             if loan.fine is None:
-                db.session.add(Fine(amount=amount_due, loan=loan))
-                changes_made = True
+                if amount_due > 0:
+                    db.session.add(Fine(amount=amount_due, loan=loan))
+                    changes_made = True
             else:
                 if loan.fine.status == FineStatusEnum.PENDING and loan.fine.amount != amount_due:
                     loan.fine.amount = amount_due

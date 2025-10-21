@@ -9,7 +9,8 @@ class Loan(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     borrowed_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    due_date = db.Column(db.DateTime, nullable=False, default=lambda: datetime.utcnow() + timedelta(days=14))
+    # --- CHANGED: Default due date is now 182 days (6 months) ---
+    due_date = db.Column(db.DateTime, nullable=False, default=lambda: datetime.utcnow() + timedelta(days=182))
     returned_date = db.Column(db.DateTime, nullable=True) # Is NULL until the book is returned
     status = db.Column(db.Enum(LoanStatusEnum), default=LoanStatusEnum.BORROWED, nullable=False)
 

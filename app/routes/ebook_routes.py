@@ -7,15 +7,8 @@ from sqlalchemy import or_
 import os
 
 @main_bp.route('/ebooks')
-@login_required
 def list_ebooks():
-    """Display list of ebooks."""
-    # Check subscription access
-    if not current_user.has_access_to_ebooks():
-        return render_template('upgrade_required.html', 
-                             title='Upgrade Required',
-                             feature='ebooks')
-    
+    """Display list of ebooks. (Publicly accessible)"""
     search_term = request.args.get('q', '', type=str)
     
     if search_term:
@@ -37,15 +30,8 @@ def list_ebooks():
 
 
 @main_bp.route('/ebook/<int:ebook_id>')
-@login_required
 def ebook_detail(ebook_id):
-    """Display ebook details."""
-    # Check subscription access
-    if not current_user.has_access_to_ebooks():
-        return render_template('upgrade_required.html', 
-                             title='Upgrade Required',
-                             feature='ebooks')
-    
+    """Display ebook details. (Publicly accessible)"""
     ebook = Ebook.query.get_or_404(ebook_id)
     
     return render_template(

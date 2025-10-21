@@ -13,15 +13,8 @@ def landing_page():
     return render_template('landing_page.html', title='Welcome to LibraNet')
 
 @main_bp.route('/books')
-@login_required
 def list_books():
-    """Displays the list of all books in the catalog."""
-    # Check subscription access
-    if not current_user.has_access_to_physical_books():
-        return render_template('upgrade_required.html', 
-                             title='Upgrade Required',
-                             feature='physical_books')
-    
+    """Displays the list of all books in the catalog. (Publicly accessible)"""
     search_term = request.args.get('q', '', type=str)
 
     if search_term:
@@ -37,21 +30,17 @@ def list_books():
     return render_template('books.html', title='Book Catalog', books=books, search_term=search_term)
 
 @main_bp.route('/book/<int:book_id>')
-@login_required
 def book_detail(book_id):
-    """Displays the details of a specific book."""
-    # Check subscription access
-    if not current_user.has_access_to_physical_books():
-        return render_template('upgrade_required.html', 
-                             title='Upgrade Required',
-                             feature='physical_books')
-    
+    """Displays the details of a specific book. (Publicly accessible)"""
     book = PhysicalBook.query.get_or_404(book_id)
-    existing_loan = Loan.query.filter_by(
-        student_id=current_user.id,
-        book_id=book.id,
-        returned_date=None
-    ).first()
+    existing_loan = None
+    
+    if current_user.is_authenticated:
+        existing_loan = Loan.query.filter_by(
+            student_id=current_user.id,
+            book_id=book.id,
+            returned_date=None
+        ).first()
 
     return render_template('book_detail.html', title=book.title, book=book, existing_loan=existing_loan)
 

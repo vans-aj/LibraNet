@@ -6,15 +6,8 @@ from app import db
 from sqlalchemy import or_
 
 @main_bp.route('/audiobooks')
-@login_required
 def list_audiobooks():
-    """Display list of audiobooks."""
-    # Check subscription access
-    if not current_user.has_access_to_audiobooks():
-        return render_template('upgrade_required.html', 
-                             title='Upgrade Required',
-                             feature='audiobooks')
-    
+    """Display list of audiobooks. (Publicly accessible)"""
     search_term = request.args.get('q', '', type=str)
     
     if search_term:
@@ -37,15 +30,8 @@ def list_audiobooks():
 
 
 @main_bp.route('/audiobook/<int:audiobook_id>')
-@login_required
 def audiobook_detail(audiobook_id):
-    """Display audiobook details."""
-    # Check subscription access
-    if not current_user.has_access_to_audiobooks():
-        return render_template('upgrade_required.html', 
-                             title='Upgrade Required',
-                             feature='audiobooks')
-    
+    """Display audiobook details. (Publicly accessible)"""
     audiobook = Audiobook.query.get_or_404(audiobook_id)
     
     return render_template(
