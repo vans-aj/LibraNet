@@ -53,46 +53,27 @@
                 {% endif %}
 
                 <!-- Plan Icon & Header -->
-                <div style="text-align: center; margin-bottom: 2rem; margin-top: {% if tier.name == 'PRO' %}1rem{% else %}0{% endif %};">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">
-                        {% if tier.name == 'FREE' %}🆓
-                        {% elif tier.name == 'BASIC' %}📚
-                        {% elif tier.name == 'PRO' %}⭐
-                        {% elif tier.name == 'MAX' %}👑
-                        {% endif %}
-                    </div>
-                    <h3 style="font-size: 2rem; font-weight: 900; color: white; margin-bottom: 0.75rem; letter-spacing: -0.5px;">
-                        {{ info.name }}
-                    </h3>
-                    <div style="margin-bottom: 1rem;">
-                        <span style="font-size: 3.5rem; font-weight: 900; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-                            ₹{{ info.price }}
-                        </span>
-                        {% if info.price > 0 %}
-                        <span style="font-size: 1.1rem; color: #94a3b8; font-weight: 600;">
-                            /Semester
-                        </span>
-                        <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 0.5rem;">
-                            (inclusive of GST)
-                        </p>
-                        {% else %}
-                        <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 0.5rem;">
-                            Forever free
-                        </p>
-                        {% endif %}
-                    </div>
-                    <p style="color: #cbd5e0; font-size: 0.95rem; line-height: 1.6;">
-                        {% if tier.name == 'FREE' %}
-                            Basic access to explore our library
-                        {% elif tier.name == 'BASIC' %}
-                            Perfect for physical book lovers
-                        {% elif tier.name == 'PRO' %}
-                            Best for digital reading enthusiasts
-                        {% elif tier.name == 'MAX' %}
-                            Ultimate all-access experience
-                        {% endif %}
-                    </p>
-                </div>
+                <!-- Plan Icon & Header -->
+<div style="text-align: center; margin-bottom: 2rem; margin-top: {% if tier.name == 'PRO' %}1rem{% else %}0{% endif %};">
+    <div style="margin-bottom: 1rem;">
+        {% if tier.name == 'FREE' %}
+        <div style="width: 80px; height: 80px; background: rgba(148, 163, 184, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="LibraNet" style="width: 50px; height: 50px; opacity: 0.6;">
+        </div>
+        {% elif tier.name == 'BASIC' %}
+        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0.1) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="LibraNet" style="width: 50px; height: 50px;">
+        </div>
+        {% elif tier.name == 'PRO' %}
+        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);">
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="LibraNet" style="width: 50px; height: 50px; filter: brightness(0) invert(1);">
+        </div>
+        {% elif tier.name == 'MAX' %}
+        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);">
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="LibraNet" style="width: 50px; height: 50px; filter: brightness(0) invert(1);">
+        </div>
+        {% endif %}
+    </div>
 
                 <!-- Features List -->
                 <div style="flex-grow: 1; margin-bottom: 2rem;">

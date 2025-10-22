@@ -13,7 +13,7 @@ from app.models.loan import Loan
 from app.models.fine import Fine
 from app.models.otp import OTP
 from app.models import FineStatusEnum
-from flask_mail import Message
+from flask_mail import Message # type: ignore
 
 # Helper function to send OTP email
 def send_otp_email(email, otp_code):
@@ -51,6 +51,7 @@ def send_otp_email(email, otp_code):
                 .header h1 {{
                     margin: 0;
                     font-size: 28px;
+                    font-weight: 700;
                 }}
                 .content {{
                     padding: 40px 30px;
@@ -89,8 +90,8 @@ def send_otp_email(email, otp_code):
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>📚 LibraNet</h1>
-                    <p style="margin: 10px 0 0;">Email Verification</p>
+                    <h1>LibraNet</h1>
+                    <p style="margin: 10px 0 0; font-size: 16px;">Email Verification</p>
                 </div>
                 <div class="content">
                     <h2 style="color: #0f172a;">Welcome to LibraNet!</h2>
@@ -301,12 +302,19 @@ def login():
 
 
 
+@main_bp.route('/logout/confirm')
+@login_required
+def logout_confirm():
+    """Display logout confirmation page."""
+    return render_template('logout_confirm.html', title='Confirm Logout')
+
 @main_bp.route('/logout')
+@login_required
 def logout():
     """Logs the user out."""
-    logout_user() # This function from Flask-Login clears the user's session
-    flash('You have been logged out.', 'info')
-    return redirect(url_for('main.login'))
+    logout_user()
+    flash('You have been logged out successfully.', 'success')
+    return redirect(url_for('main.landing_page'))
 
 @main_bp.route('/my-loans')
 @login_required

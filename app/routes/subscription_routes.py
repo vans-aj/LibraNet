@@ -9,7 +9,7 @@ from app.models import SubscriptionTierEnum
 from app import db
 from datetime import datetime, timedelta
 from decimal import Decimal
-import razorpay
+import razorpay # type: ignore
 import os
 import hmac
 import hashlib
