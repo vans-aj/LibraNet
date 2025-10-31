@@ -10,5 +10,6 @@ from app.routes import (
     admin_routes,
     subscription_routes,
     ebook_routes,
-    audiobook_routes
+    audiobook_routes,
+    chat_routes  # ← Add this
 )
