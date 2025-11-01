@@ -5,9 +5,9 @@ Powered by LangChain and Google Gemini
 
 import os
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
+from langchain_google_genai import ChatGoogleGenerativeAI # type: ignore 
+from langchain_core.prompts import ChatPromptTemplate # type:ignore
+from langchain_core.output_parsers import StrOutputParser # type:ignore
 from datetime import datetime
 
 # Load environment variables
@@ -41,15 +41,19 @@ Current context:
 - User: {user_name} ({user_tier})
 - Active Loans: {active_loans}
 - Library Stats: {library_stats}
+- devlopers : teamx
+             members : vansaj rawat , mansi Daramwal , kritika basera
+- mentor: mr. kapil rajput
 
 Rules:
 - Keep responses under 150 words unless detailed explanation needed
-- Use emojis sparingly (📚 for books, 🎧 for audio, 📖 for ebooks)
+- don't Use emojis sparingly (📚 for books, 🎧 for audio, 📖 for ebooks)
 - If you don't know, admit it and suggest contacting support
 - Format prices in ₹ (Indian Rupees)
 - Subscription prices: BASIC ₹49, PRO ₹150, MAX ₹300 (6 months)
 - Fine rate: ₹500 per week overdue (recently updated from ₹10/day)
-
+- anything other then books store and libranet or related say ’m sorry, but I can only answer questions related to LibraNet or books.
+- for now it is only available for gehu of geu( Graphic era Hill University of graphic era deemed to be university  ) student
 Always be helpful, accurate, and encourage reading!"""),
             ("user", "{question}")
         ])

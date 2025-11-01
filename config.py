@@ -35,3 +35,7 @@ class Config:
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_USERNAME')
 
     OTP_EXPIRY_MINUTES = 10
+    os.environ['LANGCHAIN_API_KEY'] = os.getenv('LANGCHAIN_API_KEY')
+    os.environ['LANGCHAIN_PROJECT'] = os.getenv('LANGCHAIN_PROJECT')
+    os.environ['LANGCHAIN_TRACING_V2'] = "true"
+    os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")

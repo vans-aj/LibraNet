@@ -4,50 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title }} - LibraNet</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/modern-global.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/modern-navbar.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/modern-landing.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/modern-books.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/modern-book-detail.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/modern-bag.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/modern-loans.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/modern-auth.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/modern-footer.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-global.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-navbar.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-landing.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-books.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-book-detail.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-bag.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-loans.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-auth.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-footer.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/floating-chat.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   </head>
   <body>
-    {% if 'login' not in request.endpoint and 'register' not in request.endpoint
-    %}
+    {% if 'login' not in request.endpoint and 'register' not in request.endpoint %}
     <nav class="navbar">
       <div class="nav-container">
         <a href="{{ url_for('main.landing_page') }}" class="nav-brand">
@@ -70,87 +40,43 @@
                 <i class="fas fa-chevron-down"></i>
               </button>
               <div class="dropdown-menu">
-                <a
-                  href="{{ url_for('main.list_books') }}"
-                  class="dropdown-item {% if current_user.is_authenticated and not current_user.has_access_to_physical_books() %}nav-link-locked{% endif %}"
-                >
+                <a href="{{ url_for('main.list_books') }}" 
+                   class="dropdown-item {% if current_user.is_authenticated and not current_user.has_access_to_physical_books() %}nav-link-locked{% endif %}">
                   <i class="fas fa-book"></i>
                   <span>Physical Books</span>
-                  {% if current_user.is_authenticated and not
-                  current_user.has_access_to_physical_books() %}
-                  <i
-                    class="fas fa-lock"
-                    style="font-size: 0.7rem; opacity: 0.6"
-                  ></i>
+                  {% if current_user.is_authenticated and not current_user.has_access_to_physical_books() %}
+                  <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6"></i>
                   {% endif %}
                 </a>
 
-                <a
-                  href="{{ url_for('main.list_ebooks') }}"
-                  class="dropdown-item {% if current_user.is_authenticated and not current_user.has_access_to_ebooks() %}nav-link-locked{% endif %}"
-                >
+                <a href="{{ url_for('main.list_ebooks') }}" 
+                   class="dropdown-item {% if current_user.is_authenticated and not current_user.has_access_to_ebooks() %}nav-link-locked{% endif %}">
                   <i class="fas fa-tablet-alt"></i>
                   <span>Ebooks</span>
-                  {% if current_user.is_authenticated and not
-                  current_user.has_access_to_ebooks() %}
-                  <i
-                    class="fas fa-lock"
-                    style="font-size: 0.7rem; opacity: 0.6"
-                  ></i>
+                  {% if current_user.is_authenticated and not current_user.has_access_to_ebooks() %}
+                  <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6"></i>
                   {% endif %}
                 </a>
 
-                <a
-                  href="{{ url_for('main.list_audiobooks') }}"
-                  class="dropdown-item {% if current_user.is_authenticated and not current_user.has_access_to_audiobooks() %}nav-link-locked{% endif %}"
-                >
+                <a href="{{ url_for('main.list_audiobooks') }}" 
+                   class="dropdown-item {% if current_user.is_authenticated and not current_user.has_access_to_audiobooks() %}nav-link-locked{% endif %}">
                   <i class="fas fa-headphones"></i>
                   <span>Audiobooks</span>
-                  {% if current_user.is_authenticated and not
-                  current_user.has_access_to_audiobooks() %}
-                  <i
-                    class="fas fa-lock"
-                    style="font-size: 0.7rem; opacity: 0.6"
-                  ></i>
+                  {% if current_user.is_authenticated and not current_user.has_access_to_audiobooks() %}
+                  <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6"></i>
                   {% endif %}
                 </a>
               </div>
             </li>
-            <li>
-              <a href="{{ url_for('main.chat_page') }}" class="nav-link">
-                <i class="fas fa-comments"></i>
-                <span>AI Chat</span>
-                <span
-                  class="badge"
-                  style="
-                    background: linear-gradient(
-                      135deg,
-                      #10b981 0%,
-                      #059669 100%
-                    );
-                  "
-                  >NEW</span
-                >
-              </a>
-            </li>
 
+            <!-- NEW: AI Chat Link -->
+            
             <li>
               <a href="{{ url_for('main.subscriptions') }}" class="nav-link">
                 <i class="fas fa-crown"></i>
                 <span>Plans</span>
-                {% if current_user.is_authenticated and
-                current_user.subscription_tier.name == 'FREE' %}
-                <span
-                  class="badge"
-                  style="
-                    background: linear-gradient(
-                      135deg,
-                      #f59e0b 0%,
-                      #d97706 100%
-                    );
-                  "
-                  >FREE</span
-                >
+                {% if current_user.is_authenticated and current_user.subscription_tier.name == 'FREE' %}
+                <span class="badge" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">FREE</span>
                 {% endif %}
               </a>
             </li>
@@ -178,10 +104,7 @@
                   <i class="fas fa-user"></i>
                   My Profile
                 </a>
-                <a
-                  href="{{ url_for('main.my_subscription') }}"
-                  class="dropdown-item"
-                >
+                <a href="{{ url_for('main.my_subscription') }}" class="dropdown-item">
                   <i class="fas fa-crown"></i>
                   My Subscription
                 </a>
@@ -195,10 +118,7 @@
                   My Dues
                 </a>
                 <div class="dropdown-divider"></div>
-                <a
-                  href="{{ url_for('main.logout_confirm') }}"
-                  class="dropdown-item logout-item"
-                >
+                <a href="{{ url_for('main.logout_confirm') }}" class="dropdown-item logout-item">
                   <i class="fas fa-sign-out-alt"></i>
                   Logout
                 </a>
@@ -212,10 +132,7 @@
               </a>
             </li>
             <li>
-              <a
-                href="{{ url_for('main.register') }}"
-                class="nav-link nav-register-btn"
-              >
+              <a href="{{ url_for('main.register') }}" class="nav-link nav-register-btn">
                 <i class="fas fa-user-plus"></i>
                 <span>Register</span>
               </a>
@@ -228,23 +145,24 @@
     {% endif %}
 
     <main class="container content-wrapper">
-      {% with messages = get_flashed_messages(with_categories=true) %} {% if
-      messages %}
-      <div class="flashes">
-        {% for category, message in messages %}
-        <div class="alert alert-{{ category }}">
-          <i
-            class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}times-circle{% elif category == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"
-          ></i>
-          <span>{{ message }}</span>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flashes">
+          {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}times-circle{% elif category == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
+            <span>{{ message }}</span>
+          </div>
+          {% endfor %}
         </div>
-        {% endfor %}
-      </div>
-      {% endif %} {% endwith %} {% block content %}{% endblock %}
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
     </main>
 
-    {% if 'login' not in request.endpoint and 'register' not in request.endpoint
-    %} {% include "footer.html" %} {% endif %}
+    {% if 'login' not in request.endpoint and 'register' not in request.endpoint %}
+      {% include "footer.html" %}
+    {% endif %}
 
     <style>
       {% if 'login' in request.endpoint or 'register' in request.endpoint %}
@@ -389,16 +307,10 @@
         toggle.addEventListener("click", function (e) {
           e.preventDefault();
           const dropdown = this.closest(".nav-dropdown");
-
-          // Check if this dropdown is already open
           const wasOpen = dropdown.classList.contains("open");
-
-          // Close all dropdowns
           document.querySelectorAll(".nav-dropdown").forEach((other) => {
             other.classList.remove("open");
           });
-
-          // If it wasn't open, open it
           if (!wasOpen) {
             dropdown.classList.add("open");
           }
@@ -414,10 +326,8 @@
         }
       });
 
-      // Close mobile menu when clicking a link (but not a dropdown toggle)
-      document
-        .querySelectorAll(".nav-link:not(.dropdown-toggle), .dropdown-item")
-        .forEach((link) => {
+      // Close mobile menu when clicking a link
+      document.querySelectorAll(".nav-link:not(.dropdown-toggle), .dropdown-item").forEach((link) => {
           link.addEventListener("click", function () {
             mobileMenuToggle?.classList.remove("active");
             navMenu?.classList.remove("active");
@@ -434,19 +344,14 @@
       }, 5000);
 
       // Handle locked nav links
-      document
-        .querySelectorAll(".nav-link-locked, .dropdown-item.nav-link-locked")
-        .forEach((link) => {
+      document.querySelectorAll(".nav-link-locked, .dropdown-item.nav-link-locked").forEach((link) => {
           link.addEventListener("click", function (e) {
             const hasLock = this.querySelector(".fa-lock");
             if (hasLock) {
               e.preventDefault();
-              // Show upgrade message
               const message = document.createElement("div");
               message.className = "alert alert-warning";
-              message.innerHTML =
-                '<i class="fas fa-exclamation-triangle"></i><span>Upgrade your plan to access this feature!</span>';
-
+              message.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Upgrade your plan to access this feature!</span>';
               let flashesContainer = document.querySelector(".flashes");
               if (!flashesContainer) {
                 flashesContainer = document.createElement("div");
@@ -454,15 +359,255 @@
                 document.body.appendChild(flashesContainer);
               }
               flashesContainer.appendChild(message);
-
               setTimeout(() => {
-                message.style.animation =
-                  "slideOutRight 0.3s ease-out forwards";
+                message.style.animation = "slideOutRight 0.3s ease-out forwards";
                 setTimeout(() => message.remove(), 300);
               }, 3000);
             }
           });
         });
     </script>
+
+    <!-- FLOATING CHAT WIDGET (Only show if not on login/register pages) -->
+    {% if 'login' not in request.endpoint and 'register' not in request.endpoint and 'verify_otp' not in request.endpoint %}
+    <div id="chatWidget">
+      <!-- Chat Toggle Button -->
+      <button id="chatToggleBtn" onclick="toggleChatWidget()">
+        <i class="fas fa-comments" id="chatIcon"></i>
+        <span id="chatBadge" class="hidden">1</span>
+        <div class="chat-ripple"></div>
+      </button>
+
+      <!-- Mini Chat Window -->
+      <div id="miniChatWindow">
+        <!-- Header -->
+        <div class="mini-chat-header">
+          <div class="mini-chat-header-left">
+            <div class="mini-chat-avatar">
+              <i class="fas fa-robot"></i>
+            </div>
+            <div class="mini-chat-info">
+              <h4>LibraNet AI</h4>
+              <p class="mini-chat-status">
+                <span class="status-dot"></span>
+                Online
+              </p>
+            </div>
+          </div>
+          <button class="mini-chat-close" onclick="toggleChatWidget()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Messages Container -->
+        <div id="miniChatMessages">
+          <!-- Welcome Message -->
+          <div class="mini-message mini-message-bot">
+            <div class="mini-avatar mini-avatar-bot">
+              <i class="fas fa-robot"></i>
+            </div>
+            <div class="mini-bubble mini-bubble-bot">
+              <p>👋 Hi! I'm your LibraNet assistant. How can I help you today?</p>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div style="display: grid; gap: 0.5rem; margin-top: 1rem;">
+            <button onclick="sendQuickMessage('What subscription plans are available?')" class="quick-action-btn">
+              💳 View Plans
+            </button>
+            <button onclick="sendQuickMessage('How do I borrow a book?')" class="quick-action-btn">
+              📚 How to Borrow
+            </button>
+            <button onclick="sendQuickMessage('Recommend some books')" class="quick-action-btn">
+              ⭐ Get Recommendations
+            </button>
+          </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="mini-chat-input-area">
+          <form id="miniChatForm" onsubmit="sendMiniMessage(event)">
+            <input type="text" id="miniMessageInput" placeholder="Type a message..." autocomplete="off" />
+            <button type="submit" class="mini-chat-send-btn">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+          <div class="mini-chat-full-link">
+            <a href="{{ url_for('main.chat_page') }}">
+              Open Full Chat <i class="fas fa-external-link-alt" style="font-size: 0.7rem;"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Widget JavaScript -->
+    <script>
+    // Toggle chat widget
+    function toggleChatWidget() {
+        const chatWindow = document.getElementById('miniChatWindow');
+        const chatBtn = document.getElementById('chatToggleBtn');
+        const badge = document.getElementById('chatBadge');
+        
+        chatWindow.classList.toggle('open');
+        chatBtn.classList.toggle('chat-open');
+        
+        if (chatWindow.classList.contains('open')) {
+            badge.classList.add('hidden');
+            document.getElementById('miniMessageInput').focus();
+        }
+    }
+
+    // Scroll to bottom of messages
+    function scrollMiniChatToBottom() {
+        const messagesContainer = document.getElementById('miniChatMessages');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Add user message
+    function addMiniUserMessage(text) {
+        const messagesContainer = document.getElementById('miniChatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'mini-message mini-message-user';
+        messageDiv.innerHTML = `
+            <div class="mini-bubble mini-bubble-user">
+                <p>${escapeHtml(text)}</p>
+            </div>
+            <div class="mini-avatar mini-avatar-user">
+                <i class="fas fa-user"></i>
+            </div>
+        `;
+        messagesContainer.appendChild(messageDiv);
+        scrollMiniChatToBottom();
+    }
+
+    // Add bot message
+    function addMiniBotMessage(text) {
+        removeMiniTypingIndicator();
+        
+        const messagesContainer = document.getElementById('miniChatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'mini-message mini-message-bot';
+        
+        const formattedText = text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\n/g, '<br>');
+        
+        messageDiv.innerHTML = `
+            <div class="mini-avatar mini-avatar-bot">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="mini-bubble mini-bubble-bot">
+                <p>${formattedText}</p>
+            </div>
+        `;
+        messagesContainer.appendChild(messageDiv);
+        scrollMiniChatToBottom();
+    }
+
+    // Add typing indicator
+    function addMiniTypingIndicator() {
+        const messagesContainer = document.getElementById('miniChatMessages');
+        const typingDiv = document.createElement('div');
+        typingDiv.id = 'miniTypingIndicator';
+        typingDiv.className = 'mini-message mini-message-bot';
+        typingDiv.innerHTML = `
+            <div class="mini-avatar mini-avatar-bot">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="mini-bubble mini-bubble-bot">
+                <div class="mini-typing">
+                    <div class="mini-typing-dot"></div>
+                    <div class="mini-typing-dot"></div>
+                    <div class="mini-typing-dot"></div>
+                </div>
+            </div>
+        `;
+        messagesContainer.appendChild(typingDiv);
+        scrollMiniChatToBottom();
+    }
+
+    // Remove typing indicator
+    function removeMiniTypingIndicator() {
+        const indicator = document.getElementById('miniTypingIndicator');
+        if (indicator) indicator.remove();
+    }
+
+    // Send message
+    async function sendMiniMessage(event) {
+        event.preventDefault();
+        
+        const input = document.getElementById('miniMessageInput');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        input.disabled = true;
+        addMiniUserMessage(message);
+        input.value = '';
+        addMiniTypingIndicator();
+        
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                addMiniBotMessage(data.response);
+            } else {
+                addMiniBotMessage('Sorry, I encountered an error. Please try again! 😊');
+            }
+        } catch (error) {
+            console.error('Chat error:', error);
+            addMiniBotMessage('Sorry, I\'m having trouble connecting. Please try again! 😊');
+        } finally {
+            input.disabled = false;
+            input.focus();
+        }
+    }
+
+    // Send quick message
+    function sendQuickMessage(message) {
+        const input = document.getElementById('miniMessageInput');
+        input.value = message;
+        document.getElementById('miniChatForm').dispatchEvent(new Event('submit'));
+    }
+
+    // Escape HTML
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Show notification badge after 5 seconds
+    setTimeout(() => {
+        const chatWindow = document.getElementById('miniChatWindow');
+        const badge = document.getElementById('chatBadge');
+        
+        if (!chatWindow.classList.contains('open')) {
+            badge.classList.remove('hidden');
+        }
+    }, 5000);
+
+    // Close chat when clicking outside
+    document.addEventListener('click', (e) => {
+        const chatWidget = document.getElementById('chatWidget');
+        const chatWindow = document.getElementById('miniChatWindow');
+        
+        if (chatWindow.classList.contains('open') && !chatWidget.contains(e.target)) {
+            toggleChatWidget();
+        }
+    });
+    </script>
+    {% endif %}
+
   </body>
 </html>
