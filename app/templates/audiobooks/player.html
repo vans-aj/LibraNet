@@ -4,14 +4,14 @@
 <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; padding: 2rem;">
     <div style="max-width: 900px; margin: 0 auto;">
         <!-- Back Button -->
-        <a href="{{ url_for('main.audiobook_detail', audiobook_id=audiobook.id) }}" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #818cf8; text-decoration: none; margin-bottom: 2rem; font-weight: 600;">
+        <a href="{{ url_for('main.audiobook_detail', audiobook_id=audiobook.id) }}" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #38bdf8; text-decoration: none; margin-bottom: 2rem; font-weight: 600;">
             <i class="fas fa-arrow-left"></i> Back to Details
         </a>
 
         <!-- Player Card -->
         <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: fadeInUp 0.6s ease-out;">
             <!-- Cover Art -->
-            <div style="position: relative; height: 400px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); display: flex; align-items: center; justify-content: center;">
+            <div style="position: relative; height: 400px; background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%); display: flex; align-items: center; justify-content: center;">
                 <img src="{{ audiobook.image_url or url_for('static', filename='images/default_audiobook.jpg') }}" 
                      alt="{{ audiobook.title }}"
                      style="width: 300px; height: 300px; object-fit: cover; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
@@ -45,7 +45,7 @@
                         </span>
                     </div>
                     <input type="range" min="0" max="100" value="0" 
-                           style="width: 100%; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #6366f1 0%, #ec4899 100%); outline: none; cursor: pointer;">
+                           style="width: 100%; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #0ea5e9 0%, #14b8a6 100%); outline: none; cursor: pointer;">
                 </div>
 
                 <!-- Control Buttons -->
@@ -54,7 +54,7 @@
                         <i class="fas fa-backward"></i>
                     </button>
                     
-                    <button id="playPauseBtn" style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); transition: all 0.3s ease;">
+                    <button id="playPauseBtn" style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4); transition: all 0.3s ease;">
                         <i class="fas fa-play"></i>
                     </button>
                     
@@ -100,7 +100,7 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <i class="fas fa-play" style="color: #6366f1; font-size: 1.2rem;"></i>
+                        <i class="fas fa-play" style="color: #0ea5e9; font-size: 1.2rem;"></i>
                     </button>
                     {% endfor %}
                 </div>
@@ -131,8 +131,8 @@ function loadChapter(chapterId, url, title) {
         btn.style.background = 'white';
         btn.style.borderColor = '#e2e8f0';
     });
-    document.querySelector(`[data-chapter-id="${chapterId}"]`).style.background = 'rgba(99, 102, 241, 0.05)';
-    document.querySelector(`[data-chapter-id="${chapterId}"]`).style.borderColor = '#6366f1';
+    document.querySelector(`[data-chapter-id="${chapterId}"]`).style.background = 'rgba(14, 165, 233, 0.05)';
+    document.querySelector(`[data-chapter-id="${chapterId}"]`).style.borderColor = '#0ea5e9';
 }
 
 playPauseBtn.addEventListener('click', function() {

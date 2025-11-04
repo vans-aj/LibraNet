@@ -5,7 +5,7 @@
     <div style="max-width: 600px; width: 100%; background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); animation: fadeInUp 0.6s ease-out;">
         <!-- Header -->
         <div style="text-align: center; margin-bottom: 2rem;">
-            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2.5rem;">
+            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2.5rem;">
                 {% if tier.name == 'BASIC' %}📚
                 {% elif tier.name == 'PRO' %}⭐
                 {% elif tier.name == 'MAX' %}👑
@@ -14,14 +14,14 @@
             <h1 style="font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem;">
                 Confirm Subscription
             </h1>
-            <p style="color: #64748b; font-size: 1.1rem;">You're about to subscribe to <strong style="color: #6366f1;">{{ plan.name }}</strong></p>
+            <p style="color: #64748b; font-size: 1.1rem;">You're about to subscribe to <strong style="color: #0ea5e9;">{{ plan.name }}</strong></p>
         </div>
 
         <!-- Plan Summary -->
         <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; border: 2px solid #e2e8f0;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
                 <span style="font-weight: 700; color: #64748b; font-size: 0.95rem;">Plan:</span>
-                <span style="font-weight: 800; color: #6366f1; font-size: 1.1rem;">{{ plan.name }}</span>
+                <span style="font-weight: 800; color: #0ea5e9; font-size: 1.1rem;">{{ plan.name }}</span>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
                 <span style="font-weight: 700; color: #64748b; font-size: 0.95rem;">Duration:</span>
@@ -38,20 +38,20 @@
             <div style="padding-top: 1rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">Total Amount:</span>
-                    <span style="font-size: 2rem; font-weight: 900; color: #6366f1;">₹{{ plan.price }}</span>
+                    <span style="font-size: 2rem; font-weight: 900; color: #0ea5e9;">₹{{ plan.price }}</span>
                 </div>
             </div>
         </div>
 
         <!-- Features Preview -->
-        <div style="margin-bottom: 2rem; background: rgba(99, 102, 241, 0.05); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.1);">
+        <div style="margin-bottom: 2rem; background: rgba(14, 165, 233, 0.05); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(14, 165, 233, 0.1);">
             <h3 style="font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fas fa-gift" style="color: #6366f1;"></i>
+                <i class="fas fa-gift" style="color: #0ea5e9;"></i>
                 What you'll get:
             </h3>
             <ul style="list-style: none; padding: 0; margin: 0;">
                 {% for feature in plan.features[:4] %}
-                <li style="padding: 0.75rem 0; display: flex; align-items: center; gap: 0.75rem; color: #334155; {% if not loop.last %}border-bottom: 1px solid rgba(99, 102, 241, 0.1);{% endif %}">
+                <li style="padding: 0.75rem 0; display: flex; align-items: center; gap: 0.75rem; color: #334155; {% if not loop.last %}border-bottom: 1px solid rgba(14, 165, 233, 0.1);{% endif %}">
                     <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.1rem;"></i>
                     <span style="font-weight: 500;">{{ feature }}</span>
                 </li>
@@ -61,7 +61,7 @@
 
         <!-- Payment Button -->
         <div style="display: grid; gap: 1rem;">
-            <button type="button" id="razorpayButton" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+            <button type="button" id="razorpayButton" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4); display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
                 <i class="fas fa-lock"></i>
                 <span>Proceed to Secure Payment</span>
             </button>
@@ -177,7 +177,7 @@ document.getElementById('razorpayButton').addEventListener('click', function(e) 
             "tier": "{{ tier.name }}"
         },
         "theme": {
-            "color": "#6366f1"
+            "color": "#0ea5e9"
         },
         "modal": {
             "ondismiss": function() {
@@ -212,9 +212,9 @@ document.getElementById('razorpayButton').addEventListener('click', function(e) 
 }
 
 #razorpayButton:hover {
-    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.5);
+    box-shadow: 0 12px 32px rgba(14, 165, 233, 0.5);
 }
 </style>
 {% endblock %}
