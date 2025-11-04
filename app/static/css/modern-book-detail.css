@@ -1,6 +1,6 @@
 /* ===== MODERN BOOK DETAIL PAGE ===== */
 .book-detail-page {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    background: linear-gradient(135deg, #0c1220 0%, #1a1f35 100%);
     min-height: 100vh;
     padding: 3rem 2rem;
     color: #cbd5e0;
@@ -22,7 +22,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: #818cf8;
+    color: #38bdf8;
     text-decoration: none;
     font-weight: 600;
     margin-bottom: 2.5rem;
@@ -112,7 +112,7 @@
 
 .book-main-author {
     font-size: 1.25rem;
-    color: #818cf8;
+    color: #38bdf8;
     font-weight: 500;
 }
 
@@ -147,7 +147,7 @@
     font-size: 1.5rem;
     color: #fff;
     margin-bottom: 1rem;
-    border-bottom: 2px solid #6366f1;
+    border-bottom: 2px solid #0ea5e9;
     padding-bottom: 0.5rem;
     display: inline-block;
 }
@@ -178,7 +178,7 @@
 }
 
 .action-btn.primary-action {
-    background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+    background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
     color: white;
 }
 
