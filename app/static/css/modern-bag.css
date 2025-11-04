@@ -8,7 +8,7 @@
 
 /* ===== BAG HEADER ===== */
 .bag-header {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(20, 184, 166, 0.1) 100%);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(148, 163, 184, 0.1);
     padding: 3rem 2rem;
@@ -41,7 +41,7 @@
 .bag-info {
     margin-bottom: 2rem;
     padding: 1.2rem;
-    background: rgba(99, 102, 241, 0.05);
+    background: rgba(14, 165, 233, 0.05);
     backdrop-filter: blur(10px);
     border-left: 4px solid #0ea5e9;
     border-radius: 12px;
@@ -133,12 +133,12 @@
 .date-badge {
     display: inline-block;
     padding: 0.6rem 1rem;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(14, 165, 233, 0.05) 100%);
     border-radius: 8px;
     font-size: 0.9rem;
     font-weight: 600;
     color: #0284c7;
-    border: 1px solid rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(14, 165, 233, 0.2);
 }
 
 .price-badge {
@@ -229,12 +229,12 @@
 
 .payment-btn:hover {
     border-color: #0ea5e9;
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+    box-shadow: 0 8px 24px rgba(14, 165, 233, 0.15);
     transform: translateY(-3px);
 }
 
 .payment-btn.pod-btn:hover {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(99, 102, 241, 0.02) 100%);
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, rgba(14, 165, 233, 0.02) 100%);
     border-color: #0284c7;
 }
 
@@ -340,13 +340,13 @@
     border-radius: 10px;
     font-weight: 700;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 8px 24px rgba(14, 165, 233, 0.3);
 }
 
 .btn-browse:hover {
     background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
     transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 12px 32px rgba(14, 165, 233, 0.4);
 }
 
 /* ===== RESPONSIVE ===== */

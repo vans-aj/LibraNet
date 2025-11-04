@@ -14,7 +14,7 @@
     border-radius: 50%;
     background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%);
     border: none;
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -25,7 +25,7 @@
 
 #chatToggleBtn:hover {
     transform: scale(1.1) translateY(-3px);
-    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.5);
+    box-shadow: 0 12px 32px rgba(14, 165, 233, 0.5);
 }
 
 #chatToggleBtn:active {
@@ -71,7 +71,7 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: rgba(99, 102, 241, 0.3);
+    background: rgba(14, 165, 233, 0.3);
     animation: ripple 2s ease-out infinite;
     pointer-events: none;
 }
@@ -362,7 +362,7 @@
     color: white;
     border-color: #0ea5e9;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
 }
 
 /* Input Area */
@@ -389,7 +389,7 @@
 
 #miniMessageInput:focus {
     border-color: #0ea5e9;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
 }
 
 .mini-chat-send-btn {
