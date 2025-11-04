@@ -9,45 +9,160 @@
                 <h2 style="color: white; font-size: 1.25rem; font-weight: 700; margin: 0;">{{ ebook.title }}</h2>
                 <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin: 0.25rem 0 0;">by {{ ebook.author }}</p>
             </div>
-            <a href="{{ url_for('main.ebook_detail', ebook_id=ebook.id) }}" style="color: white; text-decoration: none; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 8px; font-weight: 600;">
-                <i class="fas fa-times"></i> Close
-            </a>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <!-- Format Selector -->
+                <select id="formatSelector" style="padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+                    {% for format in ebook.formats %}
+                    <option value="{{ format.content_url }}" {% if loop.first %}selected{% endif %}>
+                        {{ format.file_format }}
+                    </option>
+                    {% endfor %}
+                </select>
+                
+                <a href="{{ url_for('main.ebook_detail', ebook_id=ebook.id) }}" style="color: white; text-decoration: none; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 8px; font-weight: 600;">
+                    <i class="fas fa-times"></i> Close
+                </a>
+            </div>
         </div>
 
         <!-- Reader Content Area -->
-        <div style="padding: 3rem; font-family: 'Georgia', serif; line-height: 1.8; font-size: 1.1rem; color: #333; min-height: 600px;">
-            <h1 style="font-size: 2rem; margin-bottom: 1.5rem; color: #0f172a;">Chapter 1</h1>
-            <p style="margin-bottom: 1.5rem;">
-                This is a demo ebook reader. In production, this would render the actual ebook content from {{ ebook.file_path }}.
-            </p>
-            <p style="margin-bottom: 1.5rem;">
-                The reader would support:
-            </p>
-            <ul style="margin-bottom: 1.5rem; padding-left: 2rem;">
-                <li>PDF rendering for PDF files</li>
-                <li>EPUB reader for EPUB format</li>
-                <li>Text zoom controls</li>
-                <li>Night mode</li>
-                <li>Bookmarks</li>
-                <li>Progress tracking</li>
-            </ul>
-            <p>
-                Integration with libraries like PDF.js or EPUBjs would be used for actual implementation.
-            </p>
+        <div id="readerContent" style="padding: 3rem; font-family: 'Georgia', serif; line-height: 1.8; font-size: 1.1rem; color: #333; min-height: 600px; max-height: 70vh; overflow-y: auto;">
+            <div style="text-align: center; padding: 4rem 0;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #6366f1;"></i>
+                <p style="margin-top: 1rem; color: #64748b;">Loading ebook...</p>
+            </div>
         </div>
 
         <!-- Reader Controls -->
         <div style="background: #f8f9fa; padding: 1rem; display: flex; justify-content: center; gap: 1rem; border-top: 1px solid #e2e8f0;">
-            <button style="padding: 0.5rem 1.5rem; background: #6366f1; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+            <button id="prevBtn" onclick="previousPage()" style="padding: 0.5rem 1.5rem; background: #6366f1; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
                 <i class="fas fa-chevron-left"></i> Previous
             </button>
-            <button style="padding: 0.5rem 1.5rem; background: #6366f1; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
-                Page 1 of 250
-            </button>
-            <button style="padding: 0.5rem 1.5rem; background: #6366f1; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+            <div id="pageInfo" style="padding: 0.5rem 1.5rem; background: white; border: 2px solid #6366f1; color: #6366f1; border-radius: 8px; font-weight: 600; display: flex; align-items: center;">
+                Page 1
+            </div>
+            <button id="nextBtn" onclick="nextPage()" style="padding: 0.5rem 1.5rem; background: #6366f1; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
                 Next <i class="fas fa-chevron-right"></i>
             </button>
         </div>
+
+        <!-- Reading Progress Bar -->
+        <div style="height: 4px; background: #e2e8f0;">
+            <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%); width: 0%; transition: width 0.3s ease;"></div>
+        </div>
     </div>
 </div>
+
+<script>
+let currentPage = 1;
+let totalPages = 1;
+let linesPerPage = 40;
+let bookLines = [];
+let currentFormat = 'HTML';
+
+// Load ebook content
+async function loadEbook(url) {
+    try {
+        // Use the proxy endpoint to avoid CORS issues
+        const proxyUrl = `{{ url_for('main.ebook_proxy') }}?url=${encodeURIComponent(url)}`;
+        const response = await fetch(proxyUrl);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const text = await response.text();
+        
+        // Split content into lines
+        bookLines = text.split('\n').filter(line => line.trim() !== '');
+        totalPages = Math.ceil(bookLines.length / linesPerPage);
+        
+        currentPage = 1;
+        displayPage();
+    } catch (error) {
+        console.error('Error loading ebook:', error);
+        document.getElementById('readerContent').innerHTML = `
+            <div style="text-align: center; padding: 4rem 0;">
+                <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #ef4444;"></i>
+                <p style="margin-top: 1rem; color: #64748b;">Failed to load ebook. The file may not be available.</p>
+                <p style="margin-top: 0.5rem; color: #94a3b8; font-size: 0.9rem;">Try selecting a different format.</p>
+            </div>
+        `;
+    }
+}
+
+function displayPage() {
+    const startLine = (currentPage - 1) * linesPerPage;
+    const endLine = Math.min(startLine + linesPerPage, bookLines.length);
+    const pageContent = bookLines.slice(startLine, endLine).join('\n');
+    
+    // Simple HTML escaping and paragraph formatting
+    const formattedContent = pageContent
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\n\n/g, '</p><p style="margin-bottom: 1.5rem;">')
+        .replace(/\n/g, '<br>');
+    
+    document.getElementById('readerContent').innerHTML = `
+        <div style="white-space: pre-wrap;">
+            <p style="margin-bottom: 1.5rem;">${formattedContent}</p>
+        </div>
+    `;
+    
+    // Update page info
+    document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+    
+    // Update progress bar
+    const progress = (currentPage / totalPages) * 100;
+    document.getElementById('progressBar').style.width = `${progress}%`;
+    
+    // Update button states
+    document.getElementById('prevBtn').disabled = currentPage === 1;
+    document.getElementById('nextBtn').disabled = currentPage === totalPages;
+    
+    // Scroll to top of content
+    document.getElementById('readerContent').scrollTop = 0;
+}
+
+function nextPage() {
+    if (currentPage < totalPages) {
+        currentPage++;
+        displayPage();
+    }
+}
+
+function previousPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        displayPage();
+    }
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight') {
+        nextPage();
+    } else if (e.key === 'ArrowLeft') {
+        previousPage();
+    }
+});
+
+// Format selector
+document.getElementById('formatSelector').addEventListener('change', function() {
+    loadEbook(this.value);
+});
+
+// Load initial format
+{% if ebook.formats %}
+loadEbook('{{ ebook.formats[0].content_url }}');
+{% else %}
+document.getElementById('readerContent').innerHTML = `
+    <div style="text-align: center; padding: 4rem 0;">
+        <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #ef4444;"></i>
+        <p style="margin-top: 1rem; color: #64748b;">No readable format available for this ebook.</p>
+    </div>
+`;
+{% endif %}
+</script>
 {% endblock %}

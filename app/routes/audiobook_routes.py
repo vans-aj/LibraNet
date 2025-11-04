@@ -7,24 +7,27 @@ from sqlalchemy import or_
 
 @main_bp.route('/audiobooks')
 def list_audiobooks():
-    """Display list of audiobooks. (Publicly accessible)"""
+    """Display list of audiobooks with pagination. (Publicly accessible)"""
     search_term = request.args.get('q', '', type=str)
+    page = request.args.get('page', 1, type=int)
+    per_page = 20  # Show 20 audiobooks per page
     
     if search_term:
-        audiobooks = Audiobook.query.filter(
+        pagination = Audiobook.query.filter(
             or_(
                 Audiobook.title.ilike(f'%{search_term}%'),
                 Audiobook.author.ilike(f'%{search_term}%'),
                 Audiobook.narrator.ilike(f'%{search_term}%')
             )
-        ).order_by(Audiobook.title).all()
+        ).order_by(Audiobook.title).paginate(page=page, per_page=per_page, error_out=False)
     else:
-        audiobooks = Audiobook.query.order_by(Audiobook.title).all()
+        pagination = Audiobook.query.order_by(Audiobook.title).paginate(page=page, per_page=per_page, error_out=False)
     
     return render_template(
         'audiobooks/list.html',
         title='Audiobooks Collection',
-        audiobooks=audiobooks,
+        audiobooks=pagination.items,
+        pagination=pagination,
         search_term=search_term
     )
 

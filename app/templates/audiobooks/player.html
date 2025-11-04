@@ -80,28 +80,101 @@
                 </div>
             </div>
 
-            <!-- Demo Notice -->
-            <div style="background: rgba(99, 102, 241, 0.1); padding: 1.5rem; text-align: center; border-top: 1px solid #e2e8f0;">
-                <p style="color: #4f46e5; margin: 0; font-weight: 600;">
-                    <i class="fas fa-info-circle"></i> This is a demo player. In production, this would stream audio from {{ audiobook.file_path }}
-                </p>
+            <!-- Chapter List -->
+            <div style="padding: 2rem; background: #f8fafc; border-top: 1px solid #e2e8f0; max-height: 400px; overflow-y: auto;">
+                <h3 style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem;">
+                    <i class="fas fa-list"></i> Chapters
+                </h3>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    {% for chapter in audiobook.chapters.order_by('chapter_number').all() %}
+                    <button onclick="loadChapter({{ chapter.id }}, '{{ chapter.content_url }}', '{{ chapter.chapter_title }}')" 
+                            data-chapter-id="{{ chapter.id }}"
+                            style="padding: 1rem; background: white; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; text-align: left; transition: all 0.2s ease; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 600; color: #0f172a; margin-bottom: 0.25rem;">
+                                {{ chapter.chapter_number }}. {{ chapter.chapter_title }}
+                            </div>
+                            <div style="font-size: 0.85rem; color: #64748b;">
+                                {% if chapter.duration_seconds %}
+                                    {{ (chapter.duration_seconds // 60)|int }} min
+                                {% endif %}
+                            </div>
+                        </div>
+                        <i class="fas fa-play" style="color: #6366f1; font-size: 1.2rem;"></i>
+                    </button>
+                    {% endfor %}
+                </div>
             </div>
+
+            <!-- Hidden Audio Element -->
+            <audio id="audioPlayer" style="display: none;"></audio>
         </div>
     </div>
 </div>
 
 <script>
-// Demo player controls
+const audioPlayer = document.getElementById('audioPlayer');
 const playPauseBtn = document.getElementById('playPauseBtn');
-let isPlaying = false;
+const currentTimeEl = document.getElementById('currentTime');
+const progressBar = document.querySelector('input[type="range"]');
+let currentChapterTitle = '';
+
+function loadChapter(chapterId, url, title) {
+    audioPlayer.src = url;
+    currentChapterTitle = title;
+    audioPlayer.load();
+    audioPlayer.play();
+    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    
+    // Highlight selected chapter
+    document.querySelectorAll('[data-chapter-id]').forEach(btn => {
+        btn.style.background = 'white';
+        btn.style.borderColor = '#e2e8f0';
+    });
+    document.querySelector(`[data-chapter-id="${chapterId}"]`).style.background = 'rgba(99, 102, 241, 0.05)';
+    document.querySelector(`[data-chapter-id="${chapterId}"]`).style.borderColor = '#6366f1';
+}
 
 playPauseBtn.addEventListener('click', function() {
-    isPlaying = !isPlaying;
-    if (isPlaying) {
+    if (audioPlayer.paused) {
+        audioPlayer.play();
         this.innerHTML = '<i class="fas fa-pause"></i>';
     } else {
+        audioPlayer.pause();
         this.innerHTML = '<i class="fas fa-play"></i>';
     }
 });
+
+// Update progress bar and time
+audioPlayer.addEventListener('timeupdate', function() {
+    if (audioPlayer.duration) {
+        const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        progressBar.value = progress;
+        
+        const minutes = Math.floor(audioPlayer.currentTime / 60);
+        const seconds = Math.floor(audioPlayer.currentTime % 60);
+        currentTimeEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+});
+
+// Seek functionality
+progressBar.addEventListener('input', function() {
+    if (audioPlayer.duration) {
+        const seekTime = (this.value / 100) * audioPlayer.duration;
+        audioPlayer.currentTime = seekTime;
+    }
+});
+
+// Auto-load first chapter on page load
+{% if audiobook.chapters.first() %}
+window.addEventListener('DOMContentLoaded', function() {
+    const firstChapter = {{ audiobook.chapters.order_by('chapter_number').first().id }};
+    const firstUrl = '{{ audiobook.chapters.order_by("chapter_number").first().content_url }}';
+    const firstTitle = '{{ audiobook.chapters.order_by("chapter_number").first().chapter_title }}';
+    loadChapter(firstChapter, firstUrl, firstTitle);
+    audioPlayer.pause(); // Don't auto-play
+    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+});
+{% endif %}
 </script>
 {% endblock %}

@@ -39,3 +39,4 @@ class Config:
     os.environ['LANGCHAIN_PROJECT'] = os.getenv('LANGCHAIN_PROJECT')
     os.environ['LANGCHAIN_TRACING_V2'] = "true"
     os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
+    os.environ["LIBRIVOX_API_URL"] = os.getenv("LIBRIVOX_API_URL")
