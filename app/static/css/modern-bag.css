@@ -1,7 +1,7 @@
 /* ===== MODERN BAG/CART PAGE ===== */
 
 .bag-page {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    background: linear-gradient(135deg, #0c1220 0%, #1a1f35 100%);
     min-height: 100vh;
     padding: 2rem 0;
 }
@@ -43,7 +43,7 @@
     padding: 1.2rem;
     background: rgba(99, 102, 241, 0.05);
     backdrop-filter: blur(10px);
-    border-left: 4px solid #6366f1;
+    border-left: 4px solid #0ea5e9;
     border-radius: 12px;
     font-size: 0.95rem;
     color: white;
@@ -56,7 +56,7 @@
 }
 
 .bag-info strong {
-    color: #818cf8;
+    color: #38bdf8;
     font-weight: 700;
 }
 
@@ -86,7 +86,7 @@
     padding: 1.25rem 1rem;
     text-align: left;
     font-weight: 700;
-    color: #0f172a;
+    color: #0c1220;
     letter-spacing: 0.3px;
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -115,7 +115,7 @@
 
 /* ===== BOOK LINK ===== */
 .book-link {
-    color: #6366f1;
+    color: #0ea5e9;
     text-decoration: none;
     font-weight: 600;
     transition: all 0.2s ease;
@@ -125,7 +125,7 @@
 }
 
 .book-link:hover {
-    color: #4f46e5;
+    color: #0284c7;
     text-decoration: underline;
 }
 
@@ -137,7 +137,7 @@
     border-radius: 8px;
     font-size: 0.9rem;
     font-weight: 600;
-    color: #4f46e5;
+    color: #0284c7;
     border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
@@ -193,7 +193,7 @@
 .payment-info h3 {
     font-size: 1.5rem;
     font-weight: 800;
-    color: #0f172a;
+    color: #0c1220;
     margin: 0 0 0.5rem 0;
 }
 
@@ -228,7 +228,7 @@
 }
 
 .payment-btn:hover {
-    border-color: #6366f1;
+    border-color: #0ea5e9;
     box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
     transform: translateY(-3px);
 }
@@ -257,7 +257,7 @@
 .payment-label {
     display: block;
     font-weight: 700;
-    color: #0f172a;
+    color: #0c1220;
     font-size: 1rem;
 }
 
@@ -286,7 +286,7 @@
 }
 
 .payment-disclaimer a {
-    color: #6366f1;
+    color: #0ea5e9;
     text-decoration: none;
     font-weight: 600;
 }
@@ -314,7 +314,7 @@
 
 .empty-state h2 {
     font-size: 1.75rem;
-    color: #0f172a;
+    color: #0c1220;
     font-weight: 800;
     margin-bottom: 0.5rem;
 }
@@ -334,7 +334,7 @@
 .btn-browse {
     display: inline-block;
     padding: 12px 28px;
-    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
     color: white;
     text-decoration: none;
     border-radius: 10px;
@@ -344,7 +344,7 @@
 }
 
 .btn-browse:hover {
-    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
     transform: translateY(-3px);
     box-shadow: 0 12px 32px rgba(99, 102, 241, 0.4);
 }
