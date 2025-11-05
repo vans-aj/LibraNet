@@ -1,110 +1,138 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="books-page">
-    <div class="books-header">
-        <h1>🎧 Audiobooks Collection</h1>
-        <p>Listen to your favorite books on the go</p>
-    </div>
+{% block title %}Audiobooks{% endblock %}
 
-    <div class="books-container">
-        <div class="filter-container">
-            <form method="GET" action="{{ url_for('main.list_audiobooks') }}" class="search-bar">
-                <i class="fas fa-search search-icon"></i>
-                <input
-                    type="text"
-                    name="q"
-                    placeholder="Search audiobooks by title, author, or narrator..."
-                    value="{{ search_term or '' }}"
-                    class="search-input"
-                >
-                <button type="submit" class="search-button">Search</button>
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/books.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ebooks.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="books-page ebooks-page">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">🎧 Audiobooks Collection</h1>
+            <p class="page-description">Listen to your favorite books on the go</p>
+        </div>
+        
+        <!-- Filters -->
+        <div class="filters-bar">
+            <form method="GET" action="{{ url_for('main.list_audiobooks') }}" style="display: contents;">
+                <div class="filter-group" style="flex: 1;">
+                    <label for="search" class="sr-only">Search</label>
+                    <div class="search-wrapper">
+                        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input 
+                            type="search" 
+                            name="q" 
+                            id="search"
+                            placeholder="Search audiobooks by title, author, or narrator..." 
+                            class="search-input"
+                            value="{{ request.args.get('q', '') }}"
+                        >
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <span>Search</span>
+                </button>
             </form>
         </div>
-
-        {% if search_term %}
-        <div class="search-results-info">
-            Results for "<strong>{{ search_term }}</strong>"
-            {% if audiobooks %}
-                <span class="result-count">({{ audiobooks|length }} found)</span>
-            {% endif %}
+        
+        <!-- Results Info -->
+        <div class="results-info">
+            <div class="results-count">
+                {% if audiobooks %}
+                    Showing <strong>{{ audiobooks|length }}</strong> audiobooks
+                {% else %}
+                    No audiobooks found
+                {% endif %}
+            </div>
         </div>
-        {% endif %}
-
+        
+        <!-- Audiobooks Grid -->
         {% if audiobooks %}
         <div class="books-grid">
             {% for audiobook in audiobooks %}
-                <a href="{{ url_for('main.audiobook_detail', audiobook_id=audiobook.id) }}" class="book-card">
-                    <div class="book-image-container">
-                        <img
-                            src="{{ audiobook.image_url or url_for('static', filename='images/default_audiobook.jpg') }}"
-                            alt="Cover of {{ audiobook.title }}"
-                            class="book-image"
-                        >
-                        <div class="book-overlay">
-                            <span class="view-details-btn">Listen Now</span>
-                        </div>
-                        <div class="availability-badge">
-                            <span class="status-badge status-available" style="background: rgba(236, 72, 153, 0.8);">
-                                <i class="fas fa-headphones"></i> Audio
+            <a href="{{ url_for('main.audiobook_detail', audiobook_id=audiobook.id) }}" class="book-card ebook-card">
+                <div class="book-card-image">
+                    <img 
+                        src="{{ audiobook.image_url or url_for('static', filename='images/default-book.jpg') }}" 
+                        alt="{{ audiobook.title }}"
+                        loading="lazy"
+                    >
+                    <div class="book-card-overlay">
+                        <span class="quick-view-btn">Listen Now</span>
+                    </div>
+                    <span class="ebook-format-badge" style="background: rgba(236, 72, 153, 0.9);">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: inline-block; vertical-align: middle; margin-right: 2px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                        </svg>
+                        AUDIO
+                    </span>
+                </div>
+                <div class="book-card-content">
+                    <h3 class="book-card-title">{{ audiobook.title }}</h3>
+                    <p class="book-card-author">{{ audiobook.author }}</p>
+                    <div class="book-card-meta">
+                        {% if audiobook.narrator %}
+                        <div class="format-badges">
+                            <span class="badge" style="background: var(--gray-100); color: var(--gray-700); font-size: 0.75rem;">
+                                🎙️ {{ audiobook.narrator }}
                             </span>
                         </div>
+                        {% endif %}
+                        {% if audiobook.duration_minutes %}
+                        <div class="format-badges" style="margin-top: 0.25rem;">
+                            <span class="badge" style="background: var(--gray-100); color: var(--gray-700); font-size: 0.75rem;">
+                                ⏱️ {{ (audiobook.duration_minutes // 60)|int }}h {{ audiobook.duration_minutes % 60 }}m
+                            </span>
+                        </div>
+                        {% endif %}
                     </div>
-                    <div class="book-info">
-                        <h3 class="book-title">{{ audiobook.title }}</h3>
-                        <p class="book-author">{{ audiobook.author }}</p>
-                        <p class="book-author" style="font-size: 0.85rem; color: #94a3b8;">
-                            <i class="fas fa-microphone"></i> {{ audiobook.narrator or 'Unknown Narrator' }}
-                            {% if audiobook.duration_minutes %}
-                            • {{ (audiobook.duration_minutes // 60)|int }}h {{ audiobook.duration_minutes % 60 }}m
-                            {% endif %}
-                        </p>
-                    </div>
-                </a>
+                </div>
+            </a>
             {% endfor %}
         </div>
-
-        <!-- Pagination Controls -->
-        {% if pagination and pagination.pages > 1 %}
-        <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 3rem; padding: 2rem 0;">
+        
+        <!-- Pagination -->
+        {% if pagination and (pagination.pages > 1) %}
+        <nav class="pagination" aria-label="Audiobooks pagination" style="margin-top: 1.5rem; display: flex; gap: .5rem; justify-content: center;">
             {% if pagination.has_prev %}
-            <a href="{{ url_for('main.list_audiobooks', page=pagination.prev_num, q=search_term) }}" 
-               style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease;">
-                <i class="fas fa-chevron-left"></i> Previous
-            </a>
+            <a class="btn" href="{{ url_for('main.list_audiobooks', page=pagination.prev_num, q=search_term) }}">Previous</a>
             {% else %}
-            <span style="padding: 0.75rem 1.5rem; background: #e2e8f0; color: #94a3b8; border-radius: 8px; font-weight: 600;">
-                <i class="fas fa-chevron-left"></i> Previous
-            </span>
+            <span class="btn" style="pointer-events:none; opacity:.5;">Previous</span>
             {% endif %}
 
-            <span style="padding: 0.75rem 1.5rem; background: white; border: 2px solid #ec4899; color: #ec4899; border-radius: 8px; font-weight: 700;">
-                Page {{ pagination.page }} of {{ pagination.pages }}
-            </span>
+            <span style="display:flex; align-items:center; padding: .5rem 1rem;">Page {{ pagination.page }} of {{ pagination.pages }}</span>
 
             {% if pagination.has_next %}
-            <a href="{{ url_for('main.list_audiobooks', page=pagination.next_num, q=search_term) }}" 
-               style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease;">
-                Next <i class="fas fa-chevron-right"></i>
-            </a>
+            <a class="btn" href="{{ url_for('main.list_audiobooks', page=pagination.next_num, q=search_term) }}">Next</a>
             {% else %}
-            <span style="padding: 0.75rem 1.5rem; background: #e2e8f0; color: #94a3b8; border-radius: 8px; font-weight: 600;">
-                Next <i class="fas fa-chevron-right"></i>
-            </span>
+            <span class="btn" style="pointer-events:none; opacity:.5;">Next</span>
             {% endif %}
-        </div>
+        </nav>
         {% endif %}
-
         {% else %}
         <div class="empty-state">
             <div class="empty-icon">🎧</div>
-            <h2>No Audiobooks Found</h2>
-            {% if search_term %}
-                <p>No results for "<strong>{{ search_term }}</strong>"</p>
-                <p class="empty-hint">Try using different keywords</p>
-            {% else %}
-                <p>No audiobooks available at this moment</p>
-            {% endif %}
+            <h2 class="empty-title">No Audiobooks Found</h2>
+            <p class="empty-description">
+                {% if request.args.get('q') %}
+                    No results for "{{ request.args.get('q') }}". Try different keywords.
+                {% else %}
+                    No audiobooks are currently available. Please check back later.
+                {% endif %}
+            </p>
+            <a href="{{ url_for('main.list_audiobooks') }}" class="btn btn-primary">
+                <span>Clear Filters</span>
+            </a>
         </div>
         {% endif %}
     </div>

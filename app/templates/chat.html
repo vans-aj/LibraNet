@@ -1,349 +1,60 @@
-{% extends "base.html" %}
-
-{% block content %}
-<div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: calc(100vh - 70px); padding: 2rem 1rem;">
-    <div style="max-width: 1000px; margin: 0 auto;">
-        <!-- Header -->
-        <div style="text-align: center; margin-bottom: 2rem; animation: fadeInDown 0.6s ease-out;">
-            <div style="display: inline-flex; align-items: center; gap: 1rem; background: rgba(99, 102, 241, 0.1); padding: 0.75rem 1.5rem; border-radius: 50px; border: 1px solid rgba(99, 102, 241, 0.3); margin-bottom: 1rem;">
-                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: pulse 2s ease-in-out infinite;">
-                    <i class="fas fa-robot" style="color: white; font-size: 1.2rem;"></i>
+<div class="chat-widget">
+    <button type="button" class="chat-toggle-btn" id="chatToggle" aria-label="Toggle chat">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+        </svg>
+    </button>
+    
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="chat-avatar">💬</div>
+                <div class="chat-title">
+                    <div class="chat-name">LibraNet Chat</div>
+                    <div class="chat-status">Always available</div>
                 </div>
-                <span style="color: white; font-weight: 700; font-size: 1.1rem;">LibraNet AI Assistant</span>
             </div>
-            <p style="color: #cbd5e0; font-size: 1rem;">Ask me anything about books, subscriptions, or library services!</p>
+            <button type="button" class="chat-close" id="chatClose" aria-label="Close chat">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
         </div>
-
-        <!-- Chat Container -->
-        <div style="background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); overflow: hidden; max-height: 600px; display: flex; flex-direction: column;">
-            
-            <!-- Quick Questions -->
-            <div id="quickQuestions" style="padding: 1.5rem; border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
-                <p style="margin: 0 0 0.75rem; font-size: 0.9rem; font-weight: 600; color: #64748b;">
-                    <i class="fas fa-lightbulb"></i> Quick Questions:
-                </p>
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="quickQuestionsContainer">
-                    <!-- Quick questions will be loaded here -->
-                </div>
-            </div>
-
-            <!-- Messages Area -->
-            <div id="chatMessages" style="flex: 1; padding: 1.5rem; overflow-y: auto; max-height: 400px; min-height: 400px; scroll-behavior: smooth;">
-                <!-- Welcome Message -->
-                <div class="message bot-message" style="animation: fadeInUp 0.4s ease-out;">
-                    <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
-                        <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                            <i class="fas fa-robot" style="color: white; font-size: 1rem;"></i>
-                        </div>
-                        <div style="flex: 1;">
-                            <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
-                                <p style="margin: 0; color: #334155; line-height: 1.6;">
-                                    👋 Hello! I'm your LibraNet AI Assistant. I can help you with:
-                                    <br><br>
-                                    📚 Finding books, ebooks, and audiobooks<br>
-                                    💳 Understanding subscription plans<br>
-                                    📖 Learning about borrowing and fines<br>
-                                    ❓ Answering any library questions<br>
-                                    <br>
-                                    What would you like to know?
-                                </p>
-                            </div>
-                            <span style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; display: block;">Just now</span>
-                        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message bot">
+                <div class="message-content">
+                    <div class="message-bubble">
+                        Hi! How can I help you today?
                     </div>
                 </div>
             </div>
-
-            <!-- Input Area -->
-            <div style="padding: 1.5rem; border-top: 1px solid #e2e8f0; background: #f8fafc;">
-                <form id="chatForm" style="display: flex; gap: 0.75rem;">
-                    <input 
-                        type="text" 
-                        id="messageInput" 
-                        placeholder="Type your question here..." 
-                        style="flex: 1; padding: 0.875rem 1rem; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 0.95rem; outline: none; transition: all 0.3s ease;"
-                        autocomplete="off"
-                    >
-                    <button 
-                        type="submit" 
-                        id="sendButton"
-                        style="padding: 0.875rem 1.5rem; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);"
-                    >
-                        <i class="fas fa-paper-plane"></i>
-                        <span>Send</span>
-                    </button>
-                </form>
-                <p style="margin: 0.75rem 0 0; font-size: 0.8rem; color: #94a3b8; text-align: center;">
-                    <i class="fas fa-info-circle"></i> Powered by Google Gemini AI
-                </p>
+        </div>
+        
+        <div class="quick-replies">
+            <div class="quick-replies-title">Quick questions</div>
+            <div class="quick-replies-buttons">
+                <button type="button" class="quick-reply-btn" data-message="How do I borrow a book?">Borrow a book</button>
+                <button type="button" class="quick-reply-btn" data-message="What are subscription plans?">Subscription plans</button>
+                <button type="button" class="quick-reply-btn" data-message="How to return books?">Return books</button>
             </div>
         </div>
-
-        <!-- Features -->
-        <div style="margin-top: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-            <div style="background: rgba(99, 102, 241, 0.1); padding: 1rem; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.2); text-align: center;">
-                <i class="fas fa-brain" style="font-size: 2rem; color: #6366f1; margin-bottom: 0.5rem;"></i>
-                <p style="margin: 0; color: #cbd5e0; font-weight: 600; font-size: 0.9rem;">AI-Powered</p>
-            </div>
-            <div style="background: rgba(236, 72, 153, 0.1); padding: 1rem; border-radius: 12px; border: 1px solid rgba(236, 72, 153, 0.2); text-align: center;">
-                <i class="fas fa-clock" style="font-size: 2rem; color: #ec4899; margin-bottom: 0.5rem;"></i>
-                <p style="margin: 0; color: #cbd5e0; font-weight: 600; font-size: 0.9rem;">24/7 Available</p>
-            </div>
-            <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2); text-align: center;">
-                <i class="fas fa-book-reader" style="font-size: 2rem; color: #10b981; margin-bottom: 0.5rem;"></i>
-                <p style="margin: 0; color: #cbd5e0; font-weight: 600; font-size: 0.9rem;">Library Expert</p>
-            </div>
+        
+        <div class="chat-input-wrapper">
+            <form class="chat-input-form" id="chatForm">
+                <textarea 
+                    class="chat-input" 
+                    id="chatInput" 
+                    placeholder="Type a message..." 
+                    rows="1"
+                    aria-label="Chat message"
+                ></textarea>
+                <button type="submit" class="chat-send-btn" id="chatSend" aria-label="Send message">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    </svg>
+                </button>
+            </form>
         </div>
     </div>
 </div>
-
-<style>
-@keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-#messageInput:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
-
-#sendButton:hover {
-    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-}
-
-#sendButton:disabled {
-    background: #cbd5e0;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-.quick-question-btn {
-    padding: 0.5rem 1rem;
-    background: white;
-    border: 2px solid #e2e8f0;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #64748b;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.quick-question-btn:hover {
-    background: #6366f1;
-    color: white;
-    border-color: #6366f1;
-    transform: translateY(-2px);
-}
-
-.typing-indicator {
-    display: inline-flex;
-    gap: 4px;
-    padding: 1rem;
-}
-
-.typing-dot {
-    width: 8px;
-    height: 8px;
-    background: #94a3b8;
-    border-radius: 50%;
-    animation: typing 1.4s ease-in-out infinite;
-}
-
-.typing-dot:nth-child(2) {
-    animation-delay: 0.2s;
-}
-
-.typing-dot:nth-child(3) {
-    animation-delay: 0.4s;
-}
-
-@keyframes typing {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-    30% { transform: translateY(-10px); opacity: 1; }
-}
-</style>
-
-<script>
-const chatMessages = document.getElementById('chatMessages');
-const chatForm = document.getElementById('chatForm');
-const messageInput = document.getElementById('messageInput');
-const sendButton = document.getElementById('sendButton');
-const quickQuestionsContainer = document.getElementById('quickQuestionsContainer');
-
-// Load quick questions
-fetch('/api/chat/quick-questions')
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            data.questions.forEach(q => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'quick-question-btn';
-                btn.textContent = q;
-                btn.onclick = () => {
-                    messageInput.value = q;
-                    messageInput.focus();
-                };
-                quickQuestionsContainer.appendChild(btn);
-            });
-        }
-    })
-    .catch(err => console.error('Error loading quick questions:', err));
-
-// Add user message to chat
-function addUserMessage(text) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'message user-message';
-    messageDiv.style.animation = 'fadeInUp 0.4s ease-out';
-    messageDiv.innerHTML = `
-        <div style="display: flex; gap: 0.75rem; align-items: flex-start; justify-content: flex-end;">
-            <div style="flex: 1; max-width: 80%; text-align: right;">
-                <div style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); padding: 1rem; border-radius: 12px; display: inline-block;">
-                    <p style="margin: 0; color: white; line-height: 1.6;">${escapeHtml(text)}</p>
-                </div>
-                <span style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; display: block;">Just now</span>
-            </div>
-            <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <i class="fas fa-user" style="color: white; font-size: 1rem;"></i>
-            </div>
-        </div>
-    `;
-    chatMessages.appendChild(messageDiv);
-    scrollToBottom();
-}
-
-// Add typing indicator
-function addTypingIndicator() {
-    const typingDiv = document.createElement('div');
-    typingDiv.id = 'typingIndicator';
-    typingDiv.className = 'message bot-message';
-    typingDiv.innerHTML = `
-        <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
-            <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <i class="fas fa-robot" style="color: white; font-size: 1rem;"></i>
-            </div>
-            <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
-                <div class="typing-indicator">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
-            </div>
-        </div>
-    `;
-    chatMessages.appendChild(typingDiv);
-    scrollToBottom();
-}
-
-// Remove typing indicator
-function removeTypingIndicator() {
-    const indicator = document.getElementById('typingIndicator');
-    if (indicator) indicator.remove();
-}
-
-// Add bot message to chat
-function addBotMessage(text) {
-    removeTypingIndicator();
-    
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'message bot-message';
-    messageDiv.style.animation = 'fadeInUp 0.4s ease-out';
-    
-    // Convert markdown-style bold to HTML
-    const formattedText = text
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\n/g, '<br>');
-    
-    messageDiv.innerHTML = `
-        <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
-            <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <i class="fas fa-robot" style="color: white; font-size: 1rem;"></i>
-            </div>
-            <div style="flex: 1;">
-                <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
-                    <p style="margin: 0; color: #334155; line-height: 1.6;">${formattedText}</p>
-                </div>
-                <span style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; display: block;">Just now</span>
-            </div>
-        </div>
-    `;
-    chatMessages.appendChild(messageDiv);
-    scrollToBottom();
-}
-
-// Scroll to bottom
-function scrollToBottom() {
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-// Escape HTML
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-// Handle form submission
-chatForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const message = messageInput.value.trim();
-    if (!message) return;
-    
-    // Disable input
-    messageInput.disabled = true;
-    sendButton.disabled = true;
-    
-    // Add user message
-    addUserMessage(message);
-    messageInput.value = '';
-    
-    // Show typing indicator
-    addTypingIndicator();
-    
-    try {
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ message })
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            addBotMessage(data.response);
-        } else {
-            addBotMessage('Sorry, I encountered an error. Please try again! 😊');
-        }
-    } catch (error) {
-        console.error('Chat error:', error);
-        addBotMessage('Sorry, I\'m having trouble connecting. Please try again later! 😊');
-    } finally {
-        // Re-enable input
-        messageInput.disabled = false;
-        sendButton.disabled = false;
-        messageInput.focus();
-    }
-});
-
-// Focus input on load
-messageInput.focus();
-</script>
-{% endblock %}

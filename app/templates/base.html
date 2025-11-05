@@ -1,168 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ title }} - LibraNet</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-global.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-navbar.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-landing.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-books.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-book-detail.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-bag.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-loans.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-auth.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-footer.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/floating-chat.css') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LibraNet - Smart Library Management System">
+    <meta name="author" content="LibraNet">
+    <title>{% block title %}LibraNet{% endblock %} - Library Management</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/logo.svg') }}">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-theme.css') }}">
+    {% block extra_css %}{% endblock %}
+    
+    <!-- Theme Script - Load early to prevent flash -->
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+</head>
+<body>
     {% if 'login' not in request.endpoint and 'register' not in request.endpoint %}
-    <nav class="navbar">
-      <div class="nav-container">
-        <a href="{{ url_for('main.landing_page') }}" class="nav-brand">
-          <i class="fas fa-book-open"></i>
-          <span>LibraNet</span>
-        </a>
-
-        <button class="mobile-menu-toggle" id="mobileMenuToggle">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-
-        <div class="nav-menu" id="navMenu">
-          <ul class="nav-links">
-            <li class="nav-dropdown">
-              <button class="nav-link dropdown-toggle">
-                <i class="fas fa-search"></i>
-                <span>Browse</span>
-                <i class="fas fa-chevron-down"></i>
-              </button>
-              <div class="dropdown-menu">
-                <a href="{{ url_for('main.list_books') }}" 
-                   class="dropdown-item {% if current_user.is_authenticated and not current_user.has_access_to_physical_books() %}nav-link-locked{% endif %}">
-                  <i class="fas fa-book"></i>
-                  <span>Physical Books</span>
-                  {% if current_user.is_authenticated and not current_user.has_access_to_physical_books() %}
-                  <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6"></i>
-                  {% endif %}
-                </a>
-
-                <a href="{{ url_for('main.list_ebooks') }}" 
-                   class="dropdown-item {% if current_user.is_authenticated and not current_user.has_access_to_ebooks() %}nav-link-locked{% endif %}">
-                  <i class="fas fa-tablet-alt"></i>
-                  <span>Ebooks</span>
-                  {% if current_user.is_authenticated and not current_user.has_access_to_ebooks() %}
-                  <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6"></i>
-                  {% endif %}
-                </a>
-
-                <a href="{{ url_for('main.list_audiobooks') }}" 
-                   class="dropdown-item {% if current_user.is_authenticated and not current_user.has_access_to_audiobooks() %}nav-link-locked{% endif %}">
-                  <i class="fas fa-headphones"></i>
-                  <span>Audiobooks</span>
-                  {% if current_user.is_authenticated and not current_user.has_access_to_audiobooks() %}
-                  <i class="fas fa-lock" style="font-size: 0.7rem; opacity: 0.6"></i>
-                  {% endif %}
-                </a>
-              </div>
-            </li>
-
-            <!-- NEW: AI Chat Link -->
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <!-- Logo -->
+            <a href="{{ url_for('main.landing_page') }}" class="navbar-logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>LibraNet</span>
+            </a>
             
-            <li>
-              <a href="{{ url_for('main.subscriptions') }}" class="nav-link">
-                <i class="fas fa-crown"></i>
-                <span>Plans</span>
-                {% if current_user.is_authenticated and current_user.subscription_tier.name == 'FREE' %}
-                <span class="badge" style="background-color: rgba(187, 128, 9, 0.15); color: #d29922; border: 1px solid rgba(187, 128, 9, 0.4);">FREE</span>
+            <!-- Search -->
+            <div class="navbar-search">
+                <form action="{{ url_for('main.search') }}" method="GET" class="search-wrapper">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <input type="search" name="q" placeholder="Search books, authors..." class="search-input" aria-label="Search">
+                    <kbd class="search-kbd">/</kbd>
+                </form>
+            </div>
+            
+            <!-- Navigation -->
+            <ul class="navbar-nav">
+                <li>
+                    <a href="{{ url_for('main.list_books') }}" class="nav-link">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                        <span>Books</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('main.list_ebooks') }}" class="nav-link">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                        <span>E-books</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('main.list_audiobooks') }}" class="nav-link">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                        </svg>
+                        <span>Audiobooks</span>
+                    </a>
+                </li>
+                
+                {% if current_user.is_authenticated %}
+                <li>
+                    <a href="{{ url_for('main.my_loans') }}" class="nav-link">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                        </svg>
+                        <span>My Library</span>
+                    </a>
+                </li>
+                <li class="cart-badge">
+                    <a href="{{ url_for('main.my_bag') }}" class="nav-link">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        {% if current_user.bag_items and current_user.bag_items.count() > 0 %}
+                        <span class="cart-count">{{ current_user.bag_items.count() }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                
+                <!-- Theme Toggle -->
+                <li>
+                    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <div class="theme-toggle-slider">
+                            <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                            <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                            </svg>
+                        </div>
+                    </button>
+                </li>
+                
+                <li class="user-menu">
+                    <button class="user-button" id="userMenuButton">
+                        <img src="{{ current_user.avatar_url or url_for('static', filename='images/default-avatar.png') }}" alt="{{ current_user.name }}" class="user-avatar">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu" id="userDropdown">
+                        <a href="{{ url_for('main.profile') }}" class="dropdown-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                            <span>Profile</span>
+                        </a>
+                        <a href="{{ url_for('main.subscriptions') }}" class="dropdown-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                            </svg>
+                            <span>Subscriptions</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ url_for('main.logout') }}" class="dropdown-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{{ url_for('main.login') }}" class="nav-link">Sign in</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('main.register') }}" class="btn btn-primary btn-sm">Sign up</a>
+                </li>
                 {% endif %}
-              </a>
-            </li>
-
-            {% if current_user.is_authenticated %}
-            <li>
-              <a href="{{ url_for('main.my_bag') }}" class="nav-link nav-bag">
-                <i class="fas fa-shopping-bag"></i>
-                <span>Bag</span>
-                {% if session.get('bag') %}
-                <span class="badge">{{ session['bag']|length }}</span>
-                {% endif %}
-              </a>
-            </li>
-
-            <li class="nav-dropdown">
-              <button class="nav-link dropdown-toggle">
-                <i class="fas fa-user-circle"></i>
-                <span>{{ current_user.name.split()[0] }}</span>
-                <i class="fas fa-chevron-down"></i>
-              </button>
-
-              <div class="dropdown-menu">
-                <a href="{{ url_for('main.profile') }}" class="dropdown-item">
-                  <i class="fas fa-user"></i>
-                  My Profile
-                </a>
-                <a href="{{ url_for('main.my_subscription') }}" class="dropdown-item">
-                  <i class="fas fa-crown"></i>
-                  My Subscription
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="{{ url_for('main.my_loans') }}" class="dropdown-item">
-                  <i class="fas fa-bookmark"></i>
-                  My Loans
-                </a>
-                <a href="{{ url_for('main.dues') }}" class="dropdown-item">
-                  <i class="fas fa-wallet"></i>
-                  My Dues
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="{{ url_for('main.logout_confirm') }}" class="dropdown-item logout-item">
-                  <i class="fas fa-sign-out-alt"></i>
-                  Logout
-                </a>
-              </div>
-            </li>
-            {% else %}
-            <li>
-              <a href="{{ url_for('main.login') }}" class="nav-link">
-                <i class="fas fa-sign-in-alt"></i>
-                <span>Login</span>
-              </a>
-            </li>
-            <li>
-              <a href="{{ url_for('main.register') }}" class="nav-link nav-register-btn">
-                <i class="fas fa-user-plus"></i>
-                <span>Register</span>
-              </a>
-            </li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </nav>
+            </ul>
+            
+            <!-- Mobile Toggle -->
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+        </nav>
+    </header>
     {% endif %}
-
-    <main class="container content-wrapper">
-      {% with messages = get_flashed_messages(with_categories=true) %}
+    
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-        <div class="flashes">
-          {% for category, message in messages %}
-          <div class="alert alert-{{ category }}">
-            <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}times-circle{% elif category == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
-            <span>{{ message }}</span>
-          </div>
-          {% endfor %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash {{ category }}">
+                <svg class="flash-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {% if category == 'success' %}
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    {% elif category == 'error' %}
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    {% else %}
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    {% endif %}
+                </svg>
+                <span class="flash-message">{{ message }}</span>
+                <button class="flash-close" onclick="this.parentElement.remove()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            {% endfor %}
         </div>
         {% endif %}
-      {% endwith %}
-      {% block content %}{% endblock %}
+    {% endwith %}
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
     </main>
-
+    
     {% if 'login' not in request.endpoint and 'register' not in request.endpoint %}
-      {% include "footer.html" %}
+    <!-- Footer -->
+    {% include 'footer.html' %}
+    
+    <!-- Chat Widget -->
+    {% if current_user.is_authenticated %}
+    {% include 'chat.html' %}
     {% endif %}
+ 
 
     <style>
       {% if 'login' in request.endpoint or 'register' in request.endpoint %}
@@ -608,7 +649,13 @@
         }
     });
     </script>
+ 
     {% endif %}
-
-  </body>
+    
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
 </html>

@@ -1,32 +1,40 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/book-detail.css') }}">
+{% endblock %}
+
 {% block content %}
-<div class="book-detail-page">
-    <div class="book-detail-container">
+<div class="book-detail">
+    <div class="container">
         <a href="{{ url_for('main.list_audiobooks') }}" class="back-link">
-            <i class="fas fa-arrow-left"></i>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
             <span>Back to Audiobooks</span>
         </a>
 
         <div class="book-detail-grid">
-            <div class="book-cover-wrapper">
-                <img
-                    src="{{ audiobook.image_url or url_for('static', filename='images/default_audiobook.jpg') }}"
-                    alt="Cover of {{ audiobook.title }}"
-                    class="book-cover-image"
-                >
-                <div class="availability-status">
-                    <span class="status-pill available" style="background-color: rgba(236, 72, 153, 0.1); color: #ec4899;">
-                        <i class="fas fa-headphones"></i> Audiobook
-                    </span>
+            <div class="book-cover-section">
+                <div class="book-cover-wrapper">
+                    <div class="book-cover">
+                        <img
+                            src="{{ audiobook.image_url or url_for('static', filename='images/default_audiobook.jpg') }}"
+                            alt="Cover of {{ audiobook.title }}"
+                        >
+                    </div>
+                    <div class="availability-badge" style="background-color: rgba(236, 72, 153, 0.1); color: #ec4899;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 1.06m2.828-9.9a9 9 0 000 12.728"/>
+                        </svg>
+                        Audiobook
+                    </div>
                 </div>
             </div>
 
-            <div class="book-info-wrapper">
-                <header class="book-main-info">
-                    <h1 class="book-main-title">{{ audiobook.title }}</h1>
-                    <p class="book-main-author">by {{ audiobook.author }}</p>
-                </header>
+            <div class="book-info-section">
+                <h1 class="book-title">{{ audiobook.title }}</h1>
+                <p class="book-author">by {{ audiobook.author }}</p>
 
                 <div class="book-meta-grid">
                     <div class="meta-item">
@@ -52,19 +60,24 @@
                 </div>
 
                 {% if audiobook.summary %}
-                <div class="book-summary">
-                    <h2>Summary</h2>
-                    <p>{{ audiobook.summary }}</p>
+                <div class="book-description">
+                    <h2 class="description-title">Summary</h2>
+                    <p class="description-text">{{ audiobook.summary }}</p>
                 </div>
                 {% endif %}
 
-                <div class="book-actions" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <a href="{{ url_for('main.listen_audiobook', audiobook_id=audiobook.id) }}" class="action-btn primary-action">
-                        <i class="fas fa-play"></i>
+                <div class="book-actions">
+                    <a href="{{ url_for('main.listen_audiobook', audiobook_id=audiobook.id) }}" class="btn btn-primary btn-lg">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
                         <span>Listen Now</span>
                     </a>
-                    <a href="{{ url_for('main.download_audiobook', audiobook_id=audiobook.id) }}" class="action-btn" style="background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);">
-                        <i class="fas fa-download"></i>
+                    <a href="{{ url_for('main.download_audiobook', audiobook_id=audiobook.id) }}" class="btn btn-secondary btn-lg">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
                         <span>Download</span>
                     </a>
                 </div>

@@ -12,6 +12,24 @@ def landing_page():
     """Renders the main landing page."""
     return render_template('landing_page.html', title='Welcome to LibraNet')
 
+@main_bp.route('/search')
+def search():
+    """Global search across all publications (books, ebooks, audiobooks)."""
+    query = request.args.get('q', '', type=str)
+    
+    if not query:
+        return redirect(url_for('main.list_books'))
+    
+    # Search physical books
+    books = PhysicalBook.query.filter(
+        or_(
+            PhysicalBook.title.ilike(f'%{query}%'),
+            PhysicalBook.author.ilike(f'%{query}%')
+        )
+    ).all()
+    
+    return render_template('books.html', title=f'Search: {query}', books=books, search_term=query)
+
 @main_bp.route('/books')
 def list_books():
     """Displays the list of all books in the catalog. (Publicly accessible)"""
@@ -42,7 +60,7 @@ def book_detail(book_id):
             returned_date=None
         ).first()
 
-    return render_template('book_detail.html', title=book.title, book=book, existing_loan=existing_loan)
+    return render_template('book-detail.html', title=book.title, book=book, existing_loan=existing_loan)
 
 @main_bp.route('/add_to_bag/<int:book_id>', methods=['POST'])
 @login_required

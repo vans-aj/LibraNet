@@ -1,85 +1,12 @@
 {% extends "base.html" %}
-
+{% block title %}Subscription Successful{% endblock %}
 {% block content %}
-<div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; padding: 3rem 2rem; display: flex; align-items: center; justify-content: center;">
-    <div style="max-width: 600px; width: 100%; text-align: center; animation: fadeInUp 0.6s ease-out;">
-        <!-- Success Icon -->
-        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; font-size: 4rem; animation: bounceIn 0.8s ease-out;">
-            ✓
-        </div>
-
-        <!-- Success Message -->
-        <div style="background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); margin-bottom: 2rem;">
-            <h1 style="font-size: 2.5rem; font-weight: 900; color: #0f172a; margin-bottom: 1rem;">
-                Subscription Successful!
-            </h1>
-            <p style="font-size: 1.1rem; color: #64748b; margin-bottom: 2rem;">
-                Welcome to {{ plan.name }} plan
-            </p>
-
-            <!-- Subscription Details -->
-            <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; text-align: left;">
-                <div style="display: grid; gap: 1rem;">
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="font-weight: 600; color: #64748b;">Plan:</span>
-                        <span style="font-weight: 700; color: #0f172a;">{{ plan.name }}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="font-weight: 600; color: #64748b;">Start Date:</span>
-                        <span style="font-weight: 700; color: #0f172a;">{{ subscription.start_date.strftime('%d %b %Y') }}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="font-weight: 600; color: #64748b;">End Date:</span>
-                        <span style="font-weight: 700; color: #0f172a;">{{ subscription.end_date.strftime('%d %b %Y') }}</span>
-                    </div>
-                    <div style="border-top: 2px solid #e2e8f0; padding-top: 1rem; margin-top: 0.5rem;">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="font-weight: 700; color: #0f172a;">Amount Paid:</span>
-                            <span style="font-weight: 900; color: #6366f1; font-size: 1.25rem;">₹{{ subscription.price_paid }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div style="display: grid; gap: 1rem;">
-                {% if subscription.tier.name == 'BASIC' %}
-                <a href="{{ url_for('main.list_books') }}" style="padding: 14px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border-radius: 12px; font-weight: 700; text-decoration: none; display: block; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
-                    <i class="fas fa-book"></i> Browse Physical Books
-                </a>
-                {% elif subscription.tier.name == 'PRO' %}
-                <a href="{{ url_for('main.list_ebooks') }}" style="padding: 14px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border-radius: 12px; font-weight: 700; text-decoration: none; display: block; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
-                    <i class="fas fa-tablet-alt"></i> Explore Ebooks
-                </a>
-                {% elif subscription.tier.name == 'MAX' %}
-                <a href="{{ url_for('main.list_audiobooks') }}" style="padding: 14px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border-radius: 12px; font-weight: 700; text-decoration: none; display: block; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
-                    <i class="fas fa-headphones"></i> Listen to Audiobooks
-                </a>
-                {% endif %}
-                
-                <a href="{{ url_for('main.my_subscription') }}" style="padding: 14px; background: #f1f5f9; color: #64748b; border-radius: 12px; font-weight: 700; text-decoration: none; display: block;">
-                    View My Subscription
-                </a>
-            </div>
-        </div>
-
-        <!-- Receipt Note -->
-        <p style="color: #cbd5e0; font-size: 0.9rem;">
-            <i class="fas fa-envelope"></i> A confirmation email has been sent to your registered email address
-        </p>
-    </div>
+<div class="container" style="max-width: 720px; margin: 2rem auto; text-align:center;">
+  <div style="background:#fff; border:1px solid #e5e7eb; border-radius: 12px; padding: 2rem;">
+    <div style="font-size:3rem;">🎉</div>
+    <h1>You're subscribed!</h1>
+    <p style="color:#6b7280;">Your {{ plan.name }} plan is now active.</p>
+    <a class="btn btn-primary" href="{{ url_for('main.subscriptions') }}">Manage subscription</a>
+  </div>
 </div>
-
-<style>
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes bounceIn {
-    0% { transform: scale(0); opacity: 0; }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
-}
-</style>
 {% endblock %}

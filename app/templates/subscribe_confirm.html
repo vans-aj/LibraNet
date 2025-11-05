@@ -1,220 +1,278 @@
 {% extends "base.html" %}
+{% block title %}Confirm Subscription{% endblock %}
+
+{% block extra_css %}
+<style>
+    .subscription-confirm-container {
+        max-width: 600px;
+        margin: 4rem auto;
+        padding: 2rem;
+    }
+
+    .confirm-card {
+        background: var(--card-bg, #fff);
+        border: 1px solid var(--border-color, #e5e7eb);
+        border-radius: 16px;
+        padding: 3rem 2.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .confirm-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .confirm-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .confirm-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text-primary, #1f2937);
+        margin-bottom: 0.5rem;
+    }
+
+    .confirm-subtitle {
+        font-size: 1rem;
+        color: var(--text-secondary, #6b7280);
+    }
+
+    .plan-summary {
+        background: var(--bg-secondary, #f9fafb);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .plan-summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .plan-summary-row:last-child {
+        margin-bottom: 0;
+        padding-top: 0.75rem;
+        border-top: 2px solid var(--border-color, #e5e7eb);
+        font-weight: 700;
+        font-size: 1.25rem;
+    }
+
+    .plan-summary-label {
+        color: var(--text-secondary, #6b7280);
+        font-size: 0.95rem;
+    }
+
+    .plan-summary-value {
+        color: var(--text-primary, #1f2937);
+        font-weight: 600;
+    }
+
+    .features-preview {
+        margin: 2rem 0;
+    }
+
+    .features-preview h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-primary, #1f2937);
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .features-list {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .features-list li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-secondary, #6b7280);
+        font-size: 0.9rem;
+    }
+
+    .features-list li i {
+        color: #10b981;
+        font-size: 1rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        flex: 1;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #6366f1, #ec4899);
+        color: white;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: var(--text-secondary, #6b7280);
+        border: 2px solid var(--border-color, #d1d5db);
+    }
+
+    .btn-secondary:hover {
+        border-color: #6366f1;
+        color: var(--text-primary, #1f2937);
+    }
+
+    .secure-note {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: var(--text-secondary, #9ca3af);
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .secure-note i {
+        color: #10b981;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; padding: 3rem 2rem; display: flex; align-items: center; justify-content: center;">
-    <div style="max-width: 600px; width: 100%; background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); animation: fadeInUp 0.6s ease-out;">
-        <!-- Header -->
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2.5rem;">
-                {% if tier.name == 'BASIC' %}📚
-                {% elif tier.name == 'PRO' %}⭐
-                {% elif tier.name == 'MAX' %}👑
-                {% endif %}
-            </div>
-            <h1 style="font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem;">
-                Confirm Subscription
-            </h1>
-            <p style="color: #64748b; font-size: 1.1rem;">You're about to subscribe to <strong style="color: #6366f1;">{{ plan.name }}</strong></p>
+<div class="subscription-confirm-container">
+    <div class="confirm-card">
+        <div class="confirm-header">
+            <div class="confirm-icon">🚀</div>
+            <h1 class="confirm-title">Confirm Your Subscription</h1>
+            <p class="confirm-subtitle">You're upgrading to the <strong>{{ plan.name }}</strong> plan</p>
         </div>
 
-        <!-- Plan Summary -->
-        <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; border: 2px solid #e2e8f0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
-                <span style="font-weight: 700; color: #64748b; font-size: 0.95rem;">Plan:</span>
-                <span style="font-weight: 800; color: #6366f1; font-size: 1.1rem;">{{ plan.name }}</span>
+        <div class="plan-summary">
+            <div class="plan-summary-row">
+                <span class="plan-summary-label">Plan</span>
+                <span class="plan-summary-value">{{ plan.name }}</span>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
-                <span style="font-weight: 700; color: #64748b; font-size: 0.95rem;">Duration:</span>
-                <span style="font-weight: 700; color: #0f172a;">{{ plan.duration_days }} days (6 months)</span>
+            <div class="plan-summary-row">
+                <span class="plan-summary-label">Billing Period</span>
+                <span class="plan-summary-value">{{ plan.duration_days // 30 }} months</span>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
-                <span style="font-weight: 700; color: #64748b; font-size: 0.95rem;">Base Price:</span>
-                <span style="font-weight: 700; color: #0f172a;">₹{{ (plan.price / 1.18)|round(2) }}</span>
+            <div class="plan-summary-row">
+                <span class="plan-summary-label">Price</span>
+                <span class="plan-summary-value">₹{{ plan.price }}</span>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
-                <span style="font-weight: 700; color: #64748b; font-size: 0.95rem;">GST (18%):</span>
-                <span style="font-weight: 700; color: #0f172a;">₹{{ (plan.price - (plan.price / 1.18))|round(2) }}</span>
-            </div>
-            <div style="padding-top: 1rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">Total Amount:</span>
-                    <span style="font-size: 2rem; font-weight: 900; color: #6366f1;">₹{{ plan.price }}</span>
-                </div>
+            <div class="plan-summary-row">
+                <span>Total</span>
+                <span>₹{{ plan.price }}</span>
             </div>
         </div>
 
-        <!-- Features Preview -->
-        <div style="margin-bottom: 2rem; background: rgba(99, 102, 241, 0.05); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.1);">
-            <h3 style="font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fas fa-gift" style="color: #6366f1;"></i>
-                What you'll get:
-            </h3>
-            <ul style="list-style: none; padding: 0; margin: 0;">
-                {% for feature in plan.features[:4] %}
-                <li style="padding: 0.75rem 0; display: flex; align-items: center; gap: 0.75rem; color: #334155; {% if not loop.last %}border-bottom: 1px solid rgba(99, 102, 241, 0.1);{% endif %}">
-                    <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.1rem;"></i>
-                    <span style="font-weight: 500;">{{ feature }}</span>
+        <div class="features-preview">
+            <h3>What's included</h3>
+            <ul class="features-list">
+                {% for feature in plan.features[:5] %}
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{ feature }}</span>
                 </li>
                 {% endfor %}
             </ul>
         </div>
 
-        <!-- Payment Button -->
-        <div style="display: grid; gap: 1rem;">
-            <button type="button" id="razorpayButton" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
-                <i class="fas fa-lock"></i>
-                <span>Proceed to Secure Payment</span>
-            </button>
-            
-            <a href="{{ url_for('main.subscriptions') }}" style="width: 100%; padding: 14px; background: #f1f5f9; color: #64748b; border: 2px solid #e2e8f0; border-radius: 12px; font-weight: 700; text-align: center; display: block; text-decoration: none; transition: all 0.3s ease;">
-                <i class="fas fa-arrow-left"></i> Back to Plans
+        <div class="action-buttons">
+            <a href="{{ url_for('main.subscriptions') }}" class="btn btn-secondary">
+                Cancel
             </a>
+            <button id="rzp-button" class="btn btn-primary">
+                <i class="fas fa-lock"></i> Pay ₹{{ plan.price }}
+            </button>
         </div>
 
-        <!-- Security Note -->
-        <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(16, 185, 129, 0.05); border-left: 4px solid #10b981; border-radius: 8px;">
-            <p style="text-align: center; margin: 0; font-size: 0.9rem; color: #059669; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                <i class="fas fa-shield-alt"></i>
-                Secured by Razorpay - Your payment information is encrypted
-            </p>
-        </div>
-
-        <!-- Payment Logos -->
-        <div style="margin-top: 1.5rem; text-align: center;">
-            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.75rem;">We accept</p>
-            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; align-items: center;">
-                <span style="padding: 0.5rem 1rem; background: #f8fafc; border-radius: 6px; font-weight: 600; color: #64748b; font-size: 0.85rem;">💳 Cards</span>
-                <span style="padding: 0.5rem 1rem; background: #f8fafc; border-radius: 6px; font-weight: 600; color: #64748b; font-size: 0.85rem;">📱 UPI</span>
-                <span style="padding: 0.5rem 1rem; background: #f8fafc; border-radius: 6px; font-weight: 600; color: #64748b; font-size: 0.85rem;">🏦 Net Banking</span>
-                <span style="padding: 0.5rem 1rem; background: #f8fafc; border-radius: 6px; font-weight: 600; color: #64748b; font-size: 0.85rem;">💰 Wallets</span>
-            </div>
-        </div>
-
-        <!-- Test Mode Notice -->
-        <div style="margin-top: 2rem; padding: 1rem; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2);">
-            <p style="margin: 0; font-size: 0.85rem; color: #92400e; text-align: center;">
-                <i class="fas fa-info-circle"></i>
-                <strong>Test Mode:</strong> Use card 4111 1111 1111 1111 for testing
-            </p>
+        <div class="secure-note">
+            <i class="fas fa-shield-alt"></i>
+            <span>Secure payment powered by Razorpay</span>
         </div>
     </div>
 </div>
 
-<!-- Load Razorpay Script -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
 <script>
-console.log('Page loaded, initializing payment button...');
-
-// Check if Razorpay is loaded
-if (typeof Razorpay === 'undefined') {
-    console.error('Razorpay library not loaded!');
-    alert('Payment gateway is not available. Please refresh the page and try again.');
-} else {
-    console.log('Razorpay library loaded successfully');
-}
-
-document.getElementById('razorpayButton').addEventListener('click', function(e) {
-    e.preventDefault();
-    console.log('Payment button clicked');
-    
-    // Check again if Razorpay is available
-    if (typeof Razorpay === 'undefined') {
-        alert('Payment gateway is not loaded. Please refresh the page and try again.');
-        return;
-    }
-    
-    var options = {
-        "key": "{{ razorpay_key_id }}",
-        "amount": "{{ (plan.price * 100)|int }}",
-        "currency": "INR",
-        "name": "LibraNet",
-        "description": "{{ plan.name }} Subscription",
-        "image": "https://cdn-icons-png.flaticon.com/512/2232/2232688.png",
-        "handler": function (response) {
-            console.log('Payment successful:', response);
-            
-            // Show loading message
-            alert('Payment successful! Processing your subscription...');
-            
-            // Send payment details to server
-            fetch("{{ url_for('main.verify_payment') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    razorpay_payment_id: response.razorpay_payment_id,
-                    tier: "{{ tier.name.lower() }}"
+    document.getElementById('rzp-button').onclick = function(e) {
+        e.preventDefault();
+        
+        const options = {
+            "key": "{{ razorpay_key_id }}",
+            "amount": {{ plan.price * 100 }}, // Amount in paise
+            "currency": "INR",
+            "name": "LibraNet",
+            "description": "{{ plan.name }} Subscription",
+            "image": "/static/images/logo.png",
+            "handler": function (response) {
+                // Send payment details to server for verification
+                fetch("{{ url_for('main.verify_payment') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        tier: "{{ tier.name.lower() }}"
+                    })
                 })
-            })
-            .then(response => {
-                console.log('Response status:', response.status);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Server response:', data);
-                if (data.success) {
-                    window.location.href = "{{ url_for('main.subscription_success', subscription_id=0) }}".replace('/0', '/' + data.subscription_id);
-                } else {
-                    alert('Payment verification failed: ' + (data.message || 'Unknown error'));
-                    window.location.href = "{{ url_for('main.subscriptions') }}";
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = "{{ url_for('main.subscription_success', subscription_id=0) }}".replace('/0', '/' + data.subscription_id);
+                    } else {
+                        alert('Payment verification failed: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please contact support.');
+                });
+            },
+            "prefill": {
+                "name": "{{ current_user.name }}",
+                "email": "{{ current_user.email }}",
+                "contact": "{{ current_user.phone or '' }}"
+            },
+            "theme": {
+                "color": "#6366f1"
+            },
+            "modal": {
+                "ondismiss": function() {
+                    console.log('Payment cancelled by user');
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Something went wrong. Please contact support with payment ID: ' + response.razorpay_payment_id);
-                window.location.href = "{{ url_for('main.subscriptions') }}";
-            });
-        },
-        "prefill": {
-            "name": "{{ current_user.name }}",
-            "email": "{{ current_user.email }}",
-            "contact": "{{ current_user.phone or '' }}"
-        },
-        "notes": {
-            "student_id": "{{ current_user.id }}",
-            "tier": "{{ tier.name }}"
-        },
-        "theme": {
-            "color": "#6366f1"
-        },
-        "modal": {
-            "ondismiss": function() {
-                console.log('Payment popup closed by user');
             }
-        }
+        };
+        
+        const rzp = new Razorpay(options);
+        rzp.open();
     };
-    
-    console.log('Opening Razorpay with options:', options);
-    
-    try {
-        var rzp1 = new Razorpay(options);
-        
-        rzp1.on('payment.failed', function (response){
-            console.error('Payment failed:', response.error);
-            alert('Payment failed: ' + response.error.description + '\n\nTest Card: 4111 1111 1111 1111\nCVV: Any 3 digits\nExpiry: Any future date');
-        });
-        
-        rzp1.open();
-        console.log('Razorpay popup opened');
-    } catch (error) {
-        console.error('Error opening Razorpay:', error);
-        alert('Failed to open payment gateway: ' + error.message);
-    }
-});
 </script>
-
-<style>
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-#razorpayButton:hover {
-    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.5);
-}
-</style>
 {% endblock %}

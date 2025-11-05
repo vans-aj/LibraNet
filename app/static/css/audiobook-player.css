@@ -1,0 +1,126 @@
+/* Audiobook player styles - modern, responsive, minimalistic */
+.player-page {
+  padding: var(--space-8) 0;
+  background: var(--gray-50);
+  min-height: 80vh;
+}
+
+.player-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+.back-link {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  color: var(--gray-700);
+  text-decoration: none;
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-6);
+}
+
+.player-card {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: var(--space-8);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  padding: var(--space-6);
+  box-shadow: var(--shadow-md);
+}
+
+/* Left: cover + meta */
+.cover-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, rgba(99,102,241,0.06), rgba(236,72,153,0.03));
+}
+
+.cover-art {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+}
+
+.player-meta {
+  margin-top: var(--space-4);
+  text-align: left;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: var(--font-bold);
+  color: var(--gray-900);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.author, .narrator {
+  color: var(--gray-600);
+  margin: 0 0 var(--space-1) 0;
+  font-size: var(--text-sm);
+}
+
+/* Right: player controls and chapters */
+.player-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.player-controls {
+  background: var(--gray-50);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-100);
+}
+
+.transport { display:flex; gap: var(--space-3); align-items:center; }
+
+.btn-icon { background: transparent; border: none; padding: 0.5rem; border-radius: 8px; cursor: pointer; color: var(--gray-600); }
+.btn-icon:hover { background: var(--gray-100); color: var(--gray-900); }
+
+.btn-play { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg,var(--primary),#ec4899); border: none; color: white; display: inline-flex; align-items:center; justify-content:center; cursor:pointer; box-shadow: 0 8px 24px rgba(37,99,235,0.15); }
+
+.time-info { margin-left: auto; color: var(--gray-600); font-weight: 600; font-size: .95rem; }
+
+.progress-wrap { margin-top: var(--space-3); }
+#seekBar { width: 100%; appearance: none; height: 8px; border-radius: 6px; background: linear-gradient(90deg,var(--primary),#f472b6); outline: none; }
+#seekBar::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.2); border: 3px solid rgba(255,255,255,0.25); }
+
+.controls-bottom { display:flex; align-items:center; justify-content:space-between; margin-top: var(--space-4); }
+.left-controls { display:flex; align-items:center; gap: var(--space-3); }
+.right-controls { display:flex; align-items:center; gap: var(--space-2); }
+.btn-small { padding: .4rem .6rem; border-radius: 8px; border: 1px solid var(--gray-200); background: var(--white); cursor:pointer; }
+
+.volume { display:flex; align-items:center; gap: .5rem; }
+#volume { width: 96px; }
+
+.chapter-list { max-height: 320px; overflow:auto; border-top: 1px dashed var(--gray-100); padding-top: var(--space-3); }
+.chapter-list h3 { margin: 0 0 var(--space-3) 0; font-size: 1rem; }
+#chapters { list-style: none; padding: 0; margin: 0; display:flex; flex-direction:column; gap: .5rem; }
+.chapter-item { padding: .6rem .8rem; border-radius: 8px; background: transparent; border: 1px solid transparent; display:flex; justify-content:space-between; gap: .5rem; cursor: pointer; color: var(--gray-700); }
+.chapter-item:hover { background: var(--gray-100); }
+.chapter-item.active { background: linear-gradient(90deg,var(--primary),#f472b6); color: white; border-color: transparent; }
+.chapter-time { color: var(--gray-500); font-size: .85rem; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .player-card { grid-template-columns: 1fr; }
+  .cover-art { max-width: 240px; }
+  .time-info { margin-left: 0; }
+}
+
+/* Dark theme compatibility */
+[data-theme="dark"] .player-card { background: #0f172a; border-color: #334155; }
+[data-theme="dark"] .player-controls { background: #0b1220; border-color: #223047; }
+[data-theme="dark"] .chapter-item:hover { background: #122033; }
+[data-theme="dark"] #seekBar { background: linear-gradient(90deg,#60a5fa,#f472b6); }
+[data-theme="dark"] .title, [data-theme="dark"] .chapter-item { color: var(--gray-100); }

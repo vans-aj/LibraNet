@@ -1,107 +1,140 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="landing-page">
-    <!-- Background Animations -->
-    <div class="bg-animation">
-        <div class="blob-1"></div>
-        <div class="blob-2"></div>
-        <div class="blob-3"></div>
-    </div>
+{% block title %}Welcome to LibraNet{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="landing">
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-content">
-            <div class="hero-badge">
-                <i class="fas fa-sparkles"></i>
-                Welcome to LibraNet
-            </div>
-
-            <h1 class="hero-title">
-                Your Modern
-                <span class="hero-title-gradient">Library Management</span>
-                Solution
-            </h1>
-
-            <p class="hero-subtitle">
-                Browse our vast collection of books, manage your borrowing effortlessly, and stay on top of your reading journey. All in one place.
-            </p>
-
-            <div class="hero-buttons">
-                {% if not current_user.is_authenticated %}
-                    <a href="{{ url_for('main.register') }}" class="btn-hero btn-hero-primary">
-                        <i class="fas fa-user-plus"></i>
-                        <span>Get Started</span>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span>Modern Library Management</span>
+                </div>
+                <h1 class="hero-title">Discover Your Next Great Read</h1>
+                <p class="hero-description">
+                    Access thousands of books, manage your reading journey, and connect with a community of book lovers.
+                </p>
+                <div class="hero-actions">
+                    <a href="{{ url_for('main.list_books') }}" class="btn btn-primary btn-lg">
+                        <span>Browse Books</span>
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                        </svg>
                     </a>
-                    <a href="{{ url_for('main.login') }}" class="btn-hero btn-hero-secondary">
-                        <i class="fas fa-sign-in-alt"></i>
-                        <span>Sign In</span>
-                    </a>
-                {% else %}
-                    <a href="{{ url_for('main.list_books') }}" class="btn-hero btn-hero-primary">
-                        <i class="fas fa-book-open"></i>
-                        <span>Browse Catalog</span>
-                    </a>
-                    <a href="{{ url_for('main.my_loans') }}" class="btn-hero btn-hero-secondary">
-                        <i class="fas fa-bookmark"></i>
-                        <span>My Loans</span>
-                    </a>
-                {% endif %}
+                </div>
             </div>
         </div>
     </section>
-
+    
     <!-- Features Section -->
-    <section class="features-section">
-        <div class="features-container">
-            <div class="features-header">
-                <h2>Why Choose LibraNet?</h2>
-                <p>Experience the future of library management with our cutting-edge platform</p>
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Features</span>
+                <h2 class="section-title">Everything You Need</h2>
+                <p class="section-description">
+                    Powerful features to enhance your reading experience
+                </p>
             </div>
-
+            
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">📚</div>
-                    <h3>Vast Collection</h3>
-                    <p>Access thousands of books across multiple genres and categories. Find exactly what you're looking for.</p>
+                    <h3 class="feature-title">Vast Collection</h3>
+                    <p class="feature-description">
+                        Access thousands of physical books and digital e-books across all genres.
+                    </p>
                 </div>
-
+                
                 <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Instant Borrowing</h3>
-                    <p>Borrow books in seconds with our streamlined checkout process. No waiting in long queues.</p>
+                    <div class="feature-icon">🔍</div>
+                    <h3 class="feature-title">Smart Search</h3>
+                    <p class="feature-description">
+                        Find exactly what you're looking for with our advanced search and filtering.
+                    </p>
                 </div>
-
+                
                 <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Track Loans</h3>
-                    <p>Keep track of all your borrowed books, due dates, and fines in one convenient dashboard.</p>
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">E-book Access</h3>
+                    <p class="feature-description">
+                        Read digital books anytime, anywhere on any device.
+                    </p>
                 </div>
-
+                
                 <div class="feature-card">
-                    <div class="feature-icon">🔐</div>
-                    <h3>Secure & Safe</h3>
-                    <p>Your personal data is encrypted and protected with modern security standards.</p>
+                    <div class="feature-icon">⏰</div>
+                    <h3 class="feature-title">Easy Management</h3>
+                    <p class="feature-description">
+                        Track your borrowing history, due dates, and manage returns effortlessly.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💳</div>
+                    <h3 class="feature-title">Flexible Plans</h3>
+                    <p class="feature-description">
+                        Choose from multiple subscription plans that fit your reading habits.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3 class="feature-title">AI Assistant</h3>
+                    <p class="feature-description">
+                        Get instant help and book recommendations from our AI assistant.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
-
+    
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">10,000+</div>
+                    <div class="stat-label">Books Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">5,000+</div>
+                    <div class="stat-label">Active Members</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">50,000+</div>
+                    <div class="stat-label">Books Borrowed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">4.9/5</div>
+                    <div class="stat-label">User Rating</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
     <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="cta-card">
-            <h2>Ready to Start Your Library Journey?</h2>
-            <p>Join thousands of book lovers who are already using LibraNet to manage their reading experience.</p>
+    <section class="cta">
+        <div class="container">
+            <h2 class="cta-title">Ready to Start Reading?</h2>
+            <p class="cta-description">
+                Join thousands of readers and discover your next favorite book today.
+            </p>
             {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('main.register') }}" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i>
-                    Create Your Account
-                </a>
-            {% else %}
-                <a href="{{ url_for('main.list_books') }}" class="btn btn-primary">
-                    <i class="fas fa-book-open"></i>
-                    Explore Our Catalog
-                </a>
+            <a href="{{ url_for('main.register') }}" class="btn btn-secondary btn-lg">
+                <span>Create Free Account</span>
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
+            </a>
             {% endif %}
         </div>
     </section>

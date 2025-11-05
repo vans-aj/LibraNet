@@ -1,97 +1,103 @@
 {% extends "base.html" %}
 
+{% block title %}Sign In{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
 {% block content %}
-<div class="auth-wrapper">
-    <!-- LEFT SIDE - BRANDING -->
-    <div class="auth-left">
-        <div class="auth-card left">
-            <div class="auth-header left">
-                <div class="auth-logo">📚 LibraNet</div>
-                <h1 class="auth-title">Welcome Back</h1>
-                <p class="auth-subtitle">Your modern solution for library management. Access thousands of books and manage your loans effortlessly.</p>
-            </div>
-
-            <div class="auth-features">
-                <div class="feature-item">
-                    <div class="feature-icon">📖</div>
-                    <div class="feature-text">
-                        <h4>Vast Collection</h4>
-                        <p>Access thousands of books</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">⚡</div>
-                    <div class="feature-text">
-                        <h4>Instant Loans</h4>
-                        <p>Borrow within seconds</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">📊</div>
-                    <div class="feature-text">
-                        <h4>Track Loans</h4>
-                        <p>Manage your borrowing</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🔐</div>
-                    <div class="feature-text">
-                        <h4>Secure</h4>
-                        <p>Your data is protected</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- RIGHT SIDE - LOGIN FORM -->
-    <div class="auth-right">
+<div class="auth-page">
+    <div class="auth-container">
         <div class="auth-card">
+            <!-- Logo -->
+            <div class="auth-logo">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="auth-logo-text">LibraNet</span>
+            </div>
+            
+            <!-- Header -->
             <div class="auth-header">
-                <h1 class="auth-title">Sign In</h1>
-                <p class="auth-subtitle">Enter your credentials to continue</p>
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to continue to your library</p>
             </div>
-
-            <form action="" method="post" novalidate>
+            
+            <!-- Form -->
+            <form action="{{ url_for('main.login') }}" method="POST" class="auth-form">
                 {{ form.hidden_tag() }}
-
+                
                 <div class="form-group">
-                    {{ form.email.label }}
-                    {{ form.email(size=32, placeholder="you@example.com", class="form-control") }}
-                    {% for error in form.email.errors %}
-                    <div class="form-error">{{ error }}</div>
-                    {% endfor %}
+                    {{ form.email.label(class="form-label form-label-required") }}
+                    <div class="input-with-icon">
+                        <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                        </svg>
+                        {{ form.email(class="form-input", placeholder="Enter your email", autocomplete="email") }}
+                    </div>
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                        <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
-
+                
                 <div class="form-group">
-                    {{ form.password.label }}
-                    {{ form.password(size=32, placeholder="••••••••", class="form-control") }}
-                    {% for error in form.password.errors %}
-                    <div class="form-error">{{ error }}</div>
-                    {% endfor %}
+                    {{ form.password.label(class="form-label form-label-required") }}
+                    <div class="input-with-icon password-toggle">
+                        <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        {{ form.password(class="form-input", placeholder="Enter your password", autocomplete="current-password") }}
+                        <button type="button" class="password-toggle-btn" id="togglePassword">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    {% if form.password.errors %}
+                        {% for error in form.password.errors %}
+                        <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
-
-                <div class="checkbox-group">
-                    {{ form.remember_me() }}
-                    {{ form.remember_me.label }}
+                
+                <div class="form-check">
+                    {{ form.remember_me(class="form-check-input") }}
+                    {{ form.remember_me.label(class="form-check-label") }}
                 </div>
-
-                <button type="submit" class="submit-btn">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Sign In
-                </button>
+                
+                <div class="forgot-password">
+                    <a href="#" class="forgot-password-link">Forgot password?</a>
+                </div>
+                
+                {{ form.submit(class="btn btn-primary btn-block") }}
             </form>
-
-            <div class="auth-divider">
-                <span>New to LibraNet?</span>
+            
+            <!-- Footer -->
+            <div class="auth-footer">
+                <p class="auth-footer-text">
+                    Don't have an account? 
+                    <a href="{{ url_for('main.register') }}" class="auth-footer-link">Sign up</a>
+                </p>
             </div>
-
-            <p class="auth-footer">
-                Don't have an account? <a href="{{ url_for('main.register') }}">Create one now</a>
-            </p>
         </div>
     </div>
 </div>
+{% endblock %}
 
-{% include "footer.html" %}
+{% block extra_js %}
+<script>
+    // Password toggle
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    
+    togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+    });
+</script>
 {% endblock %}

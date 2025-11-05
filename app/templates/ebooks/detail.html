@@ -1,64 +1,80 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="book-detail-page">
-    <div class="book-detail-container">
-        <a href="{{ url_for('main.list_ebooks') }}" class="back-link">
-            <i class="fas fa-arrow-left"></i>
-            <span>Back to Ebooks</span>
-        </a>
+{% block title %}{{ ebook.title }}{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/book-detail.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ebooks.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="book-detail ebook-detail">
+    <div class="container">
+        <a href="{{ url_for('main.list_ebooks') }}" class="back-link">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            <span>Back to E-books</span>
+        </a>
+        
         <div class="book-detail-grid">
-            <div class="book-cover-wrapper">
-                <img
-                    src="{{ ebook.image_url or url_for('static', filename='images/default_ebook.jpg') }}"
-                    alt="Cover of {{ ebook.title }}"
-                    class="book-cover-image"
-                >
-                <div class="availability-status">
-                    <span class="status-pill available">
-                        <i class="fas fa-tablet-alt"></i> Digital
-                    </span>
+            <!-- Book Cover -->
+            <div class="book-cover-section">
+                <div class="book-cover-wrapper">
+                    <div class="book-cover">
+                        <img 
+                            src="{{ ebook.image_url or url_for('static', filename='images/default-book.jpg') }}" 
+                            alt="{{ ebook.title }}"
+                        >
+                    </div>
+                    <div class="availability-badge available">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                        <span>Digital Copy</span>
+                    </div>
                 </div>
             </div>
-
-            <div class="book-info-wrapper">
-                <header class="book-main-info">
-                    <h1 class="book-main-title">{{ ebook.title }}</h1>
-                    <p class="book-main-author">by {{ ebook.author }}</p>
-                </header>
-
+            
+            <!-- Book Info -->
+            <div class="book-info-section">
+                <h1 class="book-title">{{ ebook.title }}</h1>
+                <p class="book-author">by {{ ebook.author }}</p>
+                
                 <div class="book-meta-grid">
                     <div class="meta-item">
-                        <span class="meta-label">Format</span>
-                        <span class="meta-value">{{ ebook.file_format }}</span>
-                    </div>
-                    {% if ebook.file_size_mb %}
-                    <div class="meta-item">
-                        <span class="meta-label">File Size</span>
-                        <span class="meta-value">{{ '%.1f'|format(ebook.file_size_mb) }} MB</span>
-                    </div>
-                    {% endif %}
-                    <div class="meta-item">
-                        <span class="meta-label">Type</span>
-                        <span class="meta-value">Ebook</span>
+                        <span class="meta-label">Formats</span>
+                        <span class="meta-value">
+                            {% if ebook.formats %}
+                                {% for fmt in ebook.formats %}
+                                <span class="badge">{{ fmt.file_format|upper }}</span>
+                                {% endfor %}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </span>
                     </div>
                 </div>
-
+                
                 {% if ebook.summary %}
-                <div class="book-summary">
-                    <h2>Summary</h2>
-                    <p>{{ ebook.summary }}</p>
+                <div class="book-description">
+                    <h2 class="description-title">Description</h2>
+                    <p class="description-text">{{ ebook.summary }}</p>
                 </div>
                 {% endif %}
-
-                <div class="book-actions" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <a href="{{ url_for('main.read_ebook', ebook_id=ebook.id) }}" class="action-btn primary-action">
-                        <i class="fas fa-book-reader"></i>
-                        <span>Read Now</span>
+                
+                <div class="ebook-actions">
+                    <a href="{{ url_for('main.read_ebook', ebook_id=ebook.id) }}" class="btn btn-primary read-online-btn">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        <span>Read Online</span>
                     </a>
-                    <a href="{{ url_for('main.download_ebook', ebook_id=ebook.id) }}" class="action-btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                        <i class="fas fa-download"></i>
+                    <a href="{{ url_for('main.download_ebook', ebook_id=ebook.id) }}" class="btn btn-secondary download-btn">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
                         <span>Download</span>
                     </a>
                 </div>

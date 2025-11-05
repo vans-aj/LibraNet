@@ -1,111 +1,140 @@
 {% extends "base.html" %}
 
+{% block title %}My Bag{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bag.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="bag-page">
-    <!-- Page Header -->
-    <div class="bag-header">
-        <h1>My Bag</h1>
-        <p>Review your items before borrowing</p>
-    </div>
-
-    <!-- Content Section -->
-    <div class="bag-content">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="bag-header">
+            <h1 class="bag-title">My Bag</h1>
+            <p class="bag-count">
+                {% if books %}
+                    {{ books|length }} item{{ 's' if books|length != 1 else '' }} ready to borrow
+                {% else %}
+                    Your bag is empty
+                {% endif %}
+            </p>
+        </div>
+        
         {% if books %}
-            <!-- Bag Info -->
-            <div class="bag-info">
-                <p>You have <strong>{{ books|length }}</strong> item(s) in your bag</p>
-            </div>
-
-            <!-- Bag Table -->
-            <div class="bag-table-wrapper">
-                <table class="bag-table">
-                    <thead>
-                        <tr>
-                            <th class="col-book">Book Title</th>
-                            <th class="col-author">Author</th>
-                            <th class="col-due">Due Date</th>
-                            <th class="col-price">Fine Per Day</th>
-                            <th class="col-action">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for book in books %}
-                        <tr>
-                            <td class="col-book">
-                                <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="book-link">
-                                    {{ book.title }}
-                                </a>
-                            </td>
-                            <td class="col-author">{{ book.author }}</td>
-                            <td class="col-due">
-                                <span class="date-badge">
-                                    {{ due_date.strftime('%d %b %Y') }}
-                                </span>
-                            </td>
-                            <td class="col-price">
-                                <span class="price-badge">₹10</span>
-                            </td>
-                            <td class="col-action">
-                                <form action="{{ url_for('main.remove_from_bag', book_id=book.id) }}" method="post" style="display: inline;">
-                                    <button type="submit" class="btn-remove">Remove</button>
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Payment Section -->
-            <div class="payment-section">
-                <div class="payment-info">
-                    <h3>Payment Options</h3>
-                    <p class="payment-note">Choose your preferred payment method</p>
-                </div>
-
-                <div class="payment-buttons">
-                    <button class="payment-btn pod-btn" onclick="selectPayment('pod')">
-                        <span class="payment-icon">🚚</span>
-                        <span class="payment-text">
-                            <span class="payment-label">Payment on Delivery</span>
-                            <span class="payment-desc">Pay after receiving books</span>
-                        </span>
-                    </button>
-
-                    <form action="{{ url_for('main.borrow') }}" method="post" style="display: inline; width: 100%;">
-                        <button type="submit" class="payment-btn pay-btn">
-                            <span class="payment-icon">💳</span>
-                            <span class="payment-text">
-                                <span class="payment-label">Pay Now & Borrow</span>
-                                <span class="payment-desc">Instant borrowing</span>
+        <div class="bag-content">
+            <!-- Bag Items -->
+            <div class="bag-items">
+                {% for book in books %}
+                <div class="bag-item">
+                    <div class="bag-item-image">
+                        <img 
+                            src="{{ book.image_url or url_for('static', filename='images/default-book.jpg') }}" 
+                            alt="{{ book.title }}"
+                        >
+                    </div>
+                    <div class="bag-item-info">
+                        <h3 class="bag-item-title">
+                            <a href="{{ url_for('main.book_detail', book_id=book.id) }}">{{ book.title }}</a>
+                        </h3>
+                        <p class="bag-item-author">by {{ book.author }}</p>
+                        <div class="bag-item-meta">
+                            <span class="due-date">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                Due: {{ due_date.strftime('%b %d, %Y') if due_date else 'N/A' }}
                             </span>
+                            <span class="fine-info">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                ₹10/day late fee
+                            </span>
+                        </div>
+                    </div>
+                    <div class="bag-item-actions">
+                        <form action="{{ url_for('main.remove_from_bag', book_id=book.id) }}" method="POST">
+                            <button type="submit" class="remove-btn" title="Remove from bag">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Summary Card -->
+            <div class="bag-summary">
+                <h2 class="summary-title">Order Summary</h2>
+                <div class="summary-items">
+                    <div class="summary-row">
+                        <span class="summary-label">Items</span>
+                        <span class="summary-value">{{ books|length }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Borrow Period</span>
+                        <span class="summary-value">14 days</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Late Fee (per day)</span>
+                        <span class="summary-value">₹10</span>
+                    </div>
+                </div>
+                <div class="summary-total">
+                    <div class="summary-row">
+                        <span class="summary-label">Security Deposit</span>
+                        <span class="summary-value">₹{{ books|length * 100 }}</span>
+                    </div>
+                </div>
+                <div class="summary-note">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px; flex-shrink: 0;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Security deposit will be refunded when books are returned on time and in good condition.</span>
+                </div>
+                <div class="summary-actions">
+                    <form action="{{ url_for('main.borrow') }}" method="POST">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span>Proceed to Borrow</span>
                         </button>
                     </form>
+                    <a href="{{ url_for('main.list_books') }}" class="btn btn-outline" style="width: 100%;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        <span>Add More Books</span>
+                    </a>
                 </div>
-
-                <p class="payment-disclaimer">
-                    By proceeding, you agree to our <a href="#">Terms & Conditions</a>. 
-                    Fine of ₹10 per day applies if books are returned late.
-                </p>
             </div>
-
+        </div>
         {% else %}
-            <!-- Empty State -->
-            <div class="empty-state">
-                <div class="empty-icon">🛍️</div>
-                <h2>Your Bag is Empty</h2>
-                <p>You haven't added any books to your bag yet</p>
-                <p class="empty-hint">Browse our catalog and add books to start borrowing</p>
-                <a href="{{ url_for('main.list_books') }}" class="btn-browse">Browse Books</a>
+        <!-- Empty State -->
+        <div class="bag-empty">
+            <div class="empty-bag-icon">
+                🛒
             </div>
+            <h2 class="empty-bag-title">Your Bag is Empty</h2>
+            <p class="empty-bag-description">
+                Start adding books to your bag to borrow them later.
+            </p>
+            <a href="{{ url_for('main.list_books') }}" class="btn btn-primary btn-lg">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                <span>Browse Books</span>
+            </a>
+        </div>
         {% endif %}
     </div>
 </div>
+{% endblock %}
 
-<script>
-    function selectPayment(method) {
-        console.log('Payment method selected:', method);
-    }
-</script>
-
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
 {% endblock %}

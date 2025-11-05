@@ -430,6 +430,9 @@
         </div>
         {% endif %}
 
+    {# Tier order to control button states (upgrade-only) #}
+    {% set tier_order = {'FREE':0,'BASIC':1,'PRO':2,'MAX':3} %}
+
         <!-- Plans Grid -->
         <div class="plans-grid">
             <!-- FREE Plan -->
@@ -534,14 +537,18 @@
                     </ul>
                 </div>
 
-                {% if current_subscription.tier.name == 'BASIC' and not current_subscription.is_expired %}
-                <button class="plan-button active">
-                    <i class="fas fa-check"></i> Active Plan
-                </button>
+                {% if (not current_subscription.is_expired) and (tier_order[current_subscription.tier.name] > tier_order['BASIC']) %}
+                    <button class="plan-button active" title="Downgrades are not allowed during an active billing period" disabled>
+                        Downgrade not available
+                    </button>
+                {% elif current_subscription.tier.name == 'BASIC' and not current_subscription.is_expired %}
+                    <button class="plan-button active">
+                        <i class="fas fa-check"></i> Active Plan
+                    </button>
                 {% else %}
-                <a href="{{ url_for('main.subscribe', tier='basic') }}" class="plan-button secondary">
-                    Get Go
-                </a>
+                    <a href="{{ url_for('main.subscribe', tier='basic') }}" class="plan-button secondary">
+                        Get Go
+                    </a>
                 {% endif %}
             </div>
 
@@ -590,14 +597,18 @@
                     </ul>
                 </div>
 
-                {% if current_subscription.tier.name == 'PRO' and not current_subscription.is_expired %}
-                <button class="plan-button active">
-                    <i class="fas fa-check"></i> Active Plan
-                </button>
+                {% if (not current_subscription.is_expired) and (tier_order[current_subscription.tier.name] > tier_order['PRO']) %}
+                    <button class="plan-button active" title="Downgrades are not allowed during an active billing period" disabled>
+                        Downgrade not available
+                    </button>
+                {% elif current_subscription.tier.name == 'PRO' and not current_subscription.is_expired %}
+                    <button class="plan-button active">
+                        <i class="fas fa-check"></i> Active Plan
+                    </button>
                 {% else %}
-                <a href="{{ url_for('main.subscribe', tier='pro') }}" class="plan-button primary">
-                    Get Plus
-                </a>
+                    <a href="{{ url_for('main.subscribe', tier='pro') }}" class="plan-button primary">
+                        Get Plus
+                    </a>
                 {% endif %}
             </div>
 
@@ -646,13 +657,13 @@
                 </div>
 
                 {% if current_subscription.tier.name == 'MAX' and not current_subscription.is_expired %}
-                <button class="plan-button active">
-                    <i class="fas fa-check"></i> Active Plan
-                </button>
+                    <button class="plan-button active">
+                        <i class="fas fa-check"></i> Active Plan
+                    </button>
                 {% else %}
-                <a href="{{ url_for('main.subscribe', tier='max') }}" class="plan-button secondary">
-                    Get Pro
-                </a>
+                    <a href="{{ url_for('main.subscribe', tier='max') }}" class="plan-button secondary">
+                        Get Pro
+                    </a>
                 {% endif %}
             </div>
         </div>

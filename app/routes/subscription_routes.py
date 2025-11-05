@@ -97,13 +97,54 @@ SUBSCRIPTION_FEATURES = {
 }
 
 
+# Define a strict tier order for upgrade-only logic
+TIER_ORDER = {
+    SubscriptionTierEnum.FREE: 0,
+    SubscriptionTierEnum.BASIC: 1,
+    SubscriptionTierEnum.PRO: 2,
+    SubscriptionTierEnum.MAX: 3,
+}
+
+
+def _is_upgrade_allowed(requested_tier: SubscriptionTierEnum, current_sub: Subscription | None) -> tuple[bool, str | None]:
+    """Return whether the requested tier change is allowed and an optional reason if not.
+
+    Rules:
+    - Cannot purchase FREE (it's auto-assigned / via cancel only)
+    - If no current subscription or it is expired: allow any paid tier
+    - If already on the same active tier: block
+    - If requesting a lower tier than the active one: block (no downgrades mid-cycle)
+    - If requesting a higher tier: allow (upgrade)
+    """
+    # Free tier is never purchasable
+    if requested_tier == SubscriptionTierEnum.FREE:
+        return False, 'Free tier is automatically assigned.'
+
+    if not current_sub:
+        return True, None
+
+    if current_sub.is_expired:
+        return True, None
+
+    current_order = TIER_ORDER[current_sub.tier]
+    requested_order = TIER_ORDER[requested_tier]
+
+    if requested_order == current_order:
+        return False, f'You are already subscribed to {requested_tier.value.title()} plan.'
+
+    if requested_order < current_order:
+        return False, 'Downgrades are not allowed during an active billing period. You can cancel to Free, or wait until your plan expires.'
+
+    # requested_order > current_order => upgrade
+    return True, None
+
 @main_bp.route('/subscriptions')
 @login_required
 def subscriptions():
     """Display subscription plans."""
     current_sub = current_user.current_subscription
     return render_template(
-        'subscriptions.html',
+        'subscribe.html',
         title='Subscription Plans',
         plans=SUBSCRIPTION_FEATURES,
         current_subscription=current_sub,
@@ -121,16 +162,12 @@ def subscribe(tier):
         flash('Invalid subscription tier.', 'danger')
         return redirect(url_for('main.subscriptions'))
     
-    # Cannot subscribe to FREE
-    if tier_enum == SubscriptionTierEnum.FREE:
-        flash('Free tier is automatically assigned.', 'info')
-        return redirect(url_for('main.subscriptions'))
-    
     current_sub = current_user.current_subscription
-    
-    # Check if already subscribed to this tier
-    if current_sub and current_sub.tier == tier_enum and not current_sub.is_expired:
-        flash(f'You are already subscribed to {tier_enum.value.title()} plan.', 'info')
+
+    # Enforce upgrade-only rules
+    allowed, reason = _is_upgrade_allowed(tier_enum, current_sub)
+    if not allowed:
+        flash(reason, 'info')
         return redirect(url_for('main.subscriptions'))
     
     if request.method == 'GET':
@@ -169,6 +206,12 @@ def verify_payment():
             tier_enum = SubscriptionTierEnum[tier.upper()]
         except KeyError:
             return jsonify({'success': False, 'message': 'Invalid tier'}), 400
+
+        # Enforce upgrade-only rules server-side to prevent bypass via direct API call
+        current_sub = current_user.current_subscription
+        allowed, reason = _is_upgrade_allowed(tier_enum, current_sub)
+        if not allowed:
+            return jsonify({'success': False, 'message': reason}), 400
         
         # In TEST MODE, we'll skip actual Razorpay verification
         # In PRODUCTION, you should verify the payment signature
