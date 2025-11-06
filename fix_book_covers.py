@@ -6,7 +6,7 @@ Updates existing physical books with real book covers from Open Library API.
 
 from app import create_app, db
 from app.models.physical_book import PhysicalBook
-import requests
+import requests # type: ignore
 import time
 
 def get_real_cover_from_openlibrary(title, author):

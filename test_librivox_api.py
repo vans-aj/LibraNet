@@ -1,7 +1,7 @@
 """
 Quick test to see what data LibriVox API returns
 """
-import requests
+import requests # type: ignore
 import json
 
 url = "https://librivox.org/api/feed/audiobooks"

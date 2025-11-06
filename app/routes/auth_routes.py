@@ -11,8 +11,8 @@ from app.models.fine import Fine
 from app.models.otp import OTP
 from app.models import FineStatusEnum
 from flask_mail import Message # type: ignore
-from google.oauth2 import id_token
-from google.auth.transport import requests as google_requests
+from google.oauth2 import id_token # type: ignore
+from google.auth.transport import requests as google_requests # type: ignore
 from flask import current_app
 import secrets
 from threading import Thread

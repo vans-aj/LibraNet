@@ -12,7 +12,7 @@ Features:
 - Supports multiple library outlets across India
 """
 
-import requests
+import requests # type: ignore
 import random
 import time
 from decimal import Decimal

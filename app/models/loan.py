@@ -13,6 +13,9 @@ class Loan(db.Model):
     due_date = db.Column(db.DateTime, nullable=False, default=lambda: datetime.utcnow() + timedelta(days=182))
     returned_date = db.Column(db.DateTime, nullable=True) # Is NULL until the book is returned
     status = db.Column(db.Enum(LoanStatusEnum), default=LoanStatusEnum.BORROWED, nullable=False)
+    
+    # Payment tracking for security deposit
+    payment_id = db.Column(db.String(100), nullable=True)  # Razorpay payment ID for refunds
 
     # --- Foreign Keys (The physical database links) ---
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

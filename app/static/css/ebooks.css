@@ -176,3 +176,29 @@
     margin-bottom: var(--space-4);
     text-align: justify;
 }
+/* Alert Styles */
+.alert {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    margin-top: 1rem;
+}
+
+.alert-warning {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fbbf24;
+}
+
+[data-theme="dark"] .alert-warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: #fbbf24;
+    border-color: #f59e0b;
+}
+
+.badge-inactive {
+    opacity: 0.6;
+    background: var(--color-text-muted);
+}

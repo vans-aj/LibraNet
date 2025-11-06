@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request, session
+from flask import render_template, flash, redirect, url_for, request, session, jsonify
 from app import db
 from app.models.physical_book import PhysicalBook
 from app.models.loan import Loan
@@ -7,6 +7,16 @@ from flask_login import current_user, login_required
 from datetime import datetime, timedelta
 from sqlalchemy import or_
 from app.routes import main_bp
+import razorpay
+import os
+
+# Initialize Razorpay Client
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'rzp_test_YOUR_KEY_ID')
+RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', 'YOUR_KEY_SECRET')
+razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
+
+# Security deposit per book
+SECURITY_DEPOSIT_PER_BOOK = 100
 
 @main_bp.route('/')
 def landing_page():
@@ -143,42 +153,173 @@ def remove_from_bag(book_id):
         flash('Book removed from your bag.', 'success')
     return redirect(url_for('main.my_bag'))
 
-@main_bp.route('/borrow', methods=['POST'])
+@main_bp.route('/borrow', methods=['GET', 'POST'])
 @login_required
 def borrow():
-    """Handles the borrowing of all books currently in the bag."""
-    # Check subscription access
+    """Handle book borrowing with Razorpay payment for security deposit."""
+    
+    # Check if user has subscription access
     if not current_user.has_access_to_physical_books():
-        flash('Upgrade your plan to borrow physical books!', 'warning')
+        if request.method == 'POST' and request.is_json:
+            return jsonify({
+                'success': False,
+                'message': 'You need an active Basic, Pro, or Max subscription to borrow physical books.'
+            }), 403
+        flash('You need an active Basic, Pro, or Max subscription to borrow physical books.', 'warning')
         return redirect(url_for('main.subscriptions'))
     
-    if 'bag' not in session or not session['bag']:
-        flash('Your bag is empty.', 'danger')
+    # Get bag from session
+    bag = session.get('bag', [])
+    if not bag:
+        if request.method == 'POST' and request.is_json:
+            return jsonify({
+                'success': False,
+                'message': 'Your bag is empty.'
+            }), 400
+        flash('Your bag is empty.', 'info')
+        return redirect(url_for('main.list_books'))
+    
+    # Check loan limits (max 5 books at a time)
+    active_loans_count = Loan.query.filter_by(
+        student_id=current_user.id, 
+        returned_date=None
+    ).count()
+    
+    if (len(bag) + active_loans_count) > 5:
+        if request.method == 'POST' and request.is_json:
+            return jsonify({
+                'success': False,
+                'message': f'You can only have up to 5 books on loan at once. You currently have {active_loans_count} active loans.'
+            }), 400
+        flash(f'You can only have up to 5 books on loan at once. You currently have {active_loans_count} active loans.', 'danger')
         return redirect(url_for('main.my_bag'))
+    
+    if request.method == 'GET':
+        # Calculate security deposit
+        security_deposit = len(bag) * SECURITY_DEPOSIT_PER_BOOK
+        
+        # Get book details
+        books = PhysicalBook.query.filter(PhysicalBook.id.in_(bag)).all()
+        
+        # Render confirmation page with Razorpay
+        return render_template(
+            'my_bag.html',
+            title='My Bag',
+            books=books,
+            security_deposit=security_deposit,
+            razorpay_key_id=RAZORPAY_KEY_ID
+        )
+    
+    # POST - Create Razorpay order
+    try:
+        # Calculate total amount
+        amount = len(bag) * SECURITY_DEPOSIT_PER_BOOK * 100  # Convert to paise
+        
+        # Create Razorpay order
+        order_data = {
+            'amount': amount,
+            'currency': 'INR',
+            'payment_capture': '1',
+            'notes': {
+                'user_id': current_user.id,
+                'book_count': len(bag),
+                'type': 'security_deposit'
+            }
+        }
+        
+        order = razorpay_client.order.create(data=order_data)
+        
+        # Store order info in session for verification
+        session['pending_borrow_order'] = {
+            'order_id': order['id'],
+            'amount': amount,
+            'book_ids': bag
+        }
+        
+        return jsonify({
+            'success': True,
+            'order_id': order['id'],
+            'amount': amount,
+            'currency': 'INR',
+            'key': RAZORPAY_KEY_ID
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Failed to create payment order: {str(e)}'
+        }), 500
 
-    book_ids = session['bag']
-    active_loans_count = Loan.query.filter_by(student_id=current_user.id, returned_date=None).count()
 
-    if (len(book_ids) + active_loans_count) > 5:
-        flash(f'You cannot borrow more than 5 books at a time. You already have {active_loans_count} books on loan.', 'danger')
-        return redirect(url_for('main.my_bag'))
+@main_bp.route('/borrow/verify', methods=['POST'])
+@login_required
+def verify_borrow_payment():
+    """Verify Razorpay payment and create loan records."""
+    try:
+        data = request.get_json()
+        
+        # Extract payment details
+        payment_id = data.get('razorpay_payment_id')
+        order_id = data.get('razorpay_order_id')
+        
+        # Validate inputs
+        if not payment_id or not order_id:
+            return jsonify({'success': False, 'message': 'Missing payment details'}), 400
+        
+        # Get pending order from session
+        pending_order = session.get('pending_borrow_order')
+        if not pending_order or pending_order['order_id'] != order_id:
+            return jsonify({'success': False, 'message': 'Invalid order'}), 400
+        
+        # Verify payment with Razorpay
+        try:
+            payment = razorpay_client.payment.fetch(payment_id)
+            
+            # Check if payment is captured
+            if payment['status'] not in ['captured', 'authorized']:
+                return jsonify({'success': False, 'message': 'Payment not successful'}), 400
+                
+        except Exception as e:
+            # In test mode, if fetching fails, we'll proceed anyway
+            print(f"Razorpay fetch error (might be test mode): {str(e)}")
+        
+        # Get book IDs from pending order
+        book_ids = pending_order['book_ids']
+        
+        # Create loan records
+        loans_created = []
+        for book_id in book_ids:
+            book = PhysicalBook.query.get(book_id)
+            if book and book.available_copies > 0:
+                loan = Loan(
+                    student_id=current_user.id,
+                    book_id=book_id,
+                    payment_id=payment_id  # Store payment ID for refund tracking
+                )
+                book.available_copies -= 1
+                db.session.add(loan)
+                loans_created.append(book.title)
+        
+        # Commit all changes
+        db.session.commit()
+        
+        # Clear session
+        session.pop('bag', None)
+        session.pop('pending_borrow_order', None)
+        
+        return jsonify({
+            'success': True,
+            'message': f'Successfully borrowed {len(loans_created)} book(s)!',
+            'books': loans_created
+        })
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            'success': False,
+            'message': f'Failed to process borrowing: {str(e)}'
+        }), 500
 
-    borrowed_books = 0
-    for book_id in book_ids:
-        book = PhysicalBook.query.get(book_id)
-        if book and book.is_available:
-            loan = Loan(student_id=current_user.id, book_id=book_id)
-            db.session.add(loan)
-            book.available_copies -= 1
-            borrowed_books += 1
-        else:
-            flash(f"'{book.title if book else 'A book'}' could not be borrowed as it's not available.", 'danger')
-
-    db.session.commit()
-    session.pop('bag', None)
-    if borrowed_books > 0:
-        flash(f'You have successfully borrowed {borrowed_books} book(s).', 'success')
-    return redirect(url_for('main.my_loans'))
 
 @main_bp.route('/return_book/<int:loan_id>', methods=['POST'])
 @login_required

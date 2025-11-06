@@ -39,10 +39,8 @@
                 <div class="filter-group">
                     <label for="format" class="filter-label">Format:</label>
                     <select name="format" id="format" class="filter-select">
-                        <option value="">All Formats</option>
-                        <option value="pdf">PDF</option>
-                        <option value="epub">EPUB</option>
-                        <option value="mobi">MOBI</option>
+                        <option value="">TXT Only</option>
+                        <option value="txt" selected>TXT</option>
                     </select>
                 </div>
                 
@@ -80,21 +78,32 @@
                     <div class="book-card-overlay">
                         <span class="quick-view-btn">Read Now</span>
                     </div>
-                    {% if ebook.formats %}
-                    <span class="ebook-format-badge">{{ ebook.formats[0].file_format|upper }}</span>
+                    {% set txt_format = None %}
+                    {% for fmt in ebook.formats %}
+                        {% if fmt.file_format|upper == 'TXT' %}
+                            {% set txt_format = fmt %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if txt_format %}
+                    <span class="ebook-format-badge">TXT</span>
                     {% else %}
-                    <span class="ebook-format-badge">N/A</span>
+                    <span class="ebook-format-badge" style="opacity: 0.5;">N/A</span>
                     {% endif %}
                 </div>
                 <div class="book-card-content">
                     <h3 class="book-card-title">{{ ebook.title }}</h3>
                     <p class="book-card-author">{{ ebook.author }}</p>
                     <div class="book-card-meta">
-                        {% if ebook.formats and ebook.formats|length > 1 %}
+                        {# Only show TXT format badge #}
+                        {% set txt_format = None %}
+                        {% for fmt in ebook.formats %}
+                            {% if fmt.file_format|upper == 'TXT' %}
+                                {% set txt_format = fmt %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if txt_format %}
                             <div class="format-badges">
-                                {% for fmt in ebook.formats[:3] %}
-                                <span class="badge">{{ fmt.file_format|upper }}</span>
-                                {% endfor %}
+                                <span class="badge">TXT</span>
                             </div>
                         {% endif %}
                     </div>

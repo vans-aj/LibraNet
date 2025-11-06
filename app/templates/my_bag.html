@@ -4,6 +4,33 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/bag.css') }}">
+<style>
+    .payment-loading {
+        display: none;
+        text-align: center;
+        padding: 1rem;
+        color: var(--text-muted, #666);
+    }
+    
+    .payment-loading.active {
+        display: block;
+    }
+    
+    .payment-spinner {
+        border: 3px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top: 3px solid var(--primary-color, #007bff);
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 10px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -96,14 +123,16 @@
                     <span>Security deposit will be refunded when books are returned on time and in good condition.</span>
                 </div>
                 <div class="summary-actions">
-                    <form action="{{ url_for('main.borrow') }}" method="POST">
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span>Proceed to Borrow</span>
-                        </button>
-                    </form>
+                    <div class="payment-loading" id="paymentLoading">
+                        <div class="payment-spinner"></div>
+                        <p>Processing payment...</p>
+                    </div>
+                    <button type="button" id="borrowBtn" class="btn btn-primary" style="width: 100%;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Pay Security Deposit & Borrow</span>
+                    </button>
                     <a href="{{ url_for('main.list_books') }}" class="btn btn-outline" style="width: 100%;">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
@@ -136,5 +165,96 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const borrowBtn = document.getElementById('borrowBtn');
+    const loadingDiv = document.getElementById('paymentLoading');
+    
+    if (borrowBtn) {
+        borrowBtn.addEventListener('click', async function() {
+            // Show loading
+            borrowBtn.disabled = true;
+            loadingDiv.classList.add('active');
+            
+            try {
+                // Create order
+                const response = await fetch('{{ url_for("main.borrow") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.message || 'Failed to create order');
+                }
+                
+                // Initialize Razorpay
+                const options = {
+                    key: data.key,
+                    amount: data.amount,
+                    currency: data.currency,
+                    order_id: data.order_id,
+                    name: 'LibraNet',
+                    description: 'Security Deposit for Book Borrowing',
+                    image: '{{ url_for("static", filename="images/logo.png") }}',
+                    handler: async function(response) {
+                        // Payment successful, verify on server
+                        try {
+                            const verifyResponse = await fetch('{{ url_for("main.verify_borrow_payment") }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_order_id: response.razorpay_order_id
+                                })
+                            });
+                            
+                            const verifyData = await verifyResponse.json();
+                            
+                            if (verifyData.success) {
+                                // Redirect to my loans
+                                window.location.href = '{{ url_for("main.my_loans") }}?success=1';
+                            } else {
+                                throw new Error(verifyData.message || 'Payment verification failed');
+                            }
+                        } catch (error) {
+                            alert('Error: ' + error.message);
+                            borrowBtn.disabled = false;
+                            loadingDiv.classList.remove('active');
+                        }
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            // User closed payment modal
+                            borrowBtn.disabled = false;
+                            loadingDiv.classList.remove('active');
+                        }
+                    },
+                    theme: {
+                        color: '#007bff'
+                    }
+                };
+                
+                const rzp = new Razorpay(options);
+                rzp.open();
+                
+                // Hide loading when modal opens
+                loadingDiv.classList.remove('active');
+                
+            } catch (error) {
+                alert('Error: ' + error.message);
+                borrowBtn.disabled = false;
+                loadingDiv.classList.remove('active');
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

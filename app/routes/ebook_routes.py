@@ -38,10 +38,18 @@ def ebook_detail(ebook_id):
     """Display ebook details. (Publicly accessible)"""
     ebook = Ebook.query.get_or_404(ebook_id)
     
+    # Filter to show only TXT format
+    txt_format = None
+    for fmt in ebook.formats:
+        if fmt.file_format.upper() == 'TXT':
+            txt_format = fmt
+            break
+    
     return render_template(
         'ebooks/detail.html',
         title=ebook.title,
-        ebook=ebook
+        ebook=ebook,
+        txt_format=txt_format
     )
 
 
@@ -57,10 +65,22 @@ def read_ebook(ebook_id):
     
     ebook = Ebook.query.get_or_404(ebook_id)
     
+    # Get only TXT format
+    txt_format = None
+    for fmt in ebook.formats:
+        if fmt.file_format.upper() == 'TXT':
+            txt_format = fmt
+            break
+    
+    if not txt_format:
+        flash('TXT format not available for this ebook.', 'warning')
+        return redirect(url_for('main.ebook_detail', ebook_id=ebook_id))
+    
     return render_template(
         'ebooks/reader.html',
         title=f'Reading: {ebook.title}',
-        ebook=ebook
+        ebook=ebook,
+        txt_format=txt_format
     )
 
 
