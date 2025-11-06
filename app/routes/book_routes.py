@@ -2,6 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, session
 from app import db
 from app.models.physical_book import PhysicalBook
 from app.models.loan import Loan
+from app.models.fine import Fine
 from flask_login import current_user, login_required
 from datetime import datetime, timedelta
 from sqlalchemy import or_
@@ -34,16 +35,41 @@ def search():
 def list_books():
     """Displays the list of all books in the catalog. (Publicly accessible)"""
     search_term = request.args.get('q', '', type=str)
+    availability = request.args.get('availability', '', type=str)
+    sort_by = request.args.get('sort', 'title', type=str)
 
+    # Start with base query
+    query = PhysicalBook.query
+
+    # Apply search filter
     if search_term:
-        books = PhysicalBook.query.filter(
+        query = query.filter(
             or_(
                 PhysicalBook.title.ilike(f'%{search_term}%'),
-                PhysicalBook.author.ilike(f'%{search_term}%')
+                PhysicalBook.author.ilike(f'%{search_term}%'),
+                PhysicalBook.isbn.ilike(f'%{search_term}%')
             )
-        ).order_by(PhysicalBook.title).all()
+        )
+
+    # Apply availability filter
+    if availability == 'available':
+        query = query.filter(PhysicalBook.available_copies > 0)
+    elif availability == 'unavailable':
+        query = query.filter(PhysicalBook.available_copies == 0)
+
+    # Apply sorting
+    if sort_by == 'title':
+        query = query.order_by(PhysicalBook.title.asc())
+    elif sort_by == 'title_desc':
+        query = query.order_by(PhysicalBook.title.desc())
+    elif sort_by == 'author':
+        query = query.order_by(PhysicalBook.author.asc())
+    elif sort_by == 'newest':
+        query = query.order_by(PhysicalBook.id.desc())
     else:
-        books = PhysicalBook.query.order_by(PhysicalBook.title).all()
+        query = query.order_by(PhysicalBook.title.asc())
+
+    books = query.all()
 
     return render_template('books.html', title='Book Catalog', books=books, search_term=search_term)
 
@@ -152,4 +178,45 @@ def borrow():
     session.pop('bag', None)
     if borrowed_books > 0:
         flash(f'You have successfully borrowed {borrowed_books} book(s).', 'success')
+    return redirect(url_for('main.my_loans'))
+
+@main_bp.route('/return_book/<int:loan_id>', methods=['POST'])
+@login_required
+def return_book(loan_id):
+    """Handles returning a borrowed book."""
+    loan = Loan.query.get_or_404(loan_id)
+    
+    # Verify the loan belongs to the current user
+    if loan.student_id != current_user.id:
+        flash('You can only return your own books.', 'danger')
+        return redirect(url_for('main.my_loans'))
+    
+    # Check if already returned
+    if loan.returned_date:
+        flash('This book has already been returned.', 'info')
+        return redirect(url_for('main.my_loans'))
+    
+    # Mark as returned
+    loan.returned_date = datetime.utcnow()
+    loan.status = 'returned'
+    
+    # Update book availability
+    book = PhysicalBook.query.get(loan.book_id)
+    if book:
+        book.available_copies += 1
+    
+    # Check if overdue and create fine
+    if loan.is_overdue():
+        # Calculate overdue days
+        overdue_days = (datetime.utcnow() - loan.due_date).days
+        
+        # Create fine using the standard fine amount (₹200)
+        fine = Fine.create_standard_fine(loan_id=loan.id)
+        db.session.add(fine)
+        
+        flash(f'Book returned! However, it was {overdue_days} day(s) overdue. A fine of ₹{fine.amount} has been applied.', 'warning')
+    else:
+        flash('Book returned successfully!', 'success')
+    
+    db.session.commit()
     return redirect(url_for('main.my_loans'))

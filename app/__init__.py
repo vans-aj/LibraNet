@@ -27,6 +27,6 @@ def create_app(config_class=Config):
 
     # Import models for Flask-Migrate
     with app.app_context():
-        from app.models import student, publication, physical_book, ebook, audiobook, loan, fine, subscription, otp
+        from app.models import user, publication, physical_book, ebook, audiobook, loan, fine, subscription, otp
 
     return app

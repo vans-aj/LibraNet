@@ -1,5 +1,5 @@
 import os
-import requests
+import requests  # type: ignore
 from dotenv import load_dotenv
 from app import create_app, db
 from app.models.publication import Publication

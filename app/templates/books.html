@@ -36,33 +36,21 @@
                 </div>
                 
                 <div class="filter-group">
-                    <label for="genre" class="filter-label">Genre:</label>
-                    <select name="genre" id="genre" class="filter-select">
-                        <option value="">All Genres</option>
-                        <option value="fiction">Fiction</option>
-                        <option value="non-fiction">Non-Fiction</option>
-                        <option value="science">Science</option>
-                        <option value="history">History</option>
-                        <option value="biography">Biography</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
                     <label for="availability" class="filter-label">Availability:</label>
                     <select name="availability" id="availability" class="filter-select">
-                        <option value="">All</option>
-                        <option value="available">Available</option>
-                        <option value="unavailable">Checked Out</option>
+                        <option value="" {% if not request.args.get('availability') %}selected{% endif %}>All</option>
+                        <option value="available" {% if request.args.get('availability') == 'available' %}selected{% endif %}>Available</option>
+                        <option value="unavailable" {% if request.args.get('availability') == 'unavailable' %}selected{% endif %}>Checked Out</option>
                     </select>
                 </div>
                 
                 <div class="filter-group">
                     <label for="sort" class="filter-label">Sort by:</label>
                     <select name="sort" id="sort" class="filter-select">
-                        <option value="title">Title (A-Z)</option>
-                        <option value="title_desc">Title (Z-A)</option>
-                        <option value="author">Author (A-Z)</option>
-                        <option value="newest">Newest First</option>
+                        <option value="title" {% if request.args.get('sort') == 'title' or not request.args.get('sort') %}selected{% endif %}>Title (A-Z)</option>
+                        <option value="title_desc" {% if request.args.get('sort') == 'title_desc' %}selected{% endif %}>Title (Z-A)</option>
+                        <option value="author" {% if request.args.get('sort') == 'author' %}selected{% endif %}>Author (A-Z)</option>
+                        <option value="newest" {% if request.args.get('sort') == 'newest' %}selected{% endif %}>Newest First</option>
                     </select>
                 </div>
                 
@@ -160,4 +148,21 @@
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/books.js') }}"></script>
+<script>
+    // Auto-submit form when filters change
+    document.addEventListener('DOMContentLoaded', function() {
+        const availabilitySelect = document.getElementById('availability');
+        const sortSelect = document.getElementById('sort');
+        const form = availabilitySelect.closest('form');
+        
+        // Auto-submit on filter change
+        availabilitySelect.addEventListener('change', function() {
+            form.submit();
+        });
+        
+        sortSelect.addEventListener('change', function() {
+            form.submit();
+        });
+    });
+</script>
 {% endblock %}

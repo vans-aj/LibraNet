@@ -5,7 +5,7 @@ from app.routes import main_bp
 from app.models.physical_book import PhysicalBook
 from app.models.ebook import Ebook
 from app.models.audiobook import Audiobook
-from app.models.student import Student
+from app.models.user import User
 from app.forms import BookForm, EbookForm, AudiobookForm
 from app import db
 
@@ -223,7 +223,7 @@ def edit_audiobook(audiobook_id):
 @login_required
 @admin_required
 def manage_students():
-    students = Student.query.order_by(Student.name).all()
+    students = User.query.order_by(User.name).all()
     return render_template('admin/manage_students.html', title='Manage Students', students=students)
 
 
@@ -231,6 +231,6 @@ def manage_students():
 @login_required
 @admin_required
 def student_detail(student_id):
-    student = Student.query.get_or_404(student_id)
+    student = User.query.get_or_404(student_id)
     return render_template('admin/student_detail.html', title=f'Details for {student.name}', student=student)
                 

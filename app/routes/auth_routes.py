@@ -1,6 +1,3 @@
-from flask import render_template, redirect, url_for, flash , request
-from datetime import datetime
-from decimal import Decimal
 from flask import render_template, redirect, url_for, flash, request, session
 from datetime import datetime
 from decimal import Decimal
@@ -8,16 +5,33 @@ from app import db, mail
 from app.routes import main_bp
 from app.forms import LoginForm, RegistrationForm, OTPVerificationForm
 from flask_login import login_user, logout_user, login_required, current_user
-from app.models.student import Student
+from app.models.user import User
 from app.models.loan import Loan
 from app.models.fine import Fine
 from app.models.otp import OTP
 from app.models import FineStatusEnum
 from flask_mail import Message # type: ignore
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+from flask import current_app
+import secrets
+from threading import Thread
+
+from threading import Thread
+
+# Helper function to send emails asynchronously
+def send_async_email(app, msg):
+    """Send email in background thread."""
+    with app.app_context():
+        try:
+            mail.send(msg)
+            print(f"✓ Email sent successfully to {msg.recipients}")
+        except Exception as e:
+            print(f"✗ Failed to send email: {str(e)}")
 
 # Helper function to send OTP email
 def send_otp_email(email, otp_code):
-    """Send OTP verification email."""
+    """Send OTP verification email asynchronously."""
     try:
         msg = Message(
             subject='LibraNet - Email Verification OTP',
@@ -129,10 +143,11 @@ def send_otp_email(email, otp_code):
         </body>
         </html>
         """
-        mail.send(msg)
+        # Send email asynchronously in background
+        Thread(target=send_async_email, args=(current_app._get_current_object(), msg)).start()
         return True
     except Exception as e:
-        print(f"Error sending email: {str(e)}")
+        print(f"Error preparing email: {str(e)}")
         return False
 
 
@@ -143,11 +158,14 @@ def register():
     
     form = RegistrationForm()
     if form.validate_on_submit():
+        # Generate a unique roll number automatically
+        roll_no = f"LIB-{secrets.token_hex(4).upper()}"
+        
         # Store registration data in session
         session['registration_data'] = {
             'name': form.name.data,
             'email': form.email.data,
-            'roll_no': form.roll_no.data,
+            'roll_no': roll_no,
             'phone': form.phone.data,
             'password': form.password.data
         }
@@ -214,7 +232,7 @@ def verify_otp():
         if otp_record.otp_code == form.otp.data:
             # OTP is correct - create the user
             reg_data = session['registration_data']
-            student = Student(
+            student = User(
                 name=reg_data['name'],
                 email=reg_data['email'],
                 roll_no=reg_data['roll_no'],
@@ -280,7 +298,7 @@ def resend_otp():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        student = Student.query.filter_by(email=form.email.data).first()
+        student = User.query.filter_by(email=form.email.data).first()
         
         if student is None or not student.check_password(form.password.data):
             flash('Invalid email or password', 'danger')
@@ -403,3 +421,68 @@ def profile():
     Displays the user's profile page.
     """
     return render_template('profile.html', title='My Profile')
+
+# Google OAuth Routes
+@main_bp.route('/auth/google', methods=['POST'])
+def google_login():
+    """Handle Google Sign-In token verification"""
+    try:
+        token = request.json.get('credential')
+        
+        if not token:
+            return {'error': 'No token provided'}, 400
+        
+        # Verify the token with Google
+        idinfo = id_token.verify_oauth2_token(
+            token, 
+            google_requests.Request(), 
+            current_app.config['GOOGLE_OAUTH_CLIENT_ID']
+        )
+        
+        # Get user info from token
+        email = idinfo.get('email')
+        name = idinfo.get('name')
+        google_id = idinfo.get('sub')
+        
+        if not email:
+            return {'error': 'Email not provided by Google'}, 400
+        
+        # Check if user already exists
+        student = User.query.filter_by(email=email).first()
+        
+        if student:
+            # User exists, just log them in
+            login_user(student, remember=True)
+            return {'success': True, 'redirect': url_for('main.list_books')}, 200
+        else:
+            # New user - create account
+            # Generate a random roll number for Google sign-ups
+            roll_no = f"GOOGLE-{secrets.token_hex(4).upper()}"
+            
+            # Create new student account
+            new_student = User(
+                name=name or email.split('@')[0],
+                email=email,
+                roll_no=roll_no,
+                phone='',  # Optional, can be updated later
+                is_verified=True  # Google email is already verified
+            )
+            
+            # Set a random password (user won't need it with OAuth)
+            new_student.set_password(secrets.token_urlsafe(32))
+            
+            db.session.add(new_student)
+            db.session.commit()
+            
+            # Log in the new user
+            login_user(new_student, remember=True)
+            
+            flash(f'Welcome to LibraNet, {name}! Your account has been created.', 'success')
+            return {'success': True, 'redirect': url_for('main.list_books')}, 200
+            
+    except ValueError as e:
+        # Invalid token
+        return {'error': 'Invalid token'}, 400
+    except Exception as e:
+        # Other errors
+        return {'error': str(e)}, 500

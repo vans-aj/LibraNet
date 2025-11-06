@@ -62,23 +62,19 @@
         const preferredTheme = getPreferredTheme();
         setTheme(preferredTheme);
 
-        // Add event listener to toggle button with capture phase
+        // Add event listener to toggle button
         const toggleBtn = document.getElementById('theme-toggle');
         if (toggleBtn) {
-            toggleBtn.addEventListener('click', function(e) {
+            // Remove all existing listeners first
+            const newToggleBtn = toggleBtn.cloneNode(true);
+            toggleBtn.parentNode.replaceChild(newToggleBtn, toggleBtn);
+            
+            // Add single click listener
+            newToggleBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 e.preventDefault();
                 toggleTheme(e);
-            }, true);
-            
-            // Prevent clicks on child elements from bubbling
-            const slider = toggleBtn.querySelector('.theme-toggle-slider');
-            if (slider) {
-                slider.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                }, true);
-            }
+            });
         }
     });
 

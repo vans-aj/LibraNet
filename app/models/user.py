@@ -4,18 +4,21 @@ from app import db, login_manager
 from flask_login import UserMixin
 from . import SubscriptionTierEnum
 
-class Student(UserMixin, db.Model):
-    """Model ONLY for student users."""
-    __tablename__ = "student"
+class User(UserMixin, db.Model):
+    """Model for user accounts."""
+    __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True)
-    roll_no = db.Column(db.String(64), unique=True, nullable=False, index=True)
-    name = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False, index=True)
-    phone = db.Column(db.String(20), nullable=True)
     password_hash = db.Column(db.String(256), nullable=False)
-    joined_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    
+    # Optional fields
+    name = db.Column(db.String(150), nullable=True)
+    roll_no = db.Column(db.String(64), unique=True, nullable=True, index=True)
+    phone = db.Column(db.String(20), nullable=True)
+    joined_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=True)
+    is_active = db.Column(db.Boolean, default=True, nullable=True)
+    is_verified = db.Column(db.Boolean, default=False, nullable=True)
 
     # Relationships
     loans = db.relationship('Loan', back_populates='student', lazy=True, cascade="all, delete-orphan")
@@ -67,9 +70,9 @@ class Student(UserMixin, db.Model):
         return tier in [SubscriptionTierEnum.BASIC, SubscriptionTierEnum.PRO, SubscriptionTierEnum.MAX]
 
     def __repr__(self) -> str:
-        return f"<Student id={self.id} email={self.email}>"
+        return f"<User id={self.id} email={self.email}>"
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return Student.query.get(int(user_id))
+    return User.query.get(int(user_id))

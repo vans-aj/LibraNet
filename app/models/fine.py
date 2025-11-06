@@ -2,10 +2,14 @@
 
 from app import db
 from . import FineStatusEnum, datetime
+from decimal import Decimal
 
 class Fine(db.Model):
     """Model for fines associated with a loan."""
     __tablename__ = "fine"
+
+    # Standard fine amount for physical books (₹200)
+    STANDARD_FINE_AMOUNT = Decimal('200.00')
 
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Numeric(10, 2), nullable=False)
@@ -19,6 +23,23 @@ class Fine(db.Model):
 
     # --- Relationship (The Python shortcut) ---
     loan = db.relationship('Loan', back_populates='fine')
+    
+    @classmethod
+    def create_standard_fine(cls, loan_id):
+        """
+        Create a standard fine of ₹200 for a physical book loan.
+        
+        Args:
+            loan_id: ID of the loan to create fine for
+            
+        Returns:
+            Fine instance with standard amount
+        """
+        return cls(
+            loan_id=loan_id,
+            amount=cls.STANDARD_FINE_AMOUNT,
+            status=FineStatusEnum.PENDING
+        )
 
     @property
     def balance(self):

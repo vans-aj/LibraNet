@@ -15,10 +15,10 @@ class Subscription(db.Model):
     price_paid = db.Column(db.Numeric(10, 2), default=0.00, nullable=False)
     
     # Foreign Key
-    student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
     # Relationship
-    student = db.relationship('Student', back_populates='subscriptions')
+    student = db.relationship('User', back_populates='subscriptions')
     
     @property
     def is_expired(self):

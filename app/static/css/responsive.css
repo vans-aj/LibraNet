@@ -1,0 +1,668 @@
+/* ============================================
+   RESPONSIVE DESIGN - MOBILE FIRST APPROACH
+   ============================================ */
+
+/* Base Mobile Styles (already applied in other files) */
+
+/* ============================================
+   TABLET STYLES (768px - 1024px)
+   ============================================ */
+@media (max-width: 1024px) {
+    :root {
+        --container-width: 95%;
+    }
+
+    /* Typography scaling */
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.5rem; }
+    
+    /* Navbar adjustments */
+    .navbar {
+        flex-wrap: wrap;
+        padding: 0.75rem 1rem;
+    }
+    
+    .navbar-search {
+        order: 3;
+        width: 100%;
+        margin-top: 0.75rem;
+    }
+    
+    .navbar-nav {
+        gap: 0.5rem;
+    }
+    
+    .navbar-nav .nav-link span {
+        display: none;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 0.5rem;
+    }
+}
+
+/* ============================================
+   MOBILE STYLES (max-width: 768px)
+   ============================================ */
+@media (max-width: 768px) {
+    /* Base adjustments */
+    :root {
+        --space-1: 0.25rem;
+        --space-2: 0.5rem;
+        --space-3: 0.75rem;
+        --space-4: 1rem;
+        --space-6: 1.5rem;
+        --space-8: 2rem;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+
+    /* Typography */
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.1rem; }
+
+    /* Navbar Mobile */
+    .navbar {
+        padding: 0.5rem 1rem;
+        flex-wrap: nowrap;
+    }
+
+    .navbar-logo {
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .navbar-logo svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .navbar-search {
+        display: none; /* Hide search on mobile navbar, can add toggle */
+    }
+
+    .search-wrapper {
+        width: 100%;
+    }
+
+    .navbar-nav {
+        gap: 0.25rem;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .navbar-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .navbar-nav li {
+        flex-shrink: 0;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
+    }
+
+    .navbar-nav .nav-link svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Text labels are shown in mobile menu (handled in navbar.css) */
+
+    .navbar-actions {
+        gap: 0.5rem;
+        flex-shrink: 0;
+    }
+
+    .user-menu-trigger {
+        padding: 0.5rem;
+    }
+
+    .user-menu-trigger img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .theme-toggle {
+        width: 50px;
+        height: 26px;
+    }
+
+    .theme-toggle-slider {
+        width: 20px;
+        height: 20px;
+    }
+
+    [data-theme="dark"] .theme-toggle-slider {
+        transform: translateX(24px);
+    }
+
+    /* Filters Bar */
+    .filters-bar {
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1rem;
+    }
+
+    .filters-bar form {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+    }
+
+    .filter-group {
+        width: 100% !important;
+        flex: none !important;
+    }
+
+    .filter-select,
+    .search-input {
+        width: 100%;
+        font-size: 0.875rem;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Books Grid */
+    .books-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0;
+    }
+
+    .books-grid.list-view {
+        grid-template-columns: 1fr;
+    }
+
+    .book-card {
+        flex-direction: row;
+        gap: 1rem;
+        padding: 1rem;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .book-card .book-cover {
+        width: 100px;
+        height: 140px;
+        flex-shrink: 0;
+    }
+
+    .book-card .book-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .book-card .book-title {
+        font-size: 1rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .book-card .book-author {
+        font-size: 0.875rem;
+    }
+
+    .book-card .book-meta {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .book-card .btn {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    /* Book Detail Page */
+    .book-detail-container {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .book-detail-left {
+        width: 100%;
+        align-items: center;
+    }
+
+    .book-detail-right {
+        width: 100%;
+    }
+
+    .book-cover-large {
+        max-width: 250px;
+    }
+
+    /* Landing Page */
+    .hero {
+        padding: 3rem 1rem;
+        text-align: center;
+    }
+
+    .hero-content {
+        max-width: 100%;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .hero-buttons .btn {
+        width: 100%;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    /* Forms */
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+
+    /* Tables */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 600px;
+    }
+
+    /* Cards */
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Audiobook Player */
+    .player-container {
+        padding: 1rem;
+    }
+
+    .player-card {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .player-left,
+    .player-right {
+        width: 100%;
+    }
+
+    .cover-art {
+        max-width: 200px;
+        margin: 0 auto;
+    }
+
+    .player-meta {
+        text-align: center;
+    }
+
+    .transport {
+        gap: 0.5rem;
+    }
+
+    .btn-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .btn-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .btn-play {
+        width: 56px;
+        height: 56px;
+    }
+
+    .chapter-list {
+        max-height: 300px;
+    }
+
+    /* E-book Reader */
+    .reader-container {
+        height: calc(100vh - 60px);
+    }
+
+    .reader-controls {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+
+    .reader-controls .btn {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    /* My Bag / Cart */
+    .bag-container {
+        flex-direction: column;
+    }
+
+    .bag-items {
+        width: 100%;
+    }
+
+    .bag-summary {
+        width: 100%;
+        position: static;
+    }
+
+    /* Subscription Plans */
+    .subscription-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .subscription-card {
+        max-width: 100%;
+    }
+
+    /* Profile Page */
+    .profile-container {
+        flex-direction: column;
+    }
+
+    .profile-sidebar {
+        width: 100%;
+        position: static;
+    }
+
+    .profile-main {
+        width: 100%;
+    }
+
+    /* Flash Messages */
+    .flash-messages {
+        left: 1rem;
+        right: 1rem;
+        max-width: calc(100% - 2rem);
+    }
+
+    /* Footer */
+    .footer-content {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .footer-section {
+        width: 100%;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    /* Chat Widget */
+    .chat-widget {
+        bottom: 1rem;
+        right: 1rem;
+    }
+
+    .chat-window {
+        width: calc(100vw - 2rem);
+        height: calc(100vh - 8rem);
+        bottom: 5rem;
+        right: 1rem;
+    }
+
+    /* Modal adjustments */
+    .modal-content {
+        width: 95%;
+        max-width: 95%;
+        margin: 1rem;
+    }
+
+    /* Results info */
+    .results-info {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .view-toggle {
+        display: none; /* Hide view toggle on mobile */
+    }
+
+    /* Page headers */
+    .page-header {
+        padding: 2rem 0;
+        text-align: center;
+    }
+
+    /* Loans page */
+    .loans-tabs {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .loan-card {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .loan-book-info {
+        width: 100%;
+    }
+
+    .loan-actions {
+        width: 100%;
+    }
+}
+
+/* ============================================
+   SMALL MOBILE (max-width: 480px)
+   ============================================ */
+@media (max-width: 480px) {
+    /* Further typography scaling */
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.25rem; }
+    h3 { font-size: 1.1rem; }
+    
+    .container {
+        padding: 0 0.75rem;
+    }
+
+    /* Navbar even more compact */
+    .navbar-logo span {
+        display: none;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.4rem;
+    }
+
+    /* Stats grid single column on very small screens */
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Book card adjustments */
+    .book-card .book-cover {
+        width: 80px;
+        height: 110px;
+    }
+
+    .book-card .book-title {
+        font-size: 0.95rem;
+    }
+
+    .book-card .book-author,
+    .book-card .book-isbn {
+        font-size: 0.8rem;
+    }
+
+    /* Button sizes - Touch friendly */
+    .btn {
+        font-size: 0.875rem;
+        padding: 0.75rem 1.25rem;
+        min-height: 44px; /* iOS recommended touch target */
+    }
+
+    .btn-sm {
+        font-size: 0.75rem;
+        padding: 0.625rem 1rem;
+        min-height: 40px;
+    }
+
+    /* All interactive elements touch-friendly */
+    button,
+    a,
+    input[type="submit"],
+    input[type="button"],
+    .btn,
+    .nav-link {
+        min-height: 44px;
+        -webkit-tap-highlight-color: rgba(99, 102, 241, 0.1);
+    }
+
+    /* Input fields larger */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="number"],
+    select,
+    textarea {
+        font-size: 16px; /* Prevents iOS zoom on focus */
+        min-height: 44px;
+        padding: 0.75rem;
+    }
+
+    /* Player controls */
+    .btn-play {
+        width: 48px;
+        height: 48px;
+    }
+
+    .btn-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .btn-icon-small {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* ============================================
+   LARGE SCREENS (min-width: 1440px)
+   ============================================ */
+@media (min-width: 1440px) {
+    :root {
+        --container-width: 1400px;
+    }
+
+    .books-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ============================================
+   LANDSCAPE ORIENTATION
+   ============================================ */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero {
+        padding: 2rem 1rem;
+    }
+
+    .player-container {
+        height: auto;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .chat-window {
+        height: 80vh;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    .navbar,
+    .footer,
+    .chat-widget,
+    .flash-messages,
+    .filters-bar,
+    .btn,
+    .view-toggle {
+        display: none !important;
+    }
+
+    .main-content {
+        padding: 0;
+    }
+
+    .book-card,
+    .loan-card {
+        page-break-inside: avoid;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY - REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

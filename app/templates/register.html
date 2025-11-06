@@ -50,25 +50,10 @@
                         <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
                         </svg>
-                        {{ form.email(class="form-input", placeholder="Enter your @gehu.ac.in email", autocomplete="email") }}
+                        {{ form.email(class="form-input", placeholder="Enter your email address", autocomplete="email") }}
                     </div>
                     {% if form.email.errors %}
                         {% for error in form.email.errors %}
-                        <div class="error-message">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                
-                <div class="form-group">
-                    {{ form.roll_no.label(class="form-label form-label-required") }}
-                    <div class="input-with-icon">
-                        <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
-                        </svg>
-                        {{ form.roll_no(class="form-input", placeholder="Enter your roll number") }}
-                    </div>
-                    {% if form.roll_no.errors %}
-                        {% for error in form.roll_no.errors %}
                         <div class="error-message">{{ error }}</div>
                         {% endfor %}
                     {% endif %}
@@ -133,8 +118,18 @@
                 </div>
                 
                 {{ form.submit(class="btn btn-primary auth-submit", style="width: 100%;") }}
-                </button>
             </form>
+            
+            <!-- Divider -->
+            <div class="auth-divider">
+                <span class="auth-divider-text">or continue with</span>
+            </div>
+            
+            <!-- Social Login -->
+            <div class="social-login">
+                <!-- Google will render its button here -->
+                <div id="googleSignInBtn"></div>
+            </div>
             
             <!-- Footer -->
             <div class="auth-footer">
@@ -149,6 +144,9 @@
 {% endblock %}
 
 {% block extra_js %}
+<!-- Google Sign-In Script -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 <script>
     // Password toggle
     const togglePassword = document.getElementById('togglePassword');
@@ -158,5 +156,50 @@
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
     });
+
+    // Google Sign-In Handler
+    function handleCredentialResponse(response) {
+        // Send the credential to your backend
+        fetch("{{ url_for('main.google_login') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                credential: response.credential
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                alert('Google Sign-In failed: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred during Google Sign-In');
+        });
+    }
+
+    // Initialize Google Sign-In
+    window.onload = function() {
+        google.accounts.id.initialize({
+            client_id: "{{ config.GOOGLE_OAUTH_CLIENT_ID }}",
+            callback: handleCredentialResponse
+        });
+
+        // Render the Google Sign-In button
+        google.accounts.id.renderButton(
+            document.getElementById("googleSignInBtn"),
+            { 
+                theme: "outline", 
+                size: "large",
+                width: "100%",
+                text: "signup_with"
+            }
+        );
+    };
 </script>
 {% endblock %}

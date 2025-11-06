@@ -35,6 +35,12 @@ class Config:
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_USERNAME')
 
     OTP_EXPIRY_MINUTES = 10
+    
+    # Google OAuth Configuration
+    GOOGLE_OAUTH_CLIENT_ID = os.getenv('GOOGLE_OAUTH_CLIENT_ID')
+    GOOGLE_OAUTH_CLIENT_SECRET = os.getenv('GOOGLE_OAUTH_CLIENT_SECRET')
+    OAUTHLIB_INSECURE_TRANSPORT = os.getenv('OAUTHLIB_INSECURE_TRANSPORT', '1')  # Only for development
+    
     os.environ['LANGCHAIN_API_KEY'] = os.getenv('LANGCHAIN_API_KEY')
     os.environ['LANGCHAIN_PROJECT'] = os.getenv('LANGCHAIN_PROJECT')
     os.environ['LANGCHAIN_TRACING_V2'] = "true"

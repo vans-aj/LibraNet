@@ -32,3 +32,4 @@ langchain_core
 setuptools>=68.0.0
 
 langchain_core
+google-auth google-auth-oauthlib google-auth-httplib2
