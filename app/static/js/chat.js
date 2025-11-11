@@ -20,6 +20,9 @@ function initChatWidget() {
     
     if (!chatToggle || !chatWindow) return;
     
+    // Show welcome message if chat is empty and user just logged in
+    showWelcomeMessageIfNeeded();
+    
     // Toggle chat window
     chatToggle.addEventListener('click', () => {
         chatWindow.classList.toggle('active');
@@ -136,6 +139,8 @@ function addMessageToChat(type, message) {
     
     const bubble = document.createElement('div');
     bubble.className = 'message-bubble';
+    // Handle multi-line messages
+    bubble.style.whiteSpace = 'pre-line';
     bubble.textContent = message;
     
     const time = document.createElement('div');
@@ -213,4 +218,28 @@ function formatTime(date) {
     const formattedHours = hours % 12 || 12;
     const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
     return `${formattedHours}:${formattedMinutes} ${ampm}`;
+}
+
+/**
+ * Show Welcome Message if Needed
+ */
+function showWelcomeMessageIfNeeded() {
+    const chatMessages = document.getElementById('chatMessages');
+    
+    // Check if chat is empty (no messages)
+    if (chatMessages && chatMessages.children.length === 0) {
+        // Check if welcome message was already shown in this session
+        const welcomeShown = sessionStorage.getItem('chatWelcomeShown');
+        
+        if (!welcomeShown) {
+            // Add welcome message
+            setTimeout(() => {
+                const welcomeMessage = "Hi! I'm Sweetie 🤖\n\nI'm your LibraNet assistant! I can help you with:\n\n📚 Finding books and checking availability\n💳 Subscription plans and benefits\n📖 Understanding words or paragraphs (English/Hindi)\n❓ Any questions about the library\n\nHow can I assist you today?";
+                addMessageToChat('bot', welcomeMessage);
+                
+                // Mark as shown for this session
+                sessionStorage.setItem('chatWelcomeShown', 'true');
+            }, 800);
+        }
+    }
 }

@@ -41,6 +41,10 @@ class Config:
     GOOGLE_OAUTH_CLIENT_SECRET = os.getenv('GOOGLE_OAUTH_CLIENT_SECRET')
     OAUTHLIB_INSECURE_TRANSPORT = os.getenv('OAUTHLIB_INSECURE_TRANSPORT', '1')  # Only for development
     
+    # GitHub OAuth Configuration
+    GITHUB_OAUTH_CLIENT_ID = os.getenv('GITHUB_OAUTH_CLIENT_ID')
+    GITHUB_OAUTH_CLIENT_SECRET = os.getenv('GITHUB_OAUTH_CLIENT_SECRET')
+    
     os.environ['LANGCHAIN_API_KEY'] = os.getenv('LANGCHAIN_API_KEY')
     os.environ['LANGCHAIN_PROJECT'] = os.getenv('LANGCHAIN_PROJECT')
     os.environ['LANGCHAIN_TRACING_V2'] = "true"

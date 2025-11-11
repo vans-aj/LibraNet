@@ -142,6 +142,7 @@
     border-radius: var(--radius-full);
     box-shadow: var(--shadow-lg);
     transition: all var(--transition);
+    cursor: pointer;
 }
 
 .chat-toggle-btn:hover {
@@ -472,8 +473,31 @@
 
 /* Responsive */
 @media (max-width: 480px) {
+    .chat-widget {
+        bottom: var(--space-3);
+        right: var(--space-3);
+    }
+    
+    .chat-toggle-btn {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .chat-toggle-btn svg {
+        width: 24px;
+        height: 24px;
+    }
+    
     .chat-window {
         width: calc(100vw - var(--space-8));
         height: calc(100vh - 100px);
+        right: var(--space-1);
+        bottom: 75px;
+    }
+    
+    .chat-welcome-popup {
+        right: 70px;
+        bottom: 80px;
+        max-width: calc(100vw - 100px);
     }
 }

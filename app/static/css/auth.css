@@ -218,11 +218,23 @@
     color: var(--gray-600);
 }
 /* Social Login */
-.social-login {
+.social-login,
+.social-login-top {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+}
+
+.social-login-top {
+    margin-bottom: var(--space-1);
+}
+
+.social-login {
     margin-top: var(--space-4);
+}
+
+.social-login-btn {
+    width: 100%;
 }
 
 .btn-google {
@@ -246,6 +258,37 @@
     background: var(--gray-50);
     border-color: var(--gray-400);
     box-shadow: var(--shadow-sm);
+}
+
+.github-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    background: #24292e;
+    border: 1px solid #24292e;
+    border-radius: var(--radius-lg);
+    color: white;
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: all var(--transition);
+    text-decoration: none;
+}
+
+.github-btn:hover {
+    background: #1b1f23;
+    border-color: #1b1f23;
+    box-shadow: var(--shadow-md);
+    color: white;
+    text-decoration: none;
+}
+
+.github-btn svg {
+    width: 20px;
+    height: 20px;
 }
 
 .btn-google:active {

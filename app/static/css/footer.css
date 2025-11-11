@@ -3,6 +3,9 @@
     color: var(--gray-400);
     padding: var(--space-16) 0 var(--space-8);
     margin-top: auto;
+    position: relative;
+    z-index: 1;
+    width: 100%;
 }
 
 .footer-content {
@@ -141,12 +144,22 @@
 }
 
 @media (max-width: 640px) {
+    .footer {
+        padding: var(--space-12) 0 var(--space-6);
+    }
+    
     .footer-grid {
         grid-template-columns: 1fr;
+        gap: var(--space-6);
+        margin-bottom: var(--space-8);
     }
     
     .footer-bottom {
         flex-direction: column;
         text-align: center;
+    }
+    
+    .footer-description {
+        font-size: 0.875rem;
     }
 }
