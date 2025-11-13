@@ -16,7 +16,7 @@ from google.auth.transport import requests as google_requests # type: ignore
 from flask import current_app
 import secrets
 from threading import Thread
-import requests
+import requests # type: ignore
 
 from threading import Thread
 

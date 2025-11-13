@@ -5,8 +5,8 @@ Powered by Groq + LangChain
 
 import os
 from datetime import datetime
-from langchain_groq import ChatGroq
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
+from langchain_groq import ChatGroq # type: ignore
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage # type: ignore
 
 class LibraNetChatbot:
     def __init__(self):

@@ -4,57 +4,53 @@
 
 {% block extra_css %}
 <style>
-    /* Reader Container */
-    .ebook-reader {
-        min-height: 100vh;
-        padding: 2rem 1rem;
-        background: var(--color-bg);
-    }
-
-    .reader-wrapper {
-        max-width: 900px;
-        margin: 0 auto;
-        background: var(--color-surface);
-        border-radius: 16px;
+    .reader-container {
+        display: flex;
+        height: 100vh;
         overflow: hidden;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        background: var(--background-color, #f9fafb);
     }
 
-    [data-theme="dark"] .reader-wrapper {
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    .reader-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        background: var(--surface-color, #ffffff);
     }
 
     .reader-header {
-        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-        padding: 1.5rem 2rem;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        padding: 1rem 1.5rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 10;
     }
 
     .reader-title-section h2 {
         color: white;
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0 0 0.25rem 0;
     }
 
     .reader-title-section p {
         color: rgba(255, 255, 255, 0.9);
-        font-size: 0.9rem;
-        margin: 0.25rem 0 0;
+        font-size: 0.85rem;
+        margin: 0;
     }
 
     .close-btn {
         color: white;
         text-decoration: none;
-        padding: 0.5rem 1.25rem;
+        padding: 0.5rem 1rem;
         background: rgba(255, 255, 255, 0.2);
         border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s ease;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.2s;
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -62,25 +58,17 @@
 
     .close-btn:hover {
         background: rgba(255, 255, 255, 0.3);
-        transform: translateY(-1px);
     }
 
     .reader-content {
-        padding: 3rem 2.5rem;
-        font-family: 'Georgia', 'Merriweather', serif;
-        line-height: 1.9;
-        font-size: 1.1rem;
-        color: var(--color-text);
-        min-height: 600px;
-        max-height: 65vh;
+        flex: 1;
         overflow-y: auto;
-        background: var(--color-surface);
-    }
-
-    [data-theme="dark"] .reader-content {
-        color: #e2e8f0;
-        background: #1a1d2e;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        padding: 3rem 4rem;
+        font-family: 'Georgia', 'Merriweather', serif;
+        line-height: 1.8;
+        font-size: 1.1rem;
+        color: var(--text-primary, #1f2937);
+        user-select: text;
     }
 
     .reader-content p {
@@ -88,100 +76,38 @@
         text-align: justify;
     }
 
-    .reader-content::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .reader-content::-webkit-scrollbar-track {
-        background: var(--color-bg);
-        border-radius: 4px;
-    }
-
-    .reader-content::-webkit-scrollbar-thumb {
-        background: var(--color-primary);
-        border-radius: 4px;
-    }
-
-    [data-theme="dark"] .reader-content::-webkit-scrollbar-track {
-        background: #0f1419;
-    }
-
-    .loading-state {
-        text-align: center;
-        padding: 4rem 0;
-    }
-
-    .loading-spinner {
-        width: 50px;
-        height: 50px;
-        border: 4px solid var(--color-bg);
-        border-top-color: var(--color-primary);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto;
-    }
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    .loading-text {
-        margin-top: 1rem;
-        color: var(--color-text-muted);
-        font-size: 1rem;
-    }
-
-    .error-state {
-        text-align: center;
-        padding: 4rem 2rem;
-    }
-
-    .error-icon {
-        font-size: 3rem;
-        color: #ef4444;
-        margin-bottom: 1rem;
-    }
-
-    .error-text {
-        color: var(--color-text-muted);
-        margin: 0.5rem 0;
+    .reader-content::selection {
+        background: rgba(99, 102, 241, 0.3);
     }
 
     .reader-navigation {
-        background: var(--color-bg-secondary);
-        padding: 1.25rem 2rem;
+        padding: 1rem 1.5rem;
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 1.5rem;
-        border-top: 1px solid var(--color-border);
-        flex-wrap: wrap;
-    }
-
-    [data-theme="dark"] .reader-navigation {
-        background: #0f1419;
-        border-top-color: #2d3748;
+        gap: 1rem;
+        border-top: 1px solid var(--border-color, #e5e7eb);
+        background: var(--surface-color, #ffffff);
     }
 
     .nav-btn {
-        padding: 0.75rem 2rem;
-        background: var(--color-primary);
+        padding: 0.6rem 1.5rem;
+        background: #6366f1;
         color: white;
         border: none;
         border-radius: 8px;
-        font-weight: 600;
+        font-weight: 500;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s;
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
 
     .nav-btn:hover:not(:disabled) {
-        background: var(--color-primary-dark);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        background: #4f46e5;
+        transform: translateY(-1px);
     }
 
     .nav-btn:disabled {
@@ -190,610 +116,479 @@
     }
 
     .page-info {
-        padding: 0.75rem 1.5rem;
-        background: var(--color-surface);
-        border: 2px solid var(--color-primary);
-        color: var(--color-primary);
+        padding: 0.6rem 1rem;
+        background: var(--surface-color, #ffffff);
+        border: 2px solid #6366f1;
+        color: #6366f1;
         border-radius: 8px;
         font-weight: 600;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
 
-    [data-theme="dark"] .page-info {
-        background: #1a1d2e;
-    }
-
-    .progress-container {
-        height: 5px;
-        background: var(--color-bg);
-    }
-
-    [data-theme="dark"] .progress-container {
-        background: #0f1419;
-    }
-
-    .progress-bar {
-        height: 100%;
-        background: linear-gradient(90deg, var(--color-primary) 0%, #8b5cf6 100%);
-        width: 0%;
-        transition: width 0.3s ease;
-    }
-
-    @media (max-width: 768px) {
-        .ebook-reader {
-            padding: 1rem 0.5rem;
-        }
-        .reader-content {
-            padding: 2rem 1.5rem;
-            font-size: 1rem;
-            max-height: 60vh;
-        }
-        .reader-header {
-            padding: 1rem 1.5rem;
-        }
-        .reader-title-section h2 {
-            font-size: 1.1rem;
-        }
-        .reader-navigation {
-            padding: 1rem;
-            gap: 1rem;
-        }
-        .nav-btn {
-            padding: 0.6rem 1.25rem;
-            font-size: 0.9rem;
-        }
-        .page-info {
-            padding: 0.6rem 1rem;
-            font-size: 0.9rem;
-        }
-    }
-
-    /* Word Meaning Styles */
-    .word-lookup-btn {
-        position: fixed;
-        bottom: 100px;
-        right: 30px;
-        width: 56px;
-        height: 56px;
-        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-        border: none;
-        border-radius: 50%;
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-        cursor: pointer;
+    .meaning-sidebar {
+        width: 380px;
+        background: var(--surface-color, #ffffff);
+        border-left: 1px solid var(--border-color, #e5e7eb);
         display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        z-index: 1000;
+        flex-direction: column;
+        box-shadow: -2px 0 8px rgba(0, 0, 0, 0.05);
     }
 
-    .word-lookup-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
-    }
-
-    .word-lookup-btn svg {
-        width: 28px;
-        height: 28px;
+    .meaning-sidebar-header {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        padding: 1.25rem;
         color: white;
     }
 
-    .meaning-modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        z-index: 2000;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem;
-    }
-
-    .meaning-modal.active {
+    .meaning-sidebar-header h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
+        font-weight: 600;
         display: flex;
-    }
-
-    .meaning-content {
-        background: var(--color-surface);
-        border-radius: 16px;
-        width: 100%;
-        max-width: 500px;
-        max-height: 80vh;
-        overflow-y: auto;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        animation: slideUp 0.3s ease;
-    }
-
-    [data-theme="dark"] .meaning-content {
-        background: #1a1d2e;
-        border: 1px solid #2d3748;
-    }
-
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .meaning-header {
-        padding: 1.5rem 2rem;
-        border-bottom: 1px solid var(--color-border);
-        display: flex;
-        justify-content: space-between;
         align-items: center;
+        gap: 0.5rem;
     }
 
-    [data-theme="dark"] .meaning-header {
-        border-bottom-color: #2d3748;
-    }
-
-    .meaning-header h3 {
+    .meaning-sidebar-header p {
         margin: 0;
-        color: var(--color-text);
-        font-size: 1.25rem;
-        font-weight: 700;
+        font-size: 0.85rem;
+        opacity: 0.9;
     }
 
-    .close-modal-btn {
-        background: none;
-        border: none;
-        color: var(--color-text-muted);
-        cursor: pointer;
-        padding: 0.5rem;
-        border-radius: 8px;
-        transition: all 0.2s;
+    .meaning-sidebar-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.5rem;
     }
 
-    .close-modal-btn:hover {
-        background: var(--color-bg);
-        color: var(--color-text);
+    .selection-display {
+        background: var(--background-color, #f9fafb);
+        border: 2px solid var(--border-color, #e5e7eb);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
     }
 
-    .meaning-body {
-        padding: 2rem;
-    }
-
-    .word-input-group {
-        margin-bottom: 1.5rem;
-    }
-
-    .word-input-label {
-        display: block;
-        margin-bottom: 0.5rem;
-        color: var(--color-text);
+    .selection-label {
+        font-size: 0.85rem;
         font-weight: 600;
-        font-size: 0.95rem;
+        color: var(--text-secondary, #6b7280);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    .word-input {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        border: 2px solid var(--color-border);
-        border-radius: 8px;
+    .selected-text-display {
         font-size: 1rem;
-        background: var(--color-bg);
-        color: var(--color-text);
-        transition: all 0.3s;
+        color: var(--text-primary, #1f2937);
+        font-style: italic;
+        line-height: 1.5;
+        min-height: 40px;
+        padding: 0.5rem;
+        background: white;
+        border-radius: 8px;
+        border: 1px dashed var(--border-color, #e5e7eb);
     }
 
-    .word-input:focus {
-        outline: none;
-        border-color: var(--color-primary);
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    .selected-text-display.empty {
+        color: var(--text-secondary, #9ca3af);
+        font-style: normal;
     }
 
-    [data-theme="dark"] .word-input {
-        background: #0f1419;
-        border-color: #2d3748;
-    }
-
-    .lookup-btn {
+    .get-meaning-btn {
         width: 100%;
-        padding: 0.875rem;
-        background: var(--color-primary);
+        padding: 0.75rem;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
         color: white;
         border: none;
-        border-radius: 8px;
+        border-radius: 10px;
         font-weight: 600;
-        font-size: 1rem;
         cursor: pointer;
         transition: all 0.3s;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
+        font-size: 0.95rem;
     }
 
-    .lookup-btn:hover:not(:disabled) {
-        background: var(--color-primary-dark);
+    .get-meaning-btn:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
     }
 
-    .lookup-btn:disabled {
-        opacity: 0.6;
+    .get-meaning-btn:disabled {
+        opacity: 0.5;
         cursor: not-allowed;
     }
 
-    .meaning-result {
-        margin-top: 1.5rem;
-        padding: 1.5rem;
-        background: var(--color-bg);
-        border-radius: 8px;
-        border-left: 4px solid var(--color-primary);
-        display: none;
+    .get-meaning-btn svg {
+        width: 20px;
+        height: 20px;
     }
 
-    [data-theme="dark"] .meaning-result {
-        background: #0f1419;
+    .meaning-result {
+        background: var(--background-color, #f9fafb);
+        border: 2px solid #10b981;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+        display: none;
     }
 
     .meaning-result.show {
         display: block;
-        animation: fadeIn 0.3s ease;
+        animation: slideIn 0.3s ease;
     }
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .meaning-result h4 {
+        margin: 0 0 1rem 0;
+        color: #10b981;
+        font-size: 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .meaning-result h4 svg {
+        width: 20px;
+        height: 20px;
     }
 
     .meaning-text {
-        color: var(--color-text);
-        line-height: 1.8;
-        white-space: pre-line;
-    }
-
-    .meaning-loading {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        color: var(--color-text-muted);
+        color: var(--text-primary, #1f2937);
+        line-height: 1.6;
         font-size: 0.95rem;
+        white-space: pre-wrap;
     }
 
-    .meaning-spinner {
-        width: 20px;
-        height: 20px;
-        border: 3px solid var(--color-bg);
-        border-top-color: var(--color-primary);
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-    }
-
-    .error-message {
-        margin-top: 1rem;
-        padding: 1rem;
-        background: #fee;
-        border-left: 4px solid #ef4444;
-        border-radius: 8px;
-        color: #dc2626;
-        font-size: 0.9rem;
+    .loading-indicator {
+        text-align: center;
+        padding: 2rem;
         display: none;
     }
 
-    [data-theme="dark"] .error-message {
-        background: rgba(239, 68, 68, 0.1);
-        color: #fca5a5;
-    }
-
-    .error-message.show {
+    .loading-indicator.show {
         display: block;
     }
 
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--border-color, #e5e7eb);
+        border-top-color: #6366f1;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 0.75rem;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+        color: var(--text-secondary, #6b7280);
+        font-size: 0.9rem;
+    }
+
+    .tips-section {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .tips-section h4 {
+        margin: 0 0 0.75rem 0;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-primary, #1f2937);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .tips-section h4 svg {
+        width: 16px;
+        height: 16px;
+        color: #6366f1;
+    }
+
+    .tips-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tips-list li {
+        padding: 0.5rem 0;
+        font-size: 0.85rem;
+        color: var(--text-secondary, #6b7280);
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        line-height: 1.4;
+    }
+
+    .tips-list li::before {
+        content: '💡';
+        flex-shrink: 0;
+    }
+
+    [data-theme="dark"] .reader-container { background: #0f172a; }
+    [data-theme="dark"] .reader-main,
+    [data-theme="dark"] .meaning-sidebar { background: #1e293b; }
+    [data-theme="dark"] .reader-content { color: #e2e8f0; }
+    [data-theme="dark"] .meaning-sidebar { border-left-color: #334155; }
+    [data-theme="dark"] .selection-display { background: #0f172a; border-color: #334155; }
+    [data-theme="dark"] .selected-text-display { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+    [data-theme="dark"] .meaning-result { background: #0f172a; border-color: #10b981; }
+    [data-theme="dark"] .meaning-text { color: #e2e8f0; }
+    [data-theme="dark"] .tips-section { background: rgba(99, 102, 241, 0.15); }
+    [data-theme="dark"] .page-info { background: #1e293b; }
+    [data-theme="dark"] .reader-navigation { background: #1e293b; border-top-color: #334155; }
+
+    .reader-content::-webkit-scrollbar,
+    .meaning-sidebar-body::-webkit-scrollbar { width: 8px; }
+    .reader-content::-webkit-scrollbar-track,
+    .meaning-sidebar-body::-webkit-scrollbar-track { background: var(--background-color, #f9fafb); }
+    .reader-content::-webkit-scrollbar-thumb,
+    .meaning-sidebar-body::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 4px; }
+    [data-theme="dark"] .reader-content::-webkit-scrollbar-track,
+    [data-theme="dark"] .meaning-sidebar-body::-webkit-scrollbar-track { background: #0f172a; }
+
+    @media (max-width: 1024px) {
+        .reader-container { flex-direction: column; }
+        .meaning-sidebar {
+            width: 100%;
+            max-height: 40vh;
+            border-left: none;
+            border-top: 1px solid var(--border-color, #e5e7eb);
+        }
+        .reader-content { padding: 2rem 1.5rem; }
+    }
+
     @media (max-width: 768px) {
-        .word-lookup-btn {
-            bottom: 80px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-        }
-        .word-lookup-btn svg {
-            width: 24px;
-            height: 24px;
-        }
-        .meaning-content {
-            max-height: 90vh;
-        }
-        .meaning-body {
-            padding: 1.5rem;
-        }
+        .reader-content { padding: 1.5rem 1rem; font-size: 1rem; }
+        .reader-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="ebook-reader">
-    <div class="reader-wrapper">
+<div class="reader-container">
+    <div class="reader-main">
         <div class="reader-header">
             <div class="reader-title-section">
                 <h2>{{ ebook.title }}</h2>
                 <p>by {{ ebook.author }}</p>
             </div>
-            <div class="reader-controls">
-                <a href="{{ url_for('main.ebook_detail', ebook_id=ebook.id) }}" class="close-btn">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                    Close
-                </a>
-            </div>
+            <a href="{{ url_for('main.ebook_detail', ebook_id=ebook.id) }}" class="close-btn">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                Close
+            </a>
         </div>
 
-        <div id="readerContent" class="reader-content">
-            <div class="loading-state">
-                <div class="loading-spinner"></div>
-                <p class="loading-text">Loading your book...</p>
+        <div class="reader-content" id="readerContent">
+            <div style="text-align: center; padding: 4rem 0;">
+                <div class="loading-spinner" style="width: 50px; height: 50px; margin: 0 auto 1rem;"></div>
+                <p style="color: var(--text-secondary, #6b7280);">Loading book content...</p>
             </div>
         </div>
 
         <div class="reader-navigation">
-            <button id="prevBtn" class="nav-btn" onclick="previousPage()">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+            <button class="nav-btn" id="prevBtn" disabled>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
                 Previous
             </button>
-            <div id="pageInfo" class="page-info">Page 1</div>
-            <button id="nextBtn" class="nav-btn" onclick="nextPage()">
+            <div class="page-info" id="pageInfo">Page 1</div>
+            <button class="nav-btn" id="nextBtn">
                 Next
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
             </button>
         </div>
-
-        <div class="progress-container">
-            <div id="progressBar" class="progress-bar"></div>
-        </div>
     </div>
-</div>
 
-<!-- Word Meaning Floating Button -->
-<button class="word-lookup-btn" onclick="openMeaningModal()" title="Look up word or sentence meaning">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-    </svg>
-</button>
-
-<!-- Word Meaning Modal -->
-<div id="meaningModal" class="meaning-modal">
-    <div class="meaning-content">
-        <div class="meaning-header">
-            <h3>Word & Sentence Meaning</h3>
-            <button class="close-modal-btn" onclick="closeMeaningModal()">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 24px; height: 24px;">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+    <div class="meaning-sidebar">
+        <div class="meaning-sidebar-header">
+            <h3>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                 </svg>
-            </button>
+                AI Dictionary
+            </h3>
+            <p>Select any word or sentence to get its meaning</p>
         </div>
-        <div class="meaning-body">
-            <div class="word-input-group">
-                <label class="word-input-label" for="wordInput">Enter a word or sentence:</label>
-                <input 
-                    type="text" 
-                    id="wordInput" 
-                    class="word-input" 
-                    placeholder="Type any word or sentence..."
-                    onkeypress="if(event.key === 'Enter') lookupWord()"
-                >
+
+        <div class="meaning-sidebar-body">
+            <div class="selection-display">
+                <div class="selection-label">Selected Text:</div>
+                <div class="selected-text-display empty" id="selectedTextDisplay">
+                    Select text from the book to see its meaning...
+                </div>
             </div>
-            <button class="lookup-btn" onclick="lookupWord()" id="lookupBtn">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+
+            <button class="get-meaning-btn" id="getMeaningBtn" disabled>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                 </svg>
                 Get Meaning
             </button>
-            <div id="errorMessage" class="error-message"></div>
-            <div id="meaningResult" class="meaning-result">
+
+            <div class="loading-indicator" id="loadingIndicator">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">AI is thinking...</p>
+            </div>
+
+            <div class="meaning-result" id="meaningResult">
+                <h4>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Meaning
+                </h4>
                 <div class="meaning-text" id="meaningText"></div>
+            </div>
+
+            <div class="tips-section">
+                <h4>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Quick Tips
+                </h4>
+                <ul class="tips-list">
+                    <li>Select any word to get its definition</li>
+                    <li>Highlight sentences for context-based explanations</li>
+                    <li>Works with complex phrases and idioms</li>
+                    <li>AI provides simple, easy-to-understand meanings</li>
+                </ul>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-let currentPage = 1;
-let totalPages = 1;
-let linesPerPage = 35;
-let bookLines = [];
+const ebookUrl = "{{ txt_format.content_url if txt_format else '' }}";
+let bookContent = [];
+let currentPage = 0;
+const charsPerPage = 3000;
+let selectedText = '';
 
-async function loadEbook(url) {
+const readerContent = document.getElementById('readerContent');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const pageInfo = document.getElementById('pageInfo');
+const selectedTextDisplay = document.getElementById('selectedTextDisplay');
+const getMeaningBtn = document.getElementById('getMeaningBtn');
+const loadingIndicator = document.getElementById('loadingIndicator');
+const meaningResult = document.getElementById('meaningResult');
+const meaningText = document.getElementById('meaningText');
+
+async function loadBook() {
     try {
-        const proxyUrl = `{{ url_for('main.ebook_proxy') }}?url=${encodeURIComponent(url)}`;
+        if (!ebookUrl || ebookUrl === '') {
+            throw new Error('Book URL is not available');
+        }
+        console.log('Loading ebook from URL:', ebookUrl);
+        const proxyUrl = "{{ url_for('main.ebook_proxy') }}?url=" + encodeURIComponent(ebookUrl);
+        console.log('Proxy URL:', proxyUrl);
         const response = await fetch(proxyUrl);
-        
+        console.log('Response status:', response.status);
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            console.error('Response error:', errorText);
+            throw new Error('Failed to load book: ' + response.status);
         }
-        
         const text = await response.text();
-        bookLines = text.split('\n').filter(line => line.trim() !== '');
-        totalPages = Math.ceil(bookLines.length / linesPerPage);
-        
-        currentPage = 1;
-        displayPage();
-    } catch (error) {
-        console.error('Error loading ebook:', error);
-        document.getElementById('readerContent').innerHTML = `
-            <div class="error-state">
-                <div class="error-icon">⚠️</div>
-                <p class="error-text" style="font-size: 1.1rem; font-weight: 600;">Failed to load ebook</p>
-                <p class="error-text">The book content may not be available at this time.</p>
-                <p class="error-text" style="font-size: 0.9rem;">Please try again later.</p>
-            </div>
-        `;
-    }
-}
-
-function displayPage() {
-    const startLine = (currentPage - 1) * linesPerPage;
-    const endLine = Math.min(startLine + linesPerPage, bookLines.length);
-    const pageContent = bookLines.slice(startLine, endLine);
-    
-    let formattedContent = '';
-    let currentParagraph = '';
-    
-    pageContent.forEach(line => {
-        if (line.trim() === '') {
-            if (currentParagraph.trim()) {
-                formattedContent += `<p>${escapeHtml(currentParagraph.trim())}</p>`;
-                currentParagraph = '';
-            }
-        } else {
-            currentParagraph += line + ' ';
+        console.log('Book loaded, length:', text.length);
+        if (!text || text.length === 0) {
+            throw new Error('Book content is empty');
         }
-    });
-    
-    if (currentParagraph.trim()) {
-        formattedContent += `<p>${escapeHtml(currentParagraph.trim())}</p>`;
-    }
-    
-    document.getElementById('readerContent').innerHTML = formattedContent || '<p>No content to display.</p>';
-    document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
-    
-    const progress = (currentPage / totalPages) * 100;
-    document.getElementById('progressBar').style.width = `${progress}%`;
-    
-    document.getElementById('prevBtn').disabled = currentPage === 1;
-    document.getElementById('nextBtn').disabled = currentPage === totalPages;
-    
-    document.getElementById('readerContent').scrollTop = 0;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-function nextPage() {
-    if (currentPage < totalPages) {
-        currentPage++;
-        displayPage();
+        bookContent = [];
+        for (let i = 0; i < text.length; i += charsPerPage) {
+            bookContent.push(text.slice(i, i + charsPerPage));
+        }
+        displayPage(0);
+    } catch (error) {
+        console.error('Error loading book:', error);
+        readerContent.innerHTML = '<div style="text-align: center; padding: 4rem 2rem;"><div style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;">&#9888;</div><p style="color: var(--text-secondary, #6b7280); margin: 0.5rem 0;">Failed to load book content.</p><p style="color: var(--text-secondary, #6b7280); margin: 0.5rem 0;">Error: ' + error.message + '</p><p style="color: var(--text-secondary, #6b7280); margin: 0.5rem 0;">Please try again later.</p></div>';
     }
 }
 
-function previousPage() {
-    if (currentPage > 1) {
-        currentPage--;
-        displayPage();
+function displayPage(pageNum) {
+    if (pageNum < 0 || pageNum >= bookContent.length) return;
+    currentPage = pageNum;
+    const content = bookContent[pageNum].split('\n\n').map(para => para.trim()).filter(para => para.length > 0).map(para => `<p>${para}</p>`).join('');
+    readerContent.innerHTML = content;
+    prevBtn.disabled = currentPage === 0;
+    nextBtn.disabled = currentPage === bookContent.length - 1;
+    pageInfo.textContent = `Page ${currentPage + 1} of ${bookContent.length}`;
+    readerContent.scrollTop = 0;
+}
+
+prevBtn.addEventListener('click', () => displayPage(currentPage - 1));
+nextBtn.addEventListener('click', () => displayPage(currentPage + 1));
+
+readerContent.addEventListener('mouseup', handleTextSelection);
+readerContent.addEventListener('touchend', handleTextSelection);
+
+function handleTextSelection() {
+    const selection = window.getSelection();
+    const text = selection.toString().trim();
+    if (text.length > 0) {
+        selectedText = text;
+        selectedTextDisplay.textContent = text;
+        selectedTextDisplay.classList.remove('empty');
+        getMeaningBtn.disabled = false;
+        meaningResult.classList.remove('show');
     }
 }
 
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowRight' || e.key === 'PageDown') {
-        e.preventDefault();
-        nextPage();
-    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-        e.preventDefault();
-        previousPage();
-    }
-});
-
-// Word Meaning Modal Functions
-function openMeaningModal() {
-    document.getElementById('meaningModal').classList.add('active');
-    document.getElementById('wordInput').focus();
-    // Clear previous results
-    document.getElementById('meaningResult').classList.remove('show');
-    document.getElementById('errorMessage').classList.remove('show');
-    document.getElementById('wordInput').value = '';
-}
-
-function closeMeaningModal() {
-    document.getElementById('meaningModal').classList.remove('active');
-}
-
-// Close modal when clicking outside
-document.getElementById('meaningModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeMeaningModal();
-    }
-});
-
-async function lookupWord() {
-    const wordInput = document.getElementById('wordInput');
-    const word = wordInput.value.trim();
-    const lookupBtn = document.getElementById('lookupBtn');
-    const meaningResult = document.getElementById('meaningResult');
-    const meaningText = document.getElementById('meaningText');
-    const errorMessage = document.getElementById('errorMessage');
-    
-    // Hide previous results
+getMeaningBtn.addEventListener('click', async () => {
+    if (!selectedText) return;
+    loadingIndicator.classList.add('show');
     meaningResult.classList.remove('show');
-    errorMessage.classList.remove('show');
-    
-    if (!word) {
-        errorMessage.textContent = 'Please enter a word or sentence.';
-        errorMessage.classList.add('show');
-        return;
-    }
-    
-    // Show loading state
-    lookupBtn.disabled = true;
-    lookupBtn.innerHTML = `
-        <div class="meaning-spinner"></div>
-        Looking up...
-    `;
-    
+    getMeaningBtn.disabled = true;
     try {
-        const response = await fetch('/api/word-meaning', {
+        const response = await fetch('{{ url_for("main.chat_message") }}', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ word: word })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Please explain the meaning of: "${selectedText}". Give a simple, clear explanation.` })
         });
-        
         const data = await response.json();
-        
-        if (data.success) {
-            meaningText.textContent = data.meaning;
+        if (data.success && data.response) {
+            meaningText.textContent = data.response;
             meaningResult.classList.add('show');
         } else {
-            errorMessage.textContent = data.error || 'Failed to get word meaning.';
-            errorMessage.classList.add('show');
+            meaningText.textContent = 'Sorry, I couldn\'t get the meaning. Please try again.';
+            meaningResult.classList.add('show');
         }
     } catch (error) {
-        errorMessage.textContent = 'Network error. Please try again.';
-        errorMessage.classList.add('show');
+        console.error('Error getting meaning:', error);
+        meaningText.textContent = 'An error occurred. Please try again.';
+        meaningResult.classList.add('show');
     } finally {
-        // Restore button state
-        lookupBtn.disabled = false;
-        lookupBtn.innerHTML = `
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            Get Meaning
-        `;
+        loadingIndicator.classList.remove('show');
+        getMeaningBtn.disabled = false;
     }
-}
+});
 
-{% if txt_format %}
-loadEbook('{{ txt_format.content_url }}');
-{% else %}
-document.getElementById('readerContent').innerHTML = `
-    <div class="error-state">
-        <div class="error-icon">📚</div>
-        <p class="error-text" style="font-size: 1.1rem; font-weight: 600;">No TXT format available</p>
-        <p class="error-text">This ebook is not available in text format.</p>
-    </div>
-`;
-{% endif %}
+loadBook();
 </script>
 {% endblock %}
-
