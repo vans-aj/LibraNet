@@ -624,6 +624,7 @@ LibraNet/
 
 ---3. Get AI-powered responses
 
+<img width="1440" height="900" alt="Screenshot 2025-11-13 at 10 38 05 PM" src="https://github.com/user-attachments/assets/8a8a0a9d-cb73-424a-9e4d-877439dce550" />
 
 
 ## 🎯 Usage### For Administrators
