@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, SelectField, TextAreaField, FloatField
+from flask_wtf.file import FileField, FileAllowed, FileRequired
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, SelectField, TextAreaField, FloatField, MultipleFileField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError, Optional, NumberRange, Regexp
 from app.models.user import User
 from app.models.physical_book import PhysicalBook
@@ -75,6 +76,7 @@ class BookForm(FlaskForm):
     summary = TextAreaField('Summary')
     isbn = StringField('ISBN', validators=[Optional(), Length(max=20)])
     total_copies = IntegerField('Total Copies', validators=[DataRequired(), NumberRange(min=1)])
+    related_courses = StringField('Related Courses', validators=[Optional(), Length(max=200)])
     submit = SubmitField('Submit Book')
 
     def __init__(self, original_book=None, *args, **kwargs):
@@ -86,6 +88,17 @@ class BookForm(FlaskForm):
             book = PhysicalBook.query.filter_by(isbn=isbn.data).first()
             if book and (self.original_book is None or book.id != self.original_book.id):
                 raise ValidationError('This ISBN is already registered.')
+
+
+class AddPhysicalBookForm(FlaskForm):
+    """Form for users to add a physical book with images"""
+    title = StringField('Book Title', validators=[DataRequired(), Length(max=200)])
+    author = StringField('Author Name', validators=[DataRequired(), Length(max=150)])
+    summary = TextAreaField('Summary / Description', validators=[Optional(), Length(max=1000)])
+    isbn = StringField('ISBN (Optional)', validators=[Optional(), Length(max=20)])
+    total_copies = IntegerField('Number of Copies', validators=[DataRequired(), NumberRange(min=1, max=100)], default=1)
+    related_courses = StringField('Related Courses (Optional)', validators=[Optional(), Length(max=200)])
+    submit = SubmitField('Add Book')
 
 
 class EbookForm(FlaskForm):

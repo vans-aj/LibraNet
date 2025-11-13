@@ -1,149 +1,75 @@
 """
-Chat routes for LibraNet AI Assistant
+Chat routes for LibraNet AI Chatbot
 """
 
 from flask import render_template, request, jsonify
-from flask_login import current_user
+from flask_login import login_required, current_user
 from app.routes import main_bp
-from app import db
 from app.services.chatbot import chatbot_service
 
 
 @main_bp.route('/chat')
+@login_required
 def chat_page():
-    """Display the chat interface"""
-    return render_template('chat.html', title='LibraNet Assistant')
+    """Render the chat page"""
+    return render_template('chat.html', title='AI Assistant')
 
 
 @main_bp.route('/api/chat', methods=['POST'])
-def chat_api():
-    """
-    API endpoint for chat messages
-    
-    Expected JSON:
-    {
-        "message": "user's question"
-    }
-    
-    Returns JSON:
-    {
-        "success": true,
-        "response": "AI response",
-        "user_name": "User Name"
-    }
-    """
+@login_required
+def chat_message():
+    """Handle chat messages"""
     try:
-        data = request.get_json()
+        if not chatbot_service:
+            return jsonify({
+                'success': False,
+                'error': 'Chatbot service is not available'
+            }), 503
         
-        if not data or 'message' not in data:
+        data = request.get_json()
+        user_message = data.get('message', '').strip()
+        
+        if not user_message:
             return jsonify({
                 'success': False,
                 'error': 'No message provided'
             }), 400
         
-        user_message = data['message'].strip()
-        
-        if not user_message:
-            return jsonify({
-                'success': False,
-                'error': 'Empty message'
-            }), 400
-        
-        # Generate AI response
-        ai_response = chatbot_service.chat(
-            question=user_message,
-            current_user=current_user,
-            db=db
+        # Get response from chatbot
+        response = chatbot_service.chat(
+            user_message=user_message,
+            user_name=current_user.name if current_user.is_authenticated else None
         )
         
         return jsonify({
             'success': True,
-            'response': ai_response,
-            'user_name': current_user.name if current_user.is_authenticated else 'Guest'
+            'response': response
         })
         
     except Exception as e:
-        print(f"Chat API error: {str(e)}")
+        print(f"Chat error: {str(e)}")
         return jsonify({
             'success': False,
-            'error': 'Something went wrong. Please try again.'
+            'error': 'Failed to process message'
         }), 500
 
 
-@main_bp.route('/api/chat/recommendations', methods=['POST'])
-def chat_recommendations():
-    """
-    API endpoint for book recommendations
-    
-    Expected JSON:
-    {
-        "genre": "Fiction" (optional),
-        "limit": 5 (optional)
-    }
-    """
+@main_bp.route('/api/chat/clear', methods=['POST'])
+@login_required
+def clear_chat():
+    """Clear chat history"""
     try:
-        data = request.get_json() or {}
-        
-        genre = data.get('genre')
-        limit = data.get('limit', 5)
-        
-        recommendations = chatbot_service.get_book_recommendations(
-            current_user=current_user,
-            db=db,
-            genre=genre,
-            limit=limit
-        )
+        if chatbot_service:
+            chatbot_service.clear_history()
         
         return jsonify({
             'success': True,
-            'recommendations': recommendations
+            'message': 'Chat history cleared'
         })
         
     except Exception as e:
-        print(f"Recommendations API error: {str(e)}")
+        print(f"Clear chat error: {str(e)}")
         return jsonify({
             'success': False,
-            'error': 'Could not generate recommendations'
+            'error': 'Failed to clear chat'
         }), 500
-
-
-@main_bp.route('/api/chat/quick-questions', methods=['GET'])
-def quick_questions():
-    """Get suggested quick questions based on user context"""
-    
-    if current_user.is_authenticated:
-        tier = current_user.subscription_tier.value
-        
-        if tier == 'free':
-            questions = [
-                "What are the subscription plans?",
-                "How do I upgrade my account?",
-                "What books are available?",
-                "How does borrowing work?"
-            ]
-        elif tier == 'basic':
-            questions = [
-                "How many books can I borrow?",
-                "When are my books due?",
-                "What are the fine rates?",
-                "Can I access ebooks?"
-            ]
-        else:  # PRO or MAX
-            questions = [
-                "Recommend some books for me",
-                "What audiobooks are new?",
-                "How do I download ebooks?",
-                "What's my subscription status?"
-            ]
-    else:
-        questions = [
-            "How do I register?",
-            "What is LibraNet?",
-            "What subscription plans are available?",
-            "Can I browse books as a guest?"
-        ]
-    
-    return jsonify({
-        'success': True,
-        'questions': questions
-    })

@@ -22,7 +22,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-theme.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
     {% block extra_css %}{% endblock %}
@@ -158,6 +157,14 @@
                         <span>Audiobooks</span>
                     </a>
                 </li>
+                <li class="desktop-nav-item">
+                    <a href="{{ url_for('main.chat_page') }}" class="nav-link">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                        </svg>
+                        <span>AI Chat</span>
+                    </a>
+                </li>
                 
                 {% if current_user.is_authenticated %}
                 <!-- Mobile: All items -->
@@ -218,6 +225,14 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                         </svg>
                         <span>Subscription</span>
+                    </a>
+                </li>
+                <li class="mobile-only">
+                    <a href="{{ url_for('main.my_listings') }}" class="nav-link">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                        </svg>
+                        <span>My Listings</span>
                     </a>
                 </li>
                 <li class="mobile-only">
@@ -289,6 +304,18 @@
                             </svg>
                             <span>Subscriptions</span>
                         </a>
+                        <a href="{{ url_for('main.my_listings') }}" class="dropdown-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                            </svg>
+                            <span>My Listings</span>
+                        </a>
+                        <a href="{{ url_for('main.add_physical_book') }}" class="dropdown-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                            </svg>
+                            <span> Add Book</span>
+                        </a>
                         <div class="dropdown-divider"></div>
                         <a href="{{ url_for('main.logout') }}" class="dropdown-item">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -355,10 +382,6 @@
     {% if 'login' not in request.endpoint and 'register' not in request.endpoint %}
     <!-- Footer -->
     {% include 'footer.html' %}
-    
-    <!-- Chat Widget -->
-    {% if current_user.is_authenticated %}
-    {% include 'chat.html' %}
     {% endif %}
  
 
@@ -567,16 +590,9 @@
         });
     </script>
 
-    <!-- FLOATING CHAT WIDGET (Only show if not on login/register pages) -->
-    {% if 'login' not in request.endpoint and 'register' not in request.endpoint and 'verify_otp' not in request.endpoint %}
-    
-    {% endif %}
-    {% endif %}
-    
     <!-- JavaScript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
     
     <!-- Page Loader Script -->
     <script>
@@ -605,6 +621,393 @@
                     }
                 });
             });
+        });
+    </script>
+    
+    <!-- Floating Chatbot Widget -->
+    <style>
+        .chatbot-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        
+        .chatbot-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-pink));
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .chatbot-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+        }
+        
+        .chatbot-button svg {
+            width: 30px;
+            height: 30px;
+            color: white;
+        }
+        
+        .chatbot-popup {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 380px;
+            height: 550px;
+            background: var(--surface-color);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 9998;
+        }
+        
+        .chatbot-popup.active {
+            display: flex;
+        }
+        
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-pink));
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chatbot-close {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+        
+        .chatbot-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: var(--bg-primary);
+        }
+        
+        .chat-message {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+        
+        .chat-message.bot {
+            justify-content: flex-start;
+        }
+        
+        .chat-bubble {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 15px;
+            word-wrap: break-word;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .chat-message.user .chat-bubble {
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-pink));
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .chat-message.bot .chat-bubble {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 4px;
+        }
+        
+        .chat-typing {
+            display: none;
+            padding: 10px 14px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            max-width: 60px;
+        }
+        
+        .chat-typing.active {
+            display: block;
+        }
+        
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-6px);
+                opacity: 1;
+            }
+        }
+        
+        .chatbot-input-area {
+            padding: 15px;
+            background: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chatbot-input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: border-color 0.3s;
+        }
+        
+        .chatbot-input:focus {
+            outline: none;
+            border-color: var(--primary-purple);
+        }
+        
+        .chatbot-send {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-pink));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+        
+        .chatbot-send:hover:not(:disabled) {
+            transform: scale(1.1);
+        }
+        
+        .chatbot-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .chatbot-send svg {
+            width: 18px;
+            height: 18px;
+            color: white;
+        }
+        
+        @media (max-width: 480px) {
+            .chatbot-popup {
+                width: calc(100vw - 40px);
+                height: calc(100vh - 140px);
+                bottom: 90px;
+                right: 20px;
+            }
+        }
+    </style>
+    
+    <!-- Chatbot HTML -->
+    <div class="chatbot-widget">
+        <button class="chatbot-button" id="chatbotToggle" aria-label="Open chat">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+            </svg>
+        </button>
+        
+        <div class="chatbot-popup" id="chatbotPopup">
+            <div class="chatbot-header">
+                <h3>
+                    <span>🤖</span>
+                    LibraNet AI
+                </h3>
+                <button class="chatbot-close" id="chatbotClose" aria-label="Close chat">&times;</button>
+            </div>
+            
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="chat-message bot">
+                    <div class="chat-bubble">
+                        👋 Hello! I'm your LibraNet AI assistant. How can I help you today?
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-typing" id="chatbotTyping">
+                <div class="typing-dots">
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                </div>
+            </div>
+            
+            <div class="chatbot-input-area">
+                <input 
+                    type="text" 
+                    class="chatbot-input" 
+                    id="chatbotInput" 
+                    placeholder="Type your message..."
+                    autocomplete="off"
+                />
+                <button class="chatbot-send" id="chatbotSend" aria-label="Send message">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chatbot JavaScript -->
+    <script>
+        const chatbotToggle = document.getElementById('chatbotToggle');
+        const chatbotPopup = document.getElementById('chatbotPopup');
+        const chatbotClose = document.getElementById('chatbotClose');
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        const chatbotInput = document.getElementById('chatbotInput');
+        const chatbotSend = document.getElementById('chatbotSend');
+        const chatbotTyping = document.getElementById('chatbotTyping');
+        
+        // Toggle popup
+        chatbotToggle.addEventListener('click', () => {
+            chatbotPopup.classList.toggle('active');
+            if (chatbotPopup.classList.contains('active')) {
+                chatbotInput.focus();
+            }
+        });
+        
+        chatbotClose.addEventListener('click', () => {
+            chatbotPopup.classList.remove('active');
+        });
+        
+        // Auto-scroll to bottom
+        function scrollToBottom() {
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+        
+        // Add message to chat
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser ? 'user' : 'bot'}`;
+            
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'chat-bubble';
+            bubbleDiv.textContent = text;
+            
+            messageDiv.appendChild(bubbleDiv);
+            chatbotMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+        
+        // Send message
+        async function sendChatMessage() {
+            const message = chatbotInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, true);
+            chatbotInput.value = '';
+            
+            // Show typing indicator
+            chatbotTyping.classList.add('active');
+            chatbotSend.disabled = true;
+            scrollToBottom();
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                const data = await response.json();
+                
+                // Hide typing indicator
+                chatbotTyping.classList.remove('active');
+                
+                if (data.response) {
+                    addMessage(data.response, false);
+                } else if (data.error) {
+                    addMessage(`Error: ${data.error}`, false);
+                } else {
+                    addMessage('Sorry, I could not process your request.', false);
+                }
+            } catch (error) {
+                chatbotTyping.classList.remove('active');
+                addMessage('Sorry, something went wrong. Please try again.', false);
+                console.error('Chat error:', error);
+            } finally {
+                chatbotSend.disabled = false;
+                chatbotInput.focus();
+            }
+        }
+        
+        // Event listeners
+        chatbotSend.addEventListener('click', sendChatMessage);
+        
+        chatbotInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendChatMessage();
+            }
         });
     </script>
     

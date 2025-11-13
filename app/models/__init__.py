@@ -25,3 +25,6 @@ class SubscriptionTierEnum(Enum):
     BASIC = "basic"
     PRO = "pro"
     MAX = "max"
+
+# Import models
+from app.models.book_image import BookImage

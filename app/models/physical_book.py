@@ -12,10 +12,12 @@ class PhysicalBook(Publication):
     total_copies = db.Column(db.Integer, default=1, nullable=False)
     available_copies = db.Column(db.Integer, default=1, nullable=False)
     related_courses = db.Column(db.Text, nullable=True)
+    added_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)  # Track who added the book
 
     # --- Relationships ---
     # The 'loans' relationship now belongs here, as only physical books can be loaned.
     loans = db.relationship('Loan', back_populates='book', lazy=True)
+    added_by = db.relationship('User', backref='added_books', lazy=True)
     def __init__(self, **kwargs):
         """
         Custom constructor to set available_copies equal to total_copies

@@ -11,5 +11,6 @@ from app.routes import (
     subscription_routes,
     ebook_routes,
     audiobook_routes,
-    chat_routes  # ← Add this
+    chat_routes,
+    upload_routes  # Test routes for photo upload
 )
